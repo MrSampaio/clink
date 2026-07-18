@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		36B1E888300C1981000EEF64 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36B1E887300C197A000EEF64 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		36B1E879300C187B000EEF64 /* Clink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		36B1E887300C197A000EEF64 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		36B1E870300C187B000EEF64 = {
 			isa = PBXGroup;
 			children = (
+				36B1E887300C197A000EEF64 /* .gitignore */,
 				36B1E87B300C187B000EEF64 /* Clink */,
 				36B1E87A300C187B000EEF64 /* Products */,
 			);
@@ -109,6 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36B1E888300C1981000EEF64 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
