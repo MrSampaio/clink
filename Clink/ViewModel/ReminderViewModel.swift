@@ -17,8 +17,7 @@ struct RemindersListView: View {
             subtasks: [
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
-            date: "27 Jun 2026",
-            time: "15:00",
+            dueDate: Date(),
             category: "Trabalho"
         ),
         
@@ -29,8 +28,7 @@ struct RemindersListView: View {
             subtasks: [
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
-            date: "27 Jun 2026",
-            time: "15:00",
+            dueDate: Date(),
             category: "Trabalho"
         ),
         
@@ -41,34 +39,9 @@ struct RemindersListView: View {
             subtasks: [
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
-            date: "27 Jun 2026",
-            time: "15:00",
+            dueDate: Date(),
             category: "Trabalho"
         ),
-        
-        Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatorio",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
-            ],
-            date: "27 Jun 2026",
-            time: "15:00",
-            category: "Trabalho"
-        ),
-        
-        Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatorio",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
-            ],
-            date: "27 Jun 2026",
-            time: "15:00",
-            category: "Trabalho"
-        )
     ]
     
     var body: some View {

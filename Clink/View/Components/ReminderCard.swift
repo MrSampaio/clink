@@ -55,8 +55,8 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.date, color: .purple, icon: nil)
-                BadgeView(text: reminder.time, color: .purple, icon: nil)
+                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: .purple, icon: nil)
+                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: .purple, icon: nil)
                 BadgeView(text: reminder.category, color: .purple, icon: "briefcase.fill")
                 
                 Spacer()
@@ -80,8 +80,7 @@ struct ReminderCard: View {
             subtasks: [
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
-            date: "27 Jun 2026",
-            time: "15:00",
+            dueDate: Date(),
             category: "Trabalho"
         )
         

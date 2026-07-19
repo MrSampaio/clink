@@ -19,7 +19,6 @@ struct Reminder: Identifiable{
     var description: String
     var isCompleted: Bool = false
     var subtasks: [SubTask]
-    var date: String
-    var time: String
+    var dueDate: Date
     var category: String
 }
