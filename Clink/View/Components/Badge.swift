@@ -17,13 +17,17 @@ struct BadgeView: View {
         HStack(spacing: 4){
             if let icon = icon {
                 Image(systemName: icon)
-                    .font(.system(size: 12))
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(.white))
             }
             Text(text)
-                .font(.system(size: 16, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
                 .foregroundColor(Color(.white))
         }
-        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity, alignment: .init(horizontal: .center, vertical: .center))
+        .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(Color(color))
         .cornerRadius(14)
@@ -31,5 +35,5 @@ struct BadgeView: View {
 }
 
 #Preview {
-    BadgeView(text: "Titulo", color: .purple, icon: nil)
+    BadgeView(text: "Titulo", color: .purple, icon: "briefcase.fill")
 }
