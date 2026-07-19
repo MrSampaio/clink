@@ -15,23 +15,23 @@ struct ReminderCard: View {
         VStack(alignment: .leading, spacing: 16) {
             
             HStack(alignment: .top, spacing: 12) {
-                CheckBox(isMarked: $reminder.isCompleted, color: .purple)
+                CheckBox(isMarked: $reminder.isCompleted, color: reminder.color)
                     .frame(width: 24, height: 24)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(reminder.title)
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.font)
                     
                     Text(reminder.description)
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.font)
                 }
                 
                 Spacer()
                 
                 Image(systemName: "info.circle")
-                    .foregroundColor(Color(.purple))
+                    .foregroundColor(Color(reminder.color))
                     .font(.title3)
             }
             
@@ -39,12 +39,12 @@ struct ReminderCard: View {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach($reminder.subtasks) { $subtask in
                         HStack(spacing: 12) {
-                            CheckBox(isMarked: $subtask.isCompleted, color: .purple)
+                            CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
                                 .frame(width: 24, height: 24)
                             
                             Text(subtask.title)
                                 .font(.subheadline)
-                                .foregroundColor(.white)
+                                .foregroundColor(.font)
                         }
                     }
                 }
@@ -55,18 +55,21 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: .purple, icon: nil)
-                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: .purple, icon: nil)
-                BadgeView(text: reminder.category, color: .purple, icon: "briefcase.fill")
+                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()
                 
-                Image(systemName: "flag.fill")
-                    .foregroundColor(Color(.purple))
+                if reminder.isImportant{
+                    Image(systemName: "flag.fill")
+                        .foregroundColor(Color(.red))
+                }
+                
             }
         }
         .padding(25)
-        .background(Color(.black))
+        .background(Color(.cardBackground))
         .cornerRadius(30)
     }
 }
@@ -81,12 +84,20 @@ struct ReminderCard: View {
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
             dueDate: Date(),
-            category: "Trabalho"
+            isImportant: true,
+            category: "Trabalho",
+            color: .blue
         )
         
         var body: some View {
-            ReminderCard(reminder: $mockReminder)
-                .padding()
+            
+            VStack{
+                ReminderCard(reminder: $mockReminder)
+                    .padding()
+            }
+            .frame(maxHeight: .infinity)
+            .background(Color(.background))
+            
         }
     }
     

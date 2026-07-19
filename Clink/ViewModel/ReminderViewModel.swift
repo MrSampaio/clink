@@ -18,29 +18,9 @@ struct RemindersListView: View {
                 SubTask(title: "Falar com o chefe", isCompleted: true)
             ],
             dueDate: Date(),
-            category: "Trabalho"
-        ),
-        
-        Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatorio",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
-            ],
-            dueDate: Date(),
-            category: "Trabalho"
-        ),
-        
-        Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatorio",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
-            ],
-            dueDate: Date(),
-            category: "Trabalho"
+            isImportant: true,
+            category: "Trabalho",
+            color: .blue
         ),
     ]
     

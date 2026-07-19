@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct SubTask: Identifiable{
     let id = UUID()
@@ -20,5 +21,7 @@ struct Reminder: Identifiable{
     var isCompleted: Bool = false
     var subtasks: [SubTask]
     var dueDate: Date
+    var isImportant: Bool
     var category: String
+    var color: Color
 }
