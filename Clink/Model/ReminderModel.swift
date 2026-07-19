@@ -23,5 +23,5 @@ struct Reminder: Identifiable{
     var dueDate: Date
     var isImportant: Bool
     var category: String
-    var color: Color
+    var color: Color = .blue
 }
