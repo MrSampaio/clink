@@ -24,14 +24,16 @@ struct CheckBox: View {
                         .fill(Color(color))
                     Image(systemName: "checkmark")
                         .foregroundColor(Color(.white))
+                        .font(.system(size: 14, weight: .bold))
                 } else{
                     Circle()
                         .stroke(color, lineWidth: 3)
                 }
             }
+            .contentShape(Circle())
+            .aspectRatio(1, contentMode: .fit)
         }
-        .frame(width: .infinity)
-        .frame(height: .infinity)
+        .buttonStyle(.plain)
     }
 }
 
