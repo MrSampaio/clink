@@ -21,9 +21,7 @@ struct HomeView: View {
                     Title(title: "Todos", subtitle: "x lembretes")
                         .padding(.bottom, 30)
                     
-                    
                     ForEach($viewModel.reminders) { $reminder in
-                                            
                         
                         if Calendar.current.isDateInToday(reminder.dueDate) {
                             
