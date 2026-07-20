@@ -10,6 +10,18 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Text("All Reminders")
+        NavigationStack {
+            VStack {
+                Text("All Reminders")
+                    .font(.largeTitle)
+                
+                Spacer()
+            }
+            .navigationTitle("Home")
+        }
     }
+}
+
+#Preview {
+    HomeView()
 }
