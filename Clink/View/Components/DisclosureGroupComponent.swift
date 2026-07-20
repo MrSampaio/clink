@@ -32,7 +32,6 @@ struct DisclosureGroupComponent: View {
                
                 
         }
-        .padding()
         .background(Color.black.opacity(0.05))
         .cornerRadius(12)
         
@@ -42,12 +41,10 @@ struct DisclosureGroupComponent: View {
 
 #Preview {
     struct DisclosurePreviewWrapper: View {
-        // Criamos um estado falso puxando os dados do seu ViewModel
         @State var mockReminders = ReminderViewModel().reminders
         
         var body: some View {
             ScrollView {
-                // Passamos a lista usando o $
                 DisclosureGroupComponent(title: "Hoje", reminders: $mockReminders)
                     .padding()
             }
