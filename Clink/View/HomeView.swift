@@ -9,18 +9,27 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
+    @State private var estaAberto = false
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("All Reminders")
-                    .font(.largeTitle)
+            ScrollView{
+
+                VStack{
+                    Title(title: "Todos", subtitle: "x lembretes")
+                    
+                    
+                    
+
+                            }
+                            .padding()
+                }
+                .padding(.horizontal, 25)
                 
-                Spacer()
             }
-            .navigationTitle("Home")
+            
         }
     }
-}
 
 #Preview {
     HomeView()

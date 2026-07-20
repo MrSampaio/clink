@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct title: View {
+struct Title: View {
     let title: String
     let subtitle: String?
     
@@ -25,9 +25,12 @@ struct title: View {
                 .opacity(0.5)
         }
         
+        .frame(maxWidth: .infinity, alignment: .leading)
+        //.border(Color(.red))
+        
     }
 }
 
 #Preview {
-    title(title: "Página", subtitle: "Descrição da página")
+    Title(title: "Página", subtitle: "Descrição da página")
 }
