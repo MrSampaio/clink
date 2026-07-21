@@ -47,6 +47,9 @@ struct HomeView: View {
                 .padding(.horizontal, 25)
             }
             .background(Color(.background))
+            .toolbar {
+            HomeToolBar()
+            }
         }
     }
 }
