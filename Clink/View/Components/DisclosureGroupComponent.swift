@@ -15,14 +15,15 @@ struct DisclosureGroupComponent: View {
    
 //    @EnvironmentObject var viewModel: ReminderViewModel
     let title: String
+    let indices: [Int]
     @State var isExpanded: Bool = true
     @Binding var reminders: [Reminder]
     
     var body: some View {
         DisclosureGroup() {
-            ForEach($reminders) { $reminder in
-                ReminderCard(reminder: $reminder)
-                    .padding(.top, 15)
+            ForEach(indices, id: \.self) { index in
+                   ReminderCard(reminder: $reminders[index])
+                       .padding(.top, 15)
             }
             
         } label: {
@@ -45,7 +46,7 @@ struct DisclosureGroupComponent: View {
         
         var body: some View {
             ScrollView {
-                DisclosureGroupComponent(title: "Hoje", reminders: $mockReminders)
+                DisclosureGroupComponent(title: "Hoje", indices: [3, 2, 4] ,reminders: $mockReminders)
                     .padding()
             }
         }

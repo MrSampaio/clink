@@ -13,18 +13,18 @@ class ReminderViewModel: ObservableObject{
     
     @Published var reminders: [Reminder] = [
         Reminder(
-                title: "Enviar relatório",
-                description: "Terminar o projeto e enviar o relatorio",
-                isCompleted: false,
-                subtasks: [
-                    SubTask(title: "Falar com o chefe", isCompleted: true),
-                    SubTask(title: "Anexar planilhas", isCompleted: false)
-                ],
-                dueDate: Date(),
-                isImportant: true,
-                category: "Trabalho",
-                color: .blue
-            ),
+            title: "Enviar relatório",
+            description: "Terminar o projeto e enviar o relatorio",
+            isCompleted: false,
+            subtasks: [
+                SubTask(title: "Falar com o chefe", isCompleted: true),
+                SubTask(title: "Anexar planilhas", isCompleted: false)
+            ],
+            dueDate: Date(),
+            isImportant: true,
+            category: "Trabalho",
+            color: .blue
+        ),
         Reminder(
             title: "Comprar mantimentos",
             description: "Ir ao mercado comprar itens da semana",
@@ -48,8 +48,6 @@ class ReminderViewModel: ObservableObject{
             category: "Financeiro",
             color: .listColor2
         ),
-        
-        // MARK: - Semana Anterior
         Reminder(
             title: "Reunião de alinhamento",
             description: "Discutir os próximos passos do projeto",
@@ -85,7 +83,6 @@ class ReminderViewModel: ObservableObject{
             category: "Saúde",
             color: .listColor5
         ),
-        
         Reminder(
             title: "Estudar SwiftUI",
             description: "Finalizar o módulo de animações e transições",
@@ -140,42 +137,41 @@ class ReminderViewModel: ObservableObject{
     ]
     
     // lembretes de hoje
-    var todayReminders: [Reminder] {
-        reminders.filter {
-            Calendar.current.isDateInToday($0.dueDate)
+    var todayRemindersIndices: [Int] {
+        reminders.indices.filter {
+            Calendar.current.isDateInToday(reminders[$0].dueDate)
         }
     }
     
     // lembretes dessa semana
-    var thisWeekReminders: [Reminder] {
-        reminders.filter {
+    var thisWeekRemindersIndices: [Int] {
+        reminders.indices.filter {
             // testa se é da mesma semana
-            let isSameWeek = Calendar.current.isDate($0.dueDate, equalTo: Date(), toGranularity: .weekOfYear)
+            let isSameWeek = Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .weekOfYear)
             // remove os que já apareceram nos lembretes do dia
-            let isNotToday = !Calendar.current.isDateInToday($0.dueDate)
+            let isNotToday = !Calendar.current.isDateInToday(reminders[$0].dueDate)
             
             return isSameWeek && isNotToday
         }
     }
         
     // lembretes desse mês
-    var thisMonthReminders: [Reminder] {
-        reminders.filter {
+    var thisMonthRemindersIndices: [Int] {
+        reminders.indices.filter {
             // testa se é do mesmo mês
-            let isSameMonth = Calendar.current.isDate($0.dueDate, equalTo: Date(), toGranularity: .month)
+            let isSameMonth = Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .month)
             // remove os que já apareceram essa semana (acaba tirando os de "hoje" também)
-            let isNotThisWeek = !Calendar.current.isDate($0.dueDate, equalTo: Date(), toGranularity: .weekOfYear)
+            let isNotThisWeek = !Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .weekOfYear)
             
             return isSameMonth && isNotThisWeek
         }
     }
 
-
     // lembretes atrasados
-    var overdueReminders: [Reminder]{
-        reminders.filter { reminder in
-            let startOfToday = Calendar.current.startOfDay(for: Date())
-            return reminder.dueDate < startOfToday && !reminder.isCompleted
+    var overdueRemindersIndices: [Int] {
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        return reminders.indices.filter {
+            reminders[$0].dueDate < startOfToday && !reminders[$0].isCompleted
         }
     }
     

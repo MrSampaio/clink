@@ -21,14 +21,33 @@ struct HomeView: View {
                     Title(title: "Todos", subtitle: "x lembretes")
                         .padding(.bottom, 30)
                     
-                    ForEach($viewModel.reminders) { $reminder in
-                        
-                        if Calendar.current.isDateInToday(reminder.dueDate) {
-                            
-                        }
-                    }
+                    DisclosureGroupComponent(
+                            title: "Hoje",
+                            indices: viewModel.todayIndices,
+                            reminders: $viewModel.reminders
+                    )
+                    DisclosureGroupComponent(
+                        title: "Esta Semana",
+                        indices: viewModel.thisWeekIndices,
+                        reminders: $viewModel.reminders
+                    )
+                    DisclosureGroupComponent(
+                        title: "Este Mês",
+                        indices: viewModel.thisMonthIndices,
+                        reminders: $viewModel.reminders
+                    )
+                    DisclosureGroupComponent(
+                        title: "Atrasados",
+                        indices: viewModel.overdueIndices,
+                        reminders: $viewModel.reminders
+                    )
+//
+//                    DisclosureGroupComponent(
+//                        title: "Hoje",
+//                        reminders: $viewModel.todayReminders
+//                    )
                 
-                DisclosureGroupComponent(title: "Hoje", reminders: $viewModel.reminders)
+//                DisclosureGroupComponent(title: "Hoje", reminders: $viewModel.reminders)
                     
                 }
 
