@@ -21,17 +21,23 @@ struct DisclosureGroupComponent: View {
     
     var body: some View {
         DisclosureGroup(isExpanded: $isExpanded) {
-            ForEach(indices, id: \.self) { index in
-                   ReminderCard(reminder: $reminders[index])
-                       .padding(.top, 15)
+            
+            if !indices.isEmpty{
+                ForEach(indices, id: \.self) { index in
+                       ReminderCard(reminder: $reminders[index])
+                           .padding(.top, 15)
+                }
+            } else{
+                Text("Nenhum lembrete.")
             }
+            
             
         } label: {
             Text(title)
                 .foregroundColor(Color(.font))
                 .font(.system(size: 17, weight: .semibold))
         }
-        .background(Color.black.opacity(0.05))
+        //.background(Color(.cardBackground))
         .cornerRadius(12)
         
         Spacer()
@@ -44,7 +50,7 @@ struct DisclosureGroupComponent: View {
         
         var body: some View {
             ScrollView {
-                DisclosureGroupComponent(title: "Hoje", indices: [3, 2, 4] ,reminders: $mockReminders)
+                DisclosureGroupComponent(title: "Hoje", indices: [1, 5, 7] ,reminders: $mockReminders)
                     .padding()
             }
         }
