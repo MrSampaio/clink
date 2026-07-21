@@ -20,18 +20,16 @@ struct DisclosureGroupComponent: View {
     @Binding var reminders: [Reminder]
     
     var body: some View {
-        DisclosureGroup() {
+        DisclosureGroup(isExpanded: $isExpanded) {
             ForEach(indices, id: \.self) { index in
                    ReminderCard(reminder: $reminders[index])
                        .padding(.top, 15)
             }
             
         } label: {
-            Text("Hoje")
+            Text(title)
                 .foregroundColor(Color(.font))
                 .font(.system(size: 17, weight: .semibold))
-               
-                
         }
         .background(Color.black.opacity(0.05))
         .cornerRadius(12)

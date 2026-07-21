@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var reminderViewModel = ReminderViewModel()
     
     var body: some View {
         TabViewComponent()
+            .environmentObject(reminderViewModel)
     }
 }
 

@@ -16,39 +16,31 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView{
+                Title(title: "Todos", subtitle: "x lembretes")
+                    .padding(.bottom, 30)
+                
+                VStack(spacing: 10){
 
-                VStack{
-                    Title(title: "Todos", subtitle: "x lembretes")
-                        .padding(.bottom, 30)
-                    
                     DisclosureGroupComponent(
-                            title: "Hoje",
-                            indices: viewModel.todayIndices,
-                            reminders: $viewModel.reminders
+                        title: "Hoje",
+                        indices: viewModel.todayRemindersIndices,
+                        reminders: $viewModel.reminders
                     )
                     DisclosureGroupComponent(
                         title: "Esta Semana",
-                        indices: viewModel.thisWeekIndices,
+                        indices: viewModel.thisWeekRemindersIndices,
                         reminders: $viewModel.reminders
                     )
                     DisclosureGroupComponent(
                         title: "Este Mês",
-                        indices: viewModel.thisMonthIndices,
+                        indices: viewModel.thisMonthRemindersIndices,
                         reminders: $viewModel.reminders
                     )
                     DisclosureGroupComponent(
                         title: "Atrasados",
-                        indices: viewModel.overdueIndices,
+                        indices: viewModel.overdueRemindersIndices,
                         reminders: $viewModel.reminders
                     )
-//
-//                    DisclosureGroupComponent(
-//                        title: "Hoje",
-//                        reminders: $viewModel.todayReminders
-//                    )
-                
-//                DisclosureGroupComponent(title: "Hoje", reminders: $viewModel.reminders)
-                    
                 }
 
             }
