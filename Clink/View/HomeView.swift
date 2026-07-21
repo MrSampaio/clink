@@ -16,10 +16,12 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView{
-                Title(title: "Todos", subtitle: " \(viewModel.totalReminders) lembretes")
-                    .padding(.bottom, 30)
+                
                 
                 VStack(spacing: 10){
+                    
+                    Title(title: "Todos", subtitle: " \(viewModel.totalReminders) lembretes")
+                        .padding(.bottom, 30)
 
                     DisclosureGroupComponent(
                         title: "Hoje",
@@ -42,9 +44,8 @@ struct HomeView: View {
                         reminders: $viewModel.reminders
                     )
                 }
-
+                .padding(.horizontal, 25)
             }
-            .padding(.horizontal, 25)
             .background(Color(.background))
         }
     }
