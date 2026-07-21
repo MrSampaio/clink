@@ -175,6 +175,10 @@ class ReminderViewModel: ObservableObject{
         }
     }
     
+    var totalReminders: Int {
+        reminders.count
+    }
+    
 }
 //
 //struct RemindersListView: View {

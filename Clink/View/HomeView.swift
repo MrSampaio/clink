@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView{
-                Title(title: "Todos", subtitle: "x lembretes")
+                Title(title: "Todos", subtitle: " \(viewModel.totalReminders) lembretes")
                     .padding(.bottom, 30)
                 
                 VStack(spacing: 10){
