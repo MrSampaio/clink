@@ -1,5 +1,5 @@
 //
-//  AllListsComponent.swift
+//  ListComponent.swift
 //  Clink
 //
 //  Created by Julio Sampaio on 22/07/26.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct AllListsComponent: View {
+public struct ListComponent: View {
     
     var list: ReminderList
     @EnvironmentObject var viewModel: ReminderViewModel
@@ -38,7 +38,7 @@ public struct AllListsComponent: View {
                         .background(Color(list.color))
                         .cornerRadius(50)
                         
-                    VStack(alignment: .leading, spacing: 3){
+                    VStack(alignment: .leading, spacing: 0){
                         Text(list.title)
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(Color(.font))
@@ -53,19 +53,26 @@ public struct AllListsComponent: View {
                 Spacer()
                 
                 HStack(spacing: 15){
-                    Text("\(completionPercentage)%")
-                        .foregroundColor(.font)
-                        .opacity(0.7)
-                        
-
+                    
+                    if countReminders > 0{
+                        Text("\(completionPercentage)%")
+                            .foregroundColor(.font)
+                            .opacity(0.7)
+                    } else{
+                        Text("Nenhum lembrete.")
+                            .foregroundColor(.font)
+                            .opacity(0.7)
+                    }
+                    
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
                 }
                
             }
-            .padding(.horizontal, 30)
+            .frame(maxWidth: .infinity)
+            //.padding(.horizontal, 30)
+           
         }
-        
     }
 }
 #Preview {
@@ -73,7 +80,7 @@ public struct AllListsComponent: View {
     let reminder = ReminderList(id: 1, title: "Trabalho", color: .listColor1, icon: "briefcase.fill")
     
     NavigationStack{
-        AllListsComponent(list: reminder)
+        ListComponent(list: reminder)
             .environmentObject(ReminderViewModel())
     }
    

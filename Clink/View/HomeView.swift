@@ -46,7 +46,7 @@ struct HomeView: View {
             }
             .background(Color(.background))
             .toolbar {
-            HomeToolBar()
+                HomeToolBar()
             }
         }
     }
