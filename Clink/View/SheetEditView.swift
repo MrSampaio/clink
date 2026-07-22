@@ -12,7 +12,14 @@ struct SheetEditView: View {
     
     @State private var newTitle = ""
     @State private var notas = ""
-    @State private var Date = false
+    
+    @State private var isDateEnabled = false
+    @State private var isTimeEnabled = false
+    @State private var selectedDate = Date()
+    
+    @State private var notification = false
+    @State private var repeatReminder = false
+    @State private var LockReminder = false
 
     var body: some View {
         NavigationStack {
@@ -32,21 +39,61 @@ struct SheetEditView: View {
                         
                         Text("Subtarefa 1")
                             .foregroundColor(.primary)
-                        
                     }
-                        HStack(spacing: 16) {
-                            Text("Adicionar subtarefa")
-                        }
-                        .foregroundColor(.blue)
+                    HStack(spacing: 16) {
+                        Text("Adicionar subtarefa")
+                    }
+                    .foregroundColor(.blue)
                 }
                 
                 Section(header: Text("Alerta")) {
-                    Toggle(isOn: $Date) {
-                        HStack(spacing: 16) {
-                            Text("Data")
-                        }
+                    
+                    Toggle(isOn: $isDateEnabled) {
+                        Text("Data")
+                    }
+                    if isDateEnabled {
+                        DatePicker(
+                            "Selecionar Data",
+                            selection: $selectedDate,
+                            displayedComponents: .date
+                        )
+                        .datePickerStyle(.compact)
+                    }
+                    
+                    Toggle(isOn: $isTimeEnabled) {
+                        Text("Hora")
+                    }
+                    if isTimeEnabled {
+                        DatePicker(
+                            "Selecionar Hora",
+                            selection: $selectedDate,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(.compact)
                     }
                 }
+                
+                Section {
+                    HStack {
+                        Image(systemName: "bell")
+                        Toggle("Notificações", isOn: $notification)
+//                        if notification {
+//                            Text("Notificações ativadas")
+//                        }
+                    }
+                    HStack {
+                        Image(systemName: "repeat")
+                        Toggle("Repetir lembrete", isOn: $repeatReminder)
+                    }
+                }
+                
+                Section(header: Text("Privacidade")) {
+                    HStack {
+                        Image(systemName: "lock")
+                        Toggle("Trancar lembrete", isOn: $LockReminder)
+                    }
+                }
+                
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -58,7 +105,6 @@ struct SheetEditView: View {
             }
         }
     }
-
 }
 
 #Preview {
