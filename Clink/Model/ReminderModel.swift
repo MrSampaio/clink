@@ -24,6 +24,8 @@ struct ReminderList: Identifiable {
     let id: Int // -> depois muda aqui pra UUID, quando a página de inserir lembrete estiver pronta
     var title: String
     var color: Color
+    var icon: String
+    //var reminderCount: Int
 }
 
 struct Reminder: Identifiable {

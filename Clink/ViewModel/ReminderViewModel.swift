@@ -11,17 +11,19 @@ import Combine
 
 class ReminderViewModel: ObservableObject{
     @Published var customLists: [ReminderList] = [
-        ReminderList(id: 1, title: "Trabalho", color: .listColor1),
-        ReminderList(id: 2, title: "Estudos", color: .listColor2),
-        ReminderList(id: 3, title: "Geral", color: .listColor3),
-        ReminderList(id: 4, title: "Finanças", color: .listColor4),
+        ReminderList(id: 1, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
+        ReminderList(id: 2, title: "Estudos", color: .listColor2, icon: "graduationcap.fill"),
+        ReminderList(id: 3, title: "Geral", color: .listColor3, icon: "tray.fill"),
+        ReminderList(id: 4, title: "Finanças", color: .listColor4, icon: "creditcard.fill"),
+        ReminderList(id: 5, title: "Casa", color: .listColor8, icon: "house.fill"),
+        ReminderList(id: 6, title: "Família", color: .listColor6, icon: "heart.fill")
     ]
     @Published var reminders: [Reminder] = [
         Reminder(
             listId: 1,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
-            isCompleted: false,
+            isCompleted: true,
             subtasks: [
                 SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
@@ -176,6 +178,10 @@ class ReminderViewModel: ObservableObject{
         reminders.count
     }
     
+    var totalLists: Int {
+        customLists.count
+    }
+    
 }
     
     // ----------------------- futuras funções para criar lembretes e listas---------------
@@ -201,6 +207,9 @@ class ReminderViewModel: ObservableObject{
 //            color: color
 //        )
 //        reminders.append(newReminder)
+//
+
+//
 //    }
     
     // -------------------------------------------------------------------------
