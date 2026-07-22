@@ -10,13 +10,11 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var isExpanded = false
-    
     @EnvironmentObject var viewModel: ReminderViewModel
     
     var body: some View {
         NavigationStack {
             ScrollView{
-                
                 
                 VStack(spacing: 10){
                     
@@ -47,6 +45,9 @@ struct HomeView: View {
                 .padding(.horizontal, 25)
             }
             .background(Color(.background))
+            .toolbar {
+            HomeToolBar()
+            }
         }
     }
 }
