@@ -14,7 +14,6 @@ struct SheetEditView: View {
     @State private var notas = ""
     @State private var Date = false
 
-
     var body: some View {
         NavigationStack {
             Form {
