@@ -10,6 +10,8 @@ import SwiftUI
 struct SheetEditView: View {
     @Environment(\.dismiss) var dismiss
     
+    @State private var showingDiscardAlert = false
+    
     @State private var newTitle = ""
     @State private var notas = ""
     
@@ -19,93 +21,58 @@ struct SheetEditView: View {
     
     @State private var notification = false
     @State private var repeatReminder = false
-    @State private var LockReminder = false
-
+    @State private var lockReminder = false
+    
+    @State private var signposted = false
+    @State private var priority = "Nenhuma"
+    let prioridades = ["Nenhuma", "Trabalho", "Academia", "Comida"]
+    
+    var hasChanges: Bool {
+        !newTitle.isEmpty || !notas.isEmpty || isDateEnabled || notification
+    }
+    
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("Título", text: $newTitle)
-                    
-                    TextField("Escreva uma descrição", text: $notas, axis: .vertical)
-                        .lineLimit(3...5)
-                }
+                DetailsSectionView(newTitle: $newTitle, notas: $notas)
                 
-                Section {
-                    HStack(spacing: 16) {
-                        Image(systemName: "circle")
-                            .foregroundColor(.gray)
-                            .font(.system(size: 20))
-                        
-                        Text("Subtarefa 1")
-                            .foregroundColor(.primary)
-                    }
-                    HStack(spacing: 16) {
-                        Text("Adicionar subtarefa")
-                    }
-                    .foregroundColor(.blue)
-                }
+                SubtaskSectionView()
                 
-                Section(header: Text("Alerta")) {
-                    
-                    Toggle(isOn: $isDateEnabled) {
-                        Text("Data")
-                    }
-                    if isDateEnabled {
-                        DatePicker(
-                            "Selecionar Data",
-                            selection: $selectedDate,
-                            displayedComponents: .date
-                        )
-                        .datePickerStyle(.compact)
-                    }
-                    
-                    Toggle(isOn: $isTimeEnabled) {
-                        Text("Hora")
-                    }
-                    if isTimeEnabled {
-                        DatePicker(
-                            "Selecionar Hora",
-                            selection: $selectedDate,
-                            displayedComponents: .hourAndMinute
-                        )
-                        .datePickerStyle(.compact)
-                    }
-                }
+                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate)
                 
-                Section {
-                    HStack {
-                        Image(systemName: "bell")
-                        Toggle("Notificações", isOn: $notification)
-//                        if notification {
-//                            Text("Notificações ativadas")
-//                        }
-                    }
-                    HStack {
-                        Image(systemName: "repeat")
-                        Toggle("Repetir lembrete", isOn: $repeatReminder)
-                    }
-                }
+                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder)
                 
-                Section(header: Text("Privacidade")) {
-                    HStack {
-                        Image(systemName: "lock")
-                        Toggle("Trancar lembrete", isOn: $LockReminder)
-                    }
-                }
+                PrivacySectionView(lockReminder: $lockReminder)
                 
+                OrganizationSectionView(signposted: $signposted, priority: $priority, prioridades: prioridades)
+                
+                AttachmentSectionView()
             }
             .navigationBarTitleDisplayMode(.inline)
+            .interactiveDismissDisabled(hasChanges)
             .toolbar {
-                CreateReminderToolBar(
-                    actionCancel: { dismiss() },
-                    actionConfirm: { dismiss() },
-                    disableAdd: newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                )
+                SheetReminderToolBar(
+                    actionCancel: {
+                        if hasChanges {
+                            showingDiscardAlert = true
+                        } else {
+                            dismiss()
+                        }
+                    },
+                    actionConfirm: {
+                        dismiss()
+                    },
+                    actionDiscard: {
+                        dismiss()
+                    },
+                    
+                    disableAdd: newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, showingDiscardAlert: $showingDiscardAlert)
             }
+            
         }
     }
 }
+
 
 #Preview {
     SheetEditView()
