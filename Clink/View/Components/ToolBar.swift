@@ -16,14 +16,14 @@ struct HomeToolBar: ToolbarContent {
         }
         
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
-                    
-                    Button(action: {
-                        print("Lixo Clicado")}) { Image(systemName: "trash")}
-                    
-                    Button(action: {
-                        print("Menu Clicado") }) { Image(systemName: "ellipsis")}
+            Button(action: {
+                print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
+            
+            Button(action: {
+                print("Lixo Clicado")}) { Image(systemName: "trash")}
+            
+            Button(action: {
+                print("Menu Clicado") }) { Image(systemName: "ellipsis")}
         }
     }
 }
@@ -49,49 +49,75 @@ struct AllListsToolBar: ToolbarContent {
     }
 }
 
-struct EditReminderToolBar: ToolbarContent {
+struct SelectedListToolBar: ToolbarContent {
     @Binding var displaySheet: Bool
     
     var body: some ToolbarContent {
         
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
-                displaySheet.toggle() }) { Image(systemName: "plus")
+                displaySheet.toggle()
+            }) {
+                Image(systemName: "plus")
+                    .foregroundStyle(.white)
             }
+            .buttonStyle(.borderedProminent)
         }
     }
 }
 
-struct CreateReminderToolBar: ToolbarContent {
+struct SheetReminderToolBar: ToolbarContent {
     
     let actionCancel: () -> Void
     let actionConfirm: () -> Void
+    let actionDiscard: () -> Void
     let disableAdd: Bool
+    
+    @Binding var showingDiscardAlert: Bool
     
     var body: some ToolbarContent {
         
-        ToolbarItem(placement: .navigationBarLeading) {
+        ToolbarItem(placement: .cancellationAction) {
             Button(action: {
-                actionCancel() }) { Image(systemName: "xmark")}
+                actionCancel()
+            }) {
+                Image(systemName: "xmark")
+            }
+            .confirmationDialog(
+                "",
+                isPresented: $showingDiscardAlert,
+                titleVisibility: .hidden
+            ) {
+                Button("Descartar Lembrete", role: .destructive) {
+                    actionDiscard()
+                }
+                
+                Button("Continuar Editando", role: .cancel) { }
+                
+            } message: {
+                Text("Deseja mesmo descartar esse lembrete?")
+            }
         }
         
         ToolbarItem(placement: .principal) {
             Text("Editar")
                 .font(.system(size: 20, weight: .semibold))
-
         }
         
-        ToolbarItem(placement: .navigationBarTrailing) {
+        ToolbarItem(placement: .confirmationAction) {
             Button(action: {
                 actionConfirm()
             }) {
                 Image(systemName: "checkmark")
+                    .foregroundStyle(.white)
             }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+            .tint(.blue)
             .disabled(disableAdd)
         }
     }
 }
-
 struct WidgetToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
