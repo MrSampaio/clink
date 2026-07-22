@@ -10,6 +10,18 @@ import SwiftUI
 
 struct AllListsView: View {
     var body: some View {
-        Text("All Lists")
+        NavigationStack{
+            ScrollView{
+                VStack{
+                    Title(title: "Listas", subtitle: nil)
+                    
+                }
+            }
+        }
     }
 }
+
+#Preview {
+    AllListsView()
+}
+
