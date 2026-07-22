@@ -77,16 +77,17 @@ struct ReminderCard: View {
 #Preview {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatório",
+            listId: 1,
+            title: "Campanha Ria Green",
+            description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: false,
             subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
+                SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
-            dueDate: Date(),
+            dueDate: Date(), // Hoje
             isImportant: true,
-            category: "Trabalho",
-            color: .blue
+            color: .listColor1,
+            category: "Trabalho"
         )
         
         var body: some View {

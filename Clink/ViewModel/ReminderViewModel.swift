@@ -10,129 +10,126 @@ import SwiftUI
 import Combine
 
 class ReminderViewModel: ObservableObject{
-    
+    @Published var customLists: [ReminderList] = [
+        ReminderList(id: 1, title: "Trabalho", color: .listColor1),
+        ReminderList(id: 2, title: "Estudos", color: .listColor2),
+        ReminderList(id: 3, title: "Geral", color: .listColor3),
+        ReminderList(id: 4, title: "Finanças", color: .listColor4),
+    ]
     @Published var reminders: [Reminder] = [
         Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatorio",
+            listId: 1,
+            title: "Campanha",
+            description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: false,
             subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true),
-                SubTask(title: "Anexar planilhas", isCompleted: false)
+                SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
-            dueDate: Date(),
+            dueDate: Date(), // Hoje
             isImportant: true,
-            category: "Trabalho",
-            color: .blue
+            color: .listColor1,
+            category: "Trabalho"
         ),
         Reminder(
-            title: "Comprar mantimentos",
-            description: "Ir ao mercado comprar itens da semana",
+            listId: 1,
+            title: "Otimizar banco Oracle SQL",
+            description: "Verificar gargalos nas consultas e aplicar índices.",
+            isCompleted: false,
+            subtasks: [],
+            dueDate: Date(timeIntervalSinceNow: 86400 * 4), // Esta semana
+            isImportant: false,
+            color: .listColor1,
+            category: "Trabalho"
+        ),
+        Reminder(
+            listId: 2,
+            title: "Revisão de Modelagem de Software",
+            description: "Ler todos os tópicos centrais dos slides para a prova.",
             isCompleted: false,
             subtasks: [
-                SubTask(title: "Fazer a lista de compras", isCompleted: true),
-                SubTask(title: "Passar no açougue", isCompleted: false)
+                SubTask(title: "Revisar diagramas de classe", isCompleted: false)
             ],
-            dueDate: Date(),
-            isImportant: false,
-            category: "Casa",
-            color: .listColor1
+            dueDate: Date(timeIntervalSinceNow: -86400 * 3), // Atrasado
+            isImportant: true,
+            color: .listColor2,
+            category: "Estudos"
         ),
         Reminder(
-            title: "Pagar conta de luz",
-            description: "O boleto vence hoje, pagar pelo app do banco",
-            isCompleted: true,
+            listId: 2,
+            title: "Layout do aplicativo",
+            description: "Ajustar componentes customizados e bordas de input no SwiftUI.",
+            isCompleted: false,
             subtasks: [],
             dueDate: Date(), // Hoje
             isImportant: true,
-            category: "Financeiro",
-            color: .listColor2
+            color: .listColor2,
+            category: "Estudos"
         ),
         Reminder(
-            title: "Reunião de alinhamento",
-            description: "Discutir os próximos passos do projeto",
-            isCompleted: true,
-            subtasks: [
-                SubTask(title: "Preparar os slides", isCompleted: true)
-            ],
-            dueDate: Date(timeIntervalSinceNow: -86400 * 3),
-            isImportant: true,
-            category: "Trabalho",
-            color: .listColor3
-        ),
-        Reminder(
-            title: "Limpar a casa",
-            description: "Faxina geral de fim de semana",
-            isCompleted: true,
-            subtasks: [
-                SubTask(title: "Tirar o lixo", isCompleted: true),
-                SubTask(title: "Lavar o banheiro", isCompleted: true)
-            ],
-            dueDate: Date(timeIntervalSinceNow: -86400 * 6), // 6 dias atrás
-            isImportant: false,
-            category: "Casa",
-            color: .listColor4
-        ),
-        Reminder(
-            title: "Dentista",
-            description: "Consulta de rotina para limpeza",
-            isCompleted: true,
+            listId: 2,
+            title: "Prática de Estrutura de Dados",
+            description: "Refazer os exercícios do último semestre.",
+            isCompleted: false,
             subtasks: [],
-            dueDate: Date(timeIntervalSinceNow: -86400 * 7), // 7 dias atrás
-            isImportant: true,
-            category: "Saúde",
-            color: .listColor5
-        ),
-        Reminder(
-            title: "Estudar SwiftUI",
-            description: "Finalizar o módulo de animações e transições",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Ler a documentação", isCompleted: false),
-                SubTask(title: "Fazer o exercício prático", isCompleted: false)
-            ],
-            dueDate: Date(timeIntervalSinceNow: 86400 * 4),
-            isImportant: true,
-            category: "Estudos",
-            color: .listColor6
-        ),
-        Reminder(
-            title: "Renovar seguro do carro",
-            description: "Falar com o corretor sobre a nova apólice",
-            isCompleted: true,
-            subtasks: [
-                SubTask(title: "Enviar documentos", isCompleted: true)
-            ],
-            dueDate: Date(timeIntervalSinceNow: -86400 * 15),
-            isImportant: true,
-            category: "Carro",
-            color: .listColor7
-        ),
-        Reminder(
-            title: "Aniversário de fulano",
-            description: "Comprar presente e confirmar presença na festa",
-            isCompleted: false,
-            subtasks: [
-                SubTask(title: "Comprar presente", isCompleted: false)
-            ],
-            dueDate: Date(timeIntervalSinceNow: 86400 * 12),
+            dueDate: Date(timeIntervalSinceNow: 86400 * 20), // Este mês
             isImportant: false,
-            category: "Pessoal",
-            color: .listColor2
+            color: .listColor2,
+            category: "Estudos"
         ),
         Reminder(
-            title: "Publicar App na Store",
-            description: "Subir a versão de produção no App Store Connect",
+            listId: 3,
+            title: "Ligar para o filho",
+            description: "Saber como estão as coisas e bater um papo.",
             isCompleted: false,
-            subtasks: [
-                SubTask(title: "Gerar os certificados", isCompleted: false),
-                SubTask(title: "Tirar novas screenshots", isCompleted: false),
-                SubTask(title: "Enviar para revisão", isCompleted: false)
-            ],
-            dueDate: Date(timeIntervalSinceNow: 86400 * 20),
+            subtasks: [],
+            dueDate: Date(), // Hoje
             isImportant: true,
-            category: "Trabalho",
-            color: .listColor9
+            color: .listColor3,
+            category: "Geral"
+        ),
+        Reminder(
+            listId: 3,
+            title: "Ajustar PC",
+            description: "Testar compatibilidade da GPU e ver otimizações do AMD FSR 3.1.",
+            isCompleted: false,
+            subtasks: [],
+            dueDate: Date(timeIntervalSinceNow: 86400 * 5), // Esta semana
+            isImportant: false,
+            color: .listColor3,
+            category: "Geral"
+        ),
+        Reminder(
+            listId: 3,
+            title: "Séries",
+            description: "Verificar quando saem os novos episódios de Invincible e The Boys.",
+            isCompleted: false,
+            subtasks: [],
+            dueDate: Date(timeIntervalSinceNow: 86400 * 15), // Este mês
+            isImportant: false,
+            color: .listColor3,
+            category: "Geral"
+        ),
+        Reminder(
+            listId: 4,
+            title: "App de Simulação Financeira",
+            description: "Definir as perguntas guia da fase de investigação.",
+            isCompleted: false,
+            subtasks: [],
+            dueDate: Date(timeIntervalSinceNow: -86400 * 1), // Atrasado
+            isImportant: true,
+            color: .listColor4,
+            category: "Finanças"
+        ),
+        Reminder(
+            listId: 4,
+            title: "Pagar fatura",
+            description: "Acessar o aplicativo do banco para liberar o limite.",
+            isCompleted: false,
+            subtasks: [],
+            dueDate: Date(timeIntervalSinceNow: 86400 * 2), // Esta semana
+            isImportant: true,
+            color: .listColor4,
+            category: "Finanças"
         )
     ]
     
@@ -154,7 +151,7 @@ class ReminderViewModel: ObservableObject{
             return isSameWeek && isNotToday
         }
     }
-        
+    
     // lembretes desse mês
     var thisMonthRemindersIndices: [Int] {
         reminders.indices.filter {
@@ -166,7 +163,7 @@ class ReminderViewModel: ObservableObject{
             return isSameMonth && isNotThisWeek
         }
     }
-
+    
     // lembretes atrasados
     var overdueRemindersIndices: [Int] {
         let startOfToday = Calendar.current.startOfDay(for: Date())
@@ -180,6 +177,35 @@ class ReminderViewModel: ObservableObject{
     }
     
 }
+    
+    // ----------------------- futuras funções para criar lembretes e listas---------------
+    
+//    @Published var customLists: [ReminderList] = []
+//    @Published var reminders: [Reminder] = []
+//    func addNewList(title: String, color: Color) {
+//        let newList = ReminderList(id: Int, title: title, color: color)
+//        customLists.append(newList)
+//    }
+//    
+//    
+//        
+//    func addNewReminder(title: String, description: String, listId: Int, dueDate: Date, isImportant: Bool, color: Color) {
+//        let newReminder = Reminder(
+//            listId: listId,
+//            title: title,
+//            description: description,
+//            isCompleted: false,
+//            subtasks: [],
+//            dueDate: dueDate,
+//            isImportant: isImportant,
+//            color: color
+//        )
+//        reminders.append(newReminder)
+//    }
+    
+    // -------------------------------------------------------------------------
+    
+
 //
 //struct RemindersListView: View {
 //    var body: some View {
