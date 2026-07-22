@@ -9,7 +9,12 @@ import Foundation
 import SwiftUI
 
 struct ListView: View {
+    
+    var title: String
+    
     var body: some View {
-        Text("ListView")
+        
+       
+        Text("\(title)")
     }
 }

@@ -11,17 +11,17 @@ import Combine
 
 class ReminderViewModel: ObservableObject{
     @Published var customLists: [ReminderList] = [
-        ReminderList(id: 1, title: "Trabalho", color: .listColor1),
-        ReminderList(id: 2, title: "Estudos", color: .listColor2),
-        ReminderList(id: 3, title: "Geral", color: .listColor3),
-        ReminderList(id: 4, title: "Finanças", color: .listColor4),
+        ReminderList(id: 1, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
+        ReminderList(id: 2, title: "Estudos", color: .listColor2, icon: "graduationcap.fill"),
+        ReminderList(id: 3, title: "Geral", color: .listColor3, icon: "tray.fill"),
+        ReminderList(id: 4, title: "Finanças", color: .listColor4, icon: "creditcard.fill")
     ]
     @Published var reminders: [Reminder] = [
         Reminder(
             listId: 1,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
-            isCompleted: false,
+            isCompleted: true,
             subtasks: [
                 SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
@@ -201,6 +201,9 @@ class ReminderViewModel: ObservableObject{
 //            color: color
 //        )
 //        reminders.append(newReminder)
+//
+
+//
 //    }
     
     // -------------------------------------------------------------------------
