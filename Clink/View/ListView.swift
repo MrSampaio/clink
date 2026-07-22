@@ -9,12 +9,25 @@ import Foundation
 import SwiftUI
 
 struct ListView: View {
+    @State private var showSheetReminder = false
     
-    var title: String
-    
+
     var body: some View {
-        
-       
-        Text("\(title)")
+        NavigationStack {
+            VStack {
+            }
+            .navigationTitle("Trabalho")
+            .toolbar {
+                SelectedListToolBar(displaySheet: $showSheetReminder)
+            }
+            .sheet(isPresented: $showSheetReminder) {
+                SheetEditView()
+                    .presentationDragIndicator(.visible)
+            }
+        }
     }
+}
+
+#Preview {
+    ListView()
 }
