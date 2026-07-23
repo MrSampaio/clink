@@ -10,24 +10,44 @@ import SwiftUI
 
 struct ListView: View {
     @State private var showSheetReminder = false
-    var title: String
+    @EnvironmentObject var viewModel: ReminderViewModel
+    
+    let list: ReminderList
+    
+    var listRemindersIndices: [Int] {
+        viewModel.reminders.indices.filter {
+            viewModel.reminders[$0].listId == list.id
+        }
+    }
 
     var body: some View {
         NavigationStack {
-            VStack {
+            ScrollView{
+                VStack {
+                    //Title(title: title, subtitle: nil)
+                    
+                    ForEach(listRemindersIndices, id: \.self) { index in
+                        // Passando o Binding ($) direto da fonte de verdade
+                        ReminderCard(reminder: $viewModel.reminders[index])
+                    }
+                }
+                .toolbar {
+                    SelectedListToolBar(displaySheet: $showSheetReminder)
+                }
+                .sheet(isPresented: $showSheetReminder) {
+                    SheetEditView()
+                        .presentationDragIndicator(.visible)
+                }
             }
-            .navigationTitle("Trabalho")
-            .toolbar {
-                SelectedListToolBar(displaySheet: $showSheetReminder)
-            }
-            .sheet(isPresented: $showSheetReminder) {
-                SheetEditView()
-                    .presentationDragIndicator(.visible)
-            }
+            
         }
     }
 }
 
 #Preview {
-    ListView(title: "exemplo de titulo")
+    
+    var list = ReminderList(id: 3, title: "Trabalho", color: .listColor1, icon: "briefcase.fill")
+    
+    ListView(list: list)
+        .environmentObject(ReminderViewModel())
 }

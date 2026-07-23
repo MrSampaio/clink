@@ -29,7 +29,7 @@ public struct ListComponent: View {
     }
     
     public var body: some View {
-        NavigationLink(destination: ListView(title: list.title)){
+        NavigationLink(destination: ListView(list: list)){
             HStack{
                 HStack(spacing: 15){
                     Image(systemName: list.icon)
