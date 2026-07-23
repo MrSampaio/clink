@@ -13,23 +13,8 @@ public struct ListComponent: View {
     var list: ReminderList
     @EnvironmentObject var viewModel: ReminderViewModel
     
-    var countReminders: Int {
-        viewModel.reminders.filter { $0.listId == list.id }.count
-    }
-    
-    var countCompleted: Int {
-        viewModel.reminders.filter { $0.listId == list.id && $0.isCompleted }.count
-    }
-    
-    var completionPercentage: Int {
-        if countReminders == 0 { return 0 }
-        
-        let percentage = (Double(countCompleted) / Double(countReminders)) * 100
-        return Int(percentage)
-    }
-    
     public var body: some View {
-        NavigationLink(destination: ListView(title: list.title)){
+        NavigationLink(destination: ListView(list: list)){
             HStack{
                 HStack(spacing: 15){
                     Image(systemName: list.icon)
@@ -43,7 +28,7 @@ public struct ListComponent: View {
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(Color(.font))
                         
-                        Text("\(countReminders) tarefas")
+                        Text("\(viewModel.countReminders(for: list.id)) tarefas")
                             .font(.system(size: 15, weight: .regular))
                             .foregroundColor(Color(.font))
                             .opacity(0.5)
@@ -54,8 +39,8 @@ public struct ListComponent: View {
                 
                 HStack(spacing: 15){
                     
-                    if countReminders > 0{
-                        Text("\(completionPercentage)%")
+                    if viewModel.countReminders(for: list.id) > 0{
+                        Text("\(viewModel.completionPercentage(for: list.id))%")
                             .foregroundColor(.font)
                             .opacity(0.7)
                     } else{

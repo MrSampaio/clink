@@ -61,13 +61,14 @@ struct AllListsView: View {
                     
                     
                 }
-                .padding(.horizontal, 20)
+                .padding(16)
             }
-            .background(Color(.background))
             .toolbar{
                 //testToolbar()
                 AllListsToolBar()
             }
+            .background(Color(.background))
+            
         }
     }
 }

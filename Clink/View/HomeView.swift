@@ -42,7 +42,7 @@ struct HomeView: View {
                         reminders: $viewModel.reminders
                     )
                 }
-                .padding(.horizontal, 25)
+                .padding(.horizontal, 16)
             }
             .background(Color(.background))
             .toolbar {
