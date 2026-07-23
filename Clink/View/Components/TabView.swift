@@ -15,22 +15,22 @@ public struct TabViewComponent: View {
         TabView{
             HomeView()
                 .tabItem {
-                    Label("Todos", systemImage: "checkmark.circle")
+                    Label("Lembretes", systemImage: "checkmark.circle")
                 }
             
             AllListsView()
                 .tabItem {
-                    Label("All Lists", systemImage: "pencil.and.list.clipboard")
+                    Label("Listas", systemImage: "pencil.and.list.clipboard")
                 }
             
             CreateWidgetsView()
                 .tabItem {
-                    Label("Create", systemImage: "widget.small.badge.plus")
+                    Label("Widget", systemImage: "widget.small.badge.plus")
                 }
             
             ManageView()
                 .tabItem {
-                    Label("Manage", systemImage: "gear")
+                    Label("Gerenciar", systemImage: "gear")
                 }
         }
     }
