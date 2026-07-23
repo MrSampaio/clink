@@ -80,6 +80,7 @@ struct AllListsToolBar: ToolbarContent {
 
 struct SelectedListToolBar: ToolbarContent {
     @Binding var displaySheet: Bool
+    var color: Color? = .blue
     
     var body: some ToolbarContent {
         
@@ -88,13 +89,15 @@ struct SelectedListToolBar: ToolbarContent {
                 displaySheet.toggle()
             }) {
                 Image(systemName: "plus")
-                    .foregroundStyle(.white)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background((color ?? .blue))
+                    .clipShape(Circle())
             }
-            .buttonStyle(.borderedProminent)
-        }
+        } .sharedBackgroundVisibility(.hidden)
     }
 }
-
 struct SheetReminderToolBar: ToolbarContent {
     
     let actionCancel: () -> Void

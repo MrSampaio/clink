@@ -63,11 +63,12 @@ struct AllListsView: View {
                 }
                 .padding(16)
             }
-            .background(Color(.background))
             .toolbar{
                 //testToolbar()
                 AllListsToolBar()
             }
+            .background(Color(.background))
+            
         }
     }
 }
