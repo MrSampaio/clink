@@ -18,7 +18,7 @@ struct HomeView: View {
                 
                 VStack(spacing: 10){
                     
-                    Title(title: "Todos", subtitle: " \(viewModel.totalReminders) lembretes")
+                    Title(title: "Lembretes", subtitle: " \(viewModel.totalReminders) lembretes")
                         .padding(.bottom, 30)
 
                     DisclosureGroupComponent(
