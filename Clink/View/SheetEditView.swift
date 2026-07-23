@@ -10,10 +10,14 @@ import SwiftUI
 struct SheetEditView: View {
     @Environment(\.dismiss) var dismiss
     
+    // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
+    
+    // também faz uma função pra conseguir editar um lembrete já criado!!!!
+    
     @State private var showingDiscardAlert = false
     
     @State private var newTitle = ""
-    @State private var notas = ""
+    @State private var description = ""
     
     @State private var isDateEnabled = false
     @State private var isTimeEnabled = false
@@ -28,13 +32,13 @@ struct SheetEditView: View {
     let prioridades = ["Nenhuma", "Trabalho", "Academia", "Comida"]
     
     var hasChanges: Bool {
-        !newTitle.isEmpty || !notas.isEmpty || isDateEnabled || notification
+        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification
     }
     
     var body: some View {
         NavigationStack {
             Form {
-                DetailsSectionView(newTitle: $newTitle, notas: $notas)
+                DetailsSectionView(newTitle: $newTitle, description: $description)
                 
                 SubtaskSectionView()
                 
@@ -54,13 +58,19 @@ struct SheetEditView: View {
                 SheetReminderToolBar(
                     actionCancel: {
                         if hasChanges {
+                            print(selectedDate)
+                            print($newTitle)
                             showingDiscardAlert = true
                         } else {
+                            print("confirmou")
+                            print(selectedDate)
+                            print($newTitle)
                             dismiss()
                         }
                     },
                     actionConfirm: {
                         dismiss()
+                        
                     },
                     actionDiscard: {
                         dismiss()
@@ -72,7 +82,6 @@ struct SheetEditView: View {
         }
     }
 }
-
 
 #Preview {
     SheetEditView()

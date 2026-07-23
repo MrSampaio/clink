@@ -35,9 +35,9 @@ struct ReminderCard: View {
                     .font(.title3)
             }
             
-            if reminder.subtasks.isEmpty == false {
+            if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty{
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach($reminder.subtasks) { $subtask in
+                    ForEach(subtasksBinding) { $subtask in
                         HStack(spacing: 12) {
                             CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
                                 .frame(width: 24, height: 24)
@@ -78,9 +78,10 @@ struct ReminderCard: View {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
             listId: 1,
-            title: "Campanha Ria Green",
+            isLocked: false,
+            title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
-            isCompleted: false,
+            isCompleted: true,
             subtasks: [
                 SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],

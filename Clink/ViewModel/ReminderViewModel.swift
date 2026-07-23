@@ -21,6 +21,7 @@ class ReminderViewModel: ObservableObject{
     @Published var reminders: [Reminder] = [
         Reminder(
             listId: 1,
+            isLocked: false,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: true,
@@ -34,6 +35,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 1,
+            isLocked: true, // Deixei este como true para você testar o layout de trancado!
             title: "Otimizar banco Oracle SQL",
             description: "Verificar gargalos nas consultas e aplicar índices.",
             isCompleted: false,
@@ -45,6 +47,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 2,
+            isLocked: false,
             title: "Revisão de Modelagem de Software",
             description: "Ler todos os tópicos centrais dos slides para a prova.",
             isCompleted: false,
@@ -58,6 +61,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 2,
+            isLocked: false,
             title: "Layout do aplicativo",
             description: "Ajustar componentes customizados e bordas de input no SwiftUI.",
             isCompleted: false,
@@ -69,6 +73,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 2,
+            isLocked: false,
             title: "Prática de Estrutura de Dados",
             description: "Refazer os exercícios do último semestre.",
             isCompleted: false,
@@ -80,6 +85,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 3,
+            isLocked: false,
             title: "Ligar para o filho",
             description: "Saber como estão as coisas e bater um papo.",
             isCompleted: false,
@@ -91,6 +97,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 3,
+            isLocked: false,
             title: "Ajustar PC",
             description: "Testar compatibilidade da GPU e ver otimizações do AMD FSR 3.1.",
             isCompleted: false,
@@ -102,6 +109,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 3,
+            isLocked: false,
             title: "Séries",
             description: "Verificar quando saem os novos episódios de Invincible e The Boys.",
             isCompleted: false,
@@ -113,6 +121,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 4,
+            isLocked: false,
             title: "App de Simulação Financeira",
             description: "Definir as perguntas guia da fase de investigação.",
             isCompleted: false,
@@ -124,6 +133,7 @@ class ReminderViewModel: ObservableObject{
         ),
         Reminder(
             listId: 4,
+            isLocked: false,
             title: "Pagar fatura",
             description: "Acessar o aplicativo do banco para liberar o limite.",
             isCompleted: false,
@@ -183,11 +193,11 @@ class ReminderViewModel: ObservableObject{
     }
     
     // MARK: esses são os filtros por listas individuais
-
+    
     func remindersIndicesByList(for listId: Int) -> [Int] {
         reminders.indices.filter { reminders[$0].listId == listId }
     }
-
+    
     // cálculos para o ListComponent
     
     func countReminders(for listId: Int) -> Int {
@@ -207,63 +217,69 @@ class ReminderViewModel: ObservableObject{
         return Int(percentage)
     }
     
-}
-
-
-
-
+    // MARK: funções para criar/editar lembretes e listas
+    
+    func addNewList(id: Int, title: String, color: Color, icon: String) {
+        let newList = ReminderList(id: id, title: title, color: color, icon: icon)
+        customLists.append(newList)
+    }
+    
+    func addNewReminder(listId: Int, isLocked: Bool, title: String, description: String, isCompleted: Bool, subtasks: [SubTask]?, dueDate: Date, isImportant: Bool, color: Color, category: String) {
+        
+        let newReminder = Reminder(
+            listId: listId,
+            isLocked: isLocked,
+            title: title,
+            description: description,
+            isCompleted: isCompleted,
+            subtasks: subtasks,
+            dueDate: dueDate,
+            isImportant: isImportant,
+            color: color,
+            category: category
+        )
+        reminders.append(newReminder)
+        
+    }
+    
+    
+    
+    
     
     // ----------------------- futuras funções para criar lembretes e listas---------------
     
-//    @Published var customLists: [ReminderList] = []
-//    @Published var reminders: [Reminder] = []
-//    func addNewList(title: String, color: Color) {
-//        let newList = ReminderList(id: Int, title: title, color: color)
-//        customLists.append(newList)
-//    }
-//    
-//    
-//        
-//    func addNewReminder(title: String, description: String, listId: Int, dueDate: Date, isImportant: Bool, color: Color) {
-//        let newReminder = Reminder(
-//            listId: listId,
-//            title: title,
-//            description: description,
-//            isCompleted: false,
-//            subtasks: [],
-//            dueDate: dueDate,
-//            isImportant: isImportant,
-//            color: color
-//        )
-//        reminders.append(newReminder)
-//
-
-//
-//    }
+    //    @Published var customLists: [ReminderList] = []
+    //    @Published var reminders: [Reminder] = []
+    
+    //
+    
+    //
+    //    }
     
     // -------------------------------------------------------------------------
     
-
-//
-//struct RemindersListView: View {
-//    var body: some View {
-//        ScrollView {
-//            VStack(spacing: 16) {
-//                
-//                ForEach($reminders) { $reminder in
-//                    
-//                    if Calendar.current.isDateInToday(reminder.dueDate) {
-//                        ReminderCard(reminder: $reminder)
-//                    }
-//                    
-//                }
-//            }
-//            .padding()
-//        }
-//        .background(Color.white.edgesIgnoringSafeArea(.all))
-//    }
-//}
-//
-//#Preview {
-//    RemindersListView()
-//}
+    
+    //
+    //struct RemindersListView: View {
+    //    var body: some View {
+    //        ScrollView {
+    //            VStack(spacing: 16) {
+    //
+    //                ForEach($reminders) { $reminder in
+    //
+    //                    if Calendar.current.isDateInToday(reminder.dueDate) {
+    //                        ReminderCard(reminder: $reminder)
+    //                    }
+    //
+    //                }
+    //            }
+    //            .padding()
+    //        }
+    //        .background(Color.white.edgesIgnoringSafeArea(.all))
+    //    }
+    //}
+    //
+    //#Preview {
+    //    RemindersListView()
+    //}
+}

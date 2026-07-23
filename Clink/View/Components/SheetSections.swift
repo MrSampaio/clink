@@ -9,13 +9,13 @@ import SwiftUI
 
 struct DetailsSectionView: View {
     @Binding var newTitle: String
-    @Binding var notas: String
+    @Binding var description: String
     
     var body: some View {
         Section {
             TextField("Título", text: $newTitle)
             
-            TextField("Escreva uma descrição", text: $notas, axis: .vertical)
+            TextField("Escreva uma descrição", text: $description, axis: .vertical)
                 .lineLimit(3...5)
         }
     }
@@ -62,6 +62,9 @@ struct AlertSectionView: View {
                     )
                     .labelsHidden()
                     .datePickerStyle(.compact)
+                    
+                    // muda a linguagem do calendário depois
+                    //.typesettingLanguage(.explicit(Locale.Language))
                 }
                 .frame(maxWidth: .infinity, minHeight: 60)
                 .background(Color(.systemGray4))
