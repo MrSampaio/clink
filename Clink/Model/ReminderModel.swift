@@ -33,10 +33,10 @@ struct Reminder: Identifiable {
     var listId: Int // -> depois muda aqui pra UUID, quando a página de inserir lembrete estiver pronta
     var isLocked: Bool
     var title: String
-    var description: String
+    var description: String?
     var isCompleted: Bool = false
     var subtasks: [SubTask]?
-    var dueDate: Date
+    var dueDate: Date?
     var isImportant: Bool
     var color: Color // -> quando a página de inserir lembrete estiver pronta, pode tirar essa linha
     var category: String // -> quando a página de inserir lembrete estiver pronta, pode tirar essa linha

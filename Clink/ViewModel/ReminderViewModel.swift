@@ -148,7 +148,7 @@ class ReminderViewModel: ObservableObject{
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
         reminders.indices.filter {
-            Calendar.current.isDateInToday(reminders[$0].dueDate)
+            Calendar.current.isDateInToday(reminders[$0].dueDate!)
         }
     }
     
@@ -156,9 +156,9 @@ class ReminderViewModel: ObservableObject{
     var thisWeekRemindersIndices: [Int] {
         reminders.indices.filter {
             // testa se é da mesma semana
-            let isSameWeek = Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .weekOfYear)
+            let isSameWeek = Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .weekOfYear)
             // remove os que já apareceram nos lembretes do dia
-            let isNotToday = !Calendar.current.isDateInToday(reminders[$0].dueDate)
+            let isNotToday = !Calendar.current.isDateInToday(reminders[$0].dueDate!)
             
             return isSameWeek && isNotToday
         }
@@ -168,9 +168,9 @@ class ReminderViewModel: ObservableObject{
     var thisMonthRemindersIndices: [Int] {
         reminders.indices.filter {
             // testa se é do mesmo mês
-            let isSameMonth = Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .month)
+            let isSameMonth = Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .month)
             // remove os que já apareceram essa semana (acaba tirando os de "hoje" também)
-            let isNotThisWeek = !Calendar.current.isDate(reminders[$0].dueDate, equalTo: Date(), toGranularity: .weekOfYear)
+            let isNotThisWeek = !Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .weekOfYear)
             
             return isSameMonth && isNotThisWeek
         }
@@ -180,7 +180,7 @@ class ReminderViewModel: ObservableObject{
     var overdueRemindersIndices: [Int] {
         let startOfToday = Calendar.current.startOfDay(for: Date())
         return reminders.indices.filter {
-            reminders[$0].dueDate < startOfToday && !reminders[$0].isCompleted
+            reminders[$0].dueDate! < startOfToday && !reminders[$0].isCompleted
         }
     }
     
@@ -224,22 +224,25 @@ class ReminderViewModel: ObservableObject{
         customLists.append(newList)
     }
     
-    func addNewReminder(listId: Int, isLocked: Bool, title: String, description: String, isCompleted: Bool, subtasks: [SubTask]?, dueDate: Date, isImportant: Bool, color: Color, category: String) {
+    func addNewReminder(listId: Int, isLocked: Bool, title: String, description: String?, subtasks: [SubTask]?, dueDate: Date?, isImportant: Bool) -> Reminder?{
+        
+        guard let getListTitle = customLists.first(where: { $0.id == listId })?.title else { return nil }
+        guard let getListColor = customLists.first(where: { $0.id == listId })?.color else { return nil }
         
         let newReminder = Reminder(
             listId: listId,
             isLocked: isLocked,
             title: title,
             description: description,
-            isCompleted: isCompleted,
             subtasks: subtasks,
             dueDate: dueDate,
             isImportant: isImportant,
-            color: color,
-            category: category
+            color: getListColor,
+            category: getListTitle
         )
         reminders.append(newReminder)
         
+        return newReminder
     }
     
     

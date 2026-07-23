@@ -10,8 +10,12 @@ import SwiftUI
 struct SheetEditView: View {
     @Environment(\.dismiss) var dismiss
     
-    // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
+    @EnvironmentObject var viewModel: ReminderViewModel
     
+    let list: ReminderList?
+    
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
     // também faz uma função pra conseguir editar um lembrete já criado!!!!
     
     @State private var showingDiscardAlert = false
@@ -29,6 +33,10 @@ struct SheetEditView: View {
     
     @State private var signposted = false
     @State private var priority = "Nenhuma"
+    
+    // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
+    @State private var selectedListId: Int = 1
+    
     let prioridades = ["Nenhuma", "Trabalho", "Academia", "Comida"]
     
     var hasChanges: Bool {
@@ -48,10 +56,15 @@ struct SheetEditView: View {
                 
                 PrivacySectionView(lockReminder: $lockReminder)
                 
-                OrganizationSectionView(signposted: $signposted, priority: $priority, prioridades: prioridades)
+                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId)
                 
                 AttachmentSectionView()
             }
+            .alert("Não foi possível criar o lembrete", isPresented: $showErrorAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(errorMessage)
+                }
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
@@ -69,7 +82,36 @@ struct SheetEditView: View {
                         }
                     },
                     actionConfirm: {
-                        dismiss()
+                        
+                        // Validação do Título
+                        if newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            errorMessage = "Insira um título para o lembrete."
+                            showErrorAlert = true
+                            return
+                        }
+
+                        if isDateEnabled && selectedDate < Date() {
+                            errorMessage = "A data do lembrete não pode ser anterior ao dia de hoje."
+                            showErrorAlert = true
+                            return
+                        }
+                        
+                        if lockReminder && newTitle.count < 3 {
+                            errorMessage = "Lembretes trancados precisam ter um título com pelo menos 3 caracteres."
+                            showErrorAlert = true
+                            return
+                        }
+                        
+                        let newReminder = viewModel.addNewReminder(listId: selectedListId, isLocked: lockReminder, title: newTitle, description: description, subtasks: nil, dueDate: selectedDate, isImportant: signposted)
+                        
+                        if newReminder != nil {
+                            dismiss()
+                        } else {
+                            errorMessage = "Não foi possível encontrar a lista selecionada. Tente novamente."
+                            showErrorAlert = true
+                        }
+                        
+                        //dismiss()
                         
                     },
                     actionDiscard: {
@@ -84,5 +126,6 @@ struct SheetEditView: View {
 }
 
 #Preview {
-    SheetEditView()
+    SheetEditView(list: nil)
+        .environmentObject(ReminderViewModel())
 }

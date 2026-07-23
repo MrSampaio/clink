@@ -23,7 +23,7 @@ struct ReminderCard: View {
                         .font(.headline)
                         .foregroundColor(.font)
                     
-                    Text(reminder.description)
+                    Text(reminder.description ?? "")
                         .font(.subheadline)
                         .foregroundColor(.font)
                 }
@@ -55,8 +55,8 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
-                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.dueDate!.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.dueDate!.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
                 BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()

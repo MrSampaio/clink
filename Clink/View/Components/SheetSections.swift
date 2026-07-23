@@ -131,8 +131,9 @@ struct PrivacySectionView: View {
 
 struct OrganizationSectionView: View {
     @Binding var signposted: Bool
-    @Binding var priority: String
-    let prioridades: [String]
+    @Binding var selectedListId: Int
+    
+    @EnvironmentObject var viewModel: ReminderViewModel
     
     var body: some View {
         Section(header: Text("Classificar")) {
@@ -141,9 +142,12 @@ struct OrganizationSectionView: View {
             }
             .foregroundColor(.primary)
             
-            Picker("Mover para lista", selection: $priority) {
-                ForEach(prioridades, id: \.self) { prio in
-                    Text(prio).tag(prio)
+            Picker("Mover para lista", selection: $selectedListId) {
+                
+                ForEach(viewModel.customLists) { list in
+                    
+                    Text(list.title).tag(list.id)
+                    
                 }
             }
         }
