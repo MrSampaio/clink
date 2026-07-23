@@ -52,7 +52,7 @@ struct ListView: View {
                 }
                 
                 .sheet(isPresented: $showSheetReminder) {
-                    SheetEditView()
+                    SheetEditView(list: list)
                         .presentationDragIndicator(.visible)
                 }
             }

@@ -45,12 +45,15 @@ struct AlertSectionView: View {
     @Binding var isTimeEnabled: Bool
     @Binding var selectedDate: Date
     
+    var color: Color? = .green
+    
     var body: some View {
         
         Section(header: Text("Alerta")) {
             Toggle(isOn: $isDateEnabled) {
                 Text("Data")
-            }
+            } .tint(color)
+            
             if isDateEnabled {
                 HStack {
                     Image(systemName: "calendar")
@@ -75,7 +78,7 @@ struct AlertSectionView: View {
         Section(footer: Text("Um horário precisa de uma data definida.")) {
             Toggle(isOn: $isTimeEnabled) {
                 Text("Hora")
-            }
+            }.tint(color)
             if isTimeEnabled {
                 HStack {
                     Image(systemName: "clock")

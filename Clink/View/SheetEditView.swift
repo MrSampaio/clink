@@ -37,8 +37,6 @@ struct SheetEditView: View {
     // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
     @State private var selectedListId: Int = 1
     
-    let prioridades = ["Nenhuma", "Trabalho", "Academia", "Comida"]
-    
     var hasChanges: Bool {
         !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification
     }
@@ -50,7 +48,7 @@ struct SheetEditView: View {
                 
                 SubtaskSectionView()
                 
-                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate)
+                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: list?.color)
                 
                 NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder)
                 
@@ -91,7 +89,7 @@ struct SheetEditView: View {
                         }
 
                         if isDateEnabled && selectedDate < Date() {
-                            errorMessage = "A data do lembrete não pode ser anterior ao dia de hoje."
+                            errorMessage = "O lembrete não pode estar em uma data ou hora passadas."
                             showErrorAlert = true
                             return
                         }
@@ -118,7 +116,13 @@ struct SheetEditView: View {
                         dismiss()
                     },
                     
-                    disableAdd: newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, showingDiscardAlert: $showingDiscardAlert)
+                    disableAdd: false,
+                                        
+                    color: list?.color,
+                    
+                    showingDiscardAlert: $showingDiscardAlert
+                )
+                
             }
             
         }
