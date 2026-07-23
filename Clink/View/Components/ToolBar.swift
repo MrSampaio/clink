@@ -31,21 +31,50 @@ struct HomeToolBar: ToolbarContent {
 struct AllListsToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                print("Pequisar Clicado") }) { Image(systemName: "magnifyingglass")}
-        }
-        
-        ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: {
-                print("Organizar Clicado") }) { Image(systemName: "arrow.2.circlepath.circle")}
+        ToolbarItem(placement: .topBarTrailing) {
             
-            Button(action: {
-                print("Compartilhar Clicado") }) { Image(systemName: "square.and.arrow.up")}
-            
-            Button(action: {
-                print("Menu Clicado") }) { Image(systemName: "elliipsis")}
-        }
+            HStack(spacing: 12) {
+                Button(action: {
+                    print("Pesquisar Clicado")
+                }) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.font)
+                        .frame(width: 50, height: 50)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.border.opacity(0.3), lineWidth: 1)
+                        )
+                        .shadow(color: .border.opacity(0.15), radius: 5, x: 0, y: 4)
+                }
+                
+                HStack(spacing: 20) {
+                    Button(action: { print("Organizar Clicado") }) {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                    
+                    Button(action: { print("Lixo Clicado") }) {
+                        Image(systemName: "trash")
+                    }
+                    
+                    Button(action: { print("Menu Clicado") }) {
+                        Image(systemName: "ellipsis")
+                    }
+                }
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.font)
+                .padding(.horizontal, 20)
+                .frame(height: 50)
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule().stroke(Color.border.opacity(0.3), lineWidth: 1)
+                )
+                .shadow(color: .font.opacity(0.15), radius: 5, x: 0, y: 4)
+                
+            }
+        } .sharedBackgroundVisibility(.hidden)
     }
 }
 
@@ -134,6 +163,15 @@ struct ManageToolBar: ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
                 print ("Menu Clicada") }) { Image(systemName: "elliipsis")}
+        }
+    }
+}
+
+struct testToolbar: ToolbarContent{
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button(action: {
+                print ("Menu Clicada") }) { Image(systemName: "magnifyingglass")}.background(.red)
         }
     }
 }

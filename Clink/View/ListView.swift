@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ListView: View {
     @State private var showSheetReminder = false
-    
+    var title: String
 
     var body: some View {
         NavigationStack {
@@ -29,5 +29,5 @@ struct ListView: View {
 }
 
 #Preview {
-    ListView()
+    ListView(title: "exemplo de titulo")
 }
