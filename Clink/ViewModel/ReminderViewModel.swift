@@ -182,7 +182,36 @@ class ReminderViewModel: ObservableObject{
         customLists.count
     }
     
+    // MARK: esses são os filtros por listas individuais
+
+    func remindersIndicesByList(for listId: Int) -> [Int] {
+        reminders.indices.filter { reminders[$0].listId == listId }
+    }
+
+    // cálculos para o ListComponent
+    
+    func countReminders(for listId: Int) -> Int {
+        reminders.filter { $0.listId == listId }.count
+    }
+    
+    func countCompletedReminders(for listId: Int) -> Int {
+        reminders.filter { $0.listId == listId && $0.isCompleted }.count
+    }
+    
+    func completionPercentage(for listId: Int) -> Int {
+        let total = countReminders(for: listId)
+        if total == 0 { return 0 }
+        
+        let completed = countCompletedReminders(for: listId)
+        let percentage = (Double(completed) / Double(total)) * 100
+        return Int(percentage)
+    }
+    
 }
+
+
+
+
     
     // ----------------------- futuras funções para criar lembretes e listas---------------
     

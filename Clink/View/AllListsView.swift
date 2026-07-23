@@ -61,7 +61,7 @@ struct AllListsView: View {
                     
                     
                 }
-                .padding(.horizontal, 20)
+                .padding(16)
             }
             .background(Color(.background))
             .toolbar{

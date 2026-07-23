@@ -13,32 +13,32 @@ struct ListView: View {
     @EnvironmentObject var viewModel: ReminderViewModel
     
     let list: ReminderList
-    
-    var listRemindersIndices: [Int] {
-        viewModel.reminders.indices.filter {
-            viewModel.reminders[$0].listId == list.id
-        }
-    }
 
     var body: some View {
         NavigationStack {
             ScrollView{
                 VStack {
-                    //Title(title: title, subtitle: nil)
+                    Title(title: list.title, subtitle: nil)
                     
-                    ForEach(listRemindersIndices, id: \.self) { index in
-                        // Passando o Binding ($) direto da fonte de verdade
+                    ForEach(viewModel.remindersIndicesByList(for: list.id), id: \.self) { index in
+
                         ReminderCard(reminder: $viewModel.reminders[index])
                     }
                 }
+                
+                .padding(16)
+                
                 .toolbar {
                     SelectedListToolBar(displaySheet: $showSheetReminder)
                 }
+                
                 .sheet(isPresented: $showSheetReminder) {
                     SheetEditView()
                         .presentationDragIndicator(.visible)
                 }
+                
             }
+            .background(Color(.background))
             
         }
     }
@@ -46,7 +46,7 @@ struct ListView: View {
 
 #Preview {
     
-    var list = ReminderList(id: 3, title: "Trabalho", color: .listColor1, icon: "briefcase.fill")
+    var list = ReminderList(id: 2, title: "Trabalho", color: .listColor1, icon: "briefcase.fill")
     
     ListView(list: list)
         .environmentObject(ReminderViewModel())
