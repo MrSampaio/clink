@@ -12,7 +12,9 @@ struct SheetEditView: View {
     
     @EnvironmentObject var viewModel: ReminderViewModel
     
-    let list: ReminderList?
+    var list: ReminderList?
+    
+    @State private var selectedListId: Int
     
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
@@ -36,8 +38,14 @@ struct SheetEditView: View {
     
     @State private var subtasks: [SubTask] = []
     
+    // lógica que faz com que a lista da qual o usuário veio já venha selecionada por padrão
+    init(list: ReminderList? = nil) {
+            self.list = list
+            _selectedListId = State(initialValue: list?.id ?? 1)
+    }
+    
     // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
-    @State private var selectedListId: Int = 1
+//    @State private var selectedListId: Int = 1
     
     var hasChanges: Bool {
         !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty

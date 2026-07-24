@@ -11,9 +11,9 @@ import Combine
 
 class ReminderViewModel: ObservableObject{
     @Published var customLists: [ReminderList] = [
-        ReminderList(id: 1, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
+        ReminderList(id: 1, title: "Geral", color: .listColor3, icon: "tray.fill"),
+        ReminderList(id: 3, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
         ReminderList(id: 2, title: "Estudos", color: .listColor2, icon: "graduationcap.fill"),
-        ReminderList(id: 3, title: "Geral", color: .listColor3, icon: "tray.fill"),
         ReminderList(id: 4, title: "Finanças", color: .listColor4, icon: "creditcard.fill"),
         ReminderList(id: 5, title: "Casa", color: .listColor8, icon: "house.fill"),
         ReminderList(id: 6, title: "Família", color: .listColor6, icon: "heart.fill")
@@ -147,9 +147,15 @@ class ReminderViewModel: ObservableObject{
     
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
-        reminders.indices.filter {
+        let indices = reminders.indices.filter {
             Calendar.current.isDateInToday(reminders[$0].dueDate!)
         }
+        
+        
+        // ORDENAÇÃO PELA DATA DE VENCIMENTO
+        // return indices.sorted { reminders[$0].dueDate < reminders[$1].dueDate }
+        
+        return indices.reversed()
     }
     
     // lembretes dessa semana
@@ -244,10 +250,6 @@ class ReminderViewModel: ObservableObject{
         
         return newReminder
     }
-    
-    
-    
-    
     
     // ----------------------- futuras funções para criar lembretes e listas---------------
     
