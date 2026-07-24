@@ -34,11 +34,13 @@ struct SheetEditView: View {
     @State private var signposted = false
     @State private var priority = "Nenhuma"
     
+    @State private var subtasks: [SubTask] = []
+    
     // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
     @State private var selectedListId: Int = 1
     
     var hasChanges: Bool {
-        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification
+        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
     }
     
     var body: some View {
@@ -46,7 +48,7 @@ struct SheetEditView: View {
             Form {
                 DetailsSectionView(newTitle: $newTitle, description: $description)
                 
-                SubtaskSectionView()
+                SubtaskSectionView(subtasks: $subtasks, color: list?.color ?? .blue)
                 
                 AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: list?.color)
                 
@@ -100,7 +102,15 @@ struct SheetEditView: View {
                             return
                         }
                         
-                        let newReminder = viewModel.addNewReminder(listId: selectedListId, isLocked: lockReminder, title: newTitle, description: description, subtasks: nil, dueDate: selectedDate, isImportant: signposted)
+                        for subtask in subtasks {
+                            if subtask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                errorMessage = "Todas as subtarefas devem ter um título."
+                                showErrorAlert = true
+                                return
+                            }
+                        }
+                        
+                        let newReminder = viewModel.addNewReminder(listId: selectedListId, isLocked: lockReminder, title: newTitle, description: description, subtasks: subtasks, dueDate: selectedDate, isImportant: signposted)
                         
                         if newReminder != nil {
                             dismiss()

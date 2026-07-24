@@ -22,24 +22,52 @@ struct DetailsSectionView: View {
 }
 
 struct SubtaskSectionView: View {
+    @Binding var subtasks: [SubTask]
+    var color: Color = .blue
+    
     var body: some View {
         Section {
-            HStack(spacing: 16) {
-                Image(systemName: "circle")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 20))
-                
-                Text("Subtarefa 1")
-                    .foregroundColor(.primary)
+            ForEach($subtasks) { $subtask in
+                HStack(spacing: 16) {
+                    CheckBox(isMarked: $subtask.isCompleted, color: color)
+                        .frame(width: 20, height: 20)
+
+                    TextField("Nova subtarefa", text: $subtask.title)
+                        .foregroundColor(.primary)
+                    
+                    Button(action: {
+                        withAnimation{
+                            if (!subtasks.isEmpty) {
+                                subtasks.removeAll(where: { $0.id == subtask.id })
+                            }
+                        }
+                        
+                    }) {
+                        HStack() {
+                            Image(systemName: "minus.circle.fill")
+                        }
+                        .foregroundColor(.red)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             }
-            HStack(spacing: 16) {
-                Text("Adicionar subtarefa")
+            
+            Button(action: {
+                withAnimation {
+                    subtasks.append(SubTask(title: ""))
+                }
+            }) {
+                HStack(spacing: 16) {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Adicionar subtarefa")
+                }
+                .foregroundColor(color)
             }
-            .foregroundColor(.blue)
+            
+            
         }
     }
 }
-
 struct AlertSectionView: View {
     @Binding var isDateEnabled: Bool
     @Binding var isTimeEnabled: Bool
