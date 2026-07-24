@@ -105,6 +105,8 @@ struct SheetReminderToolBar: ToolbarContent {
     let actionDiscard: () -> Void
     let disableAdd: Bool
     
+    var color: Color? = .blue
+    
     @Binding var showingDiscardAlert: Bool
     
     var body: some ToolbarContent {
@@ -145,7 +147,7 @@ struct SheetReminderToolBar: ToolbarContent {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.circle)
-            .tint(.blue)
+            .tint(color)
             .disabled(disableAdd)
         }
     }

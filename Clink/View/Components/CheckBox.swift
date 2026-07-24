@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CheckBox: View {
     @Binding var isMarked: Bool
-    var color: Color
+    var color: Color = .blue
     
     var body: some View {
         Button{

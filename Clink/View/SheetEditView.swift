@@ -10,10 +10,20 @@ import SwiftUI
 struct SheetEditView: View {
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var viewModel: ReminderViewModel
+    
+    var list: ReminderList?
+    
+    @State private var selectedListId: Int
+    
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
+    // também faz uma função pra conseguir editar um lembrete já criado!!!!
+    
     @State private var showingDiscardAlert = false
     
     @State private var newTitle = ""
-    @State private var notas = ""
+    @State private var description = ""
     
     @State private var isDateEnabled = false
     @State private var isTimeEnabled = false
@@ -25,55 +35,121 @@ struct SheetEditView: View {
     
     @State private var signposted = false
     @State private var priority = "Nenhuma"
-    let prioridades = ["Nenhuma", "Trabalho", "Academia", "Comida"]
+    
+    @State private var subtasks: [SubTask] = []
+    
+    //@State private var reminderId = (viewModel.totalReminders) + 1
+    
+    // lógica que faz com que a lista da qual o usuário veio já venha selecionada por padrão
+    init(list: ReminderList? = nil) {
+            self.list = list
+            _selectedListId = State(initialValue: list?.id ?? 1)
+    }
+    
+    // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
+//    @State private var selectedListId: Int = 1
     
     var hasChanges: Bool {
-        !newTitle.isEmpty || !notas.isEmpty || isDateEnabled || notification
+        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
     }
     
     var body: some View {
         NavigationStack {
             Form {
-                DetailsSectionView(newTitle: $newTitle, notas: $notas)
+                DetailsSectionView(newTitle: $newTitle, description: $description)
                 
-                SubtaskSectionView()
+                SubtaskSectionView(subtasks: $subtasks, color: list?.color ?? .blue)
                 
-                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate)
+                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: list?.color)
                 
-                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder)
+                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder, color: list?.color)
                 
-                PrivacySectionView(lockReminder: $lockReminder)
+                PrivacySectionView(lockReminder: $lockReminder, color: list?.color)
                 
-                OrganizationSectionView(signposted: $signposted, priority: $priority, prioridades: prioridades)
+                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId, color: list?.color)
                 
                 AttachmentSectionView()
             }
+            .alert("Não foi possível criar o lembrete", isPresented: $showErrorAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(errorMessage)
+                }
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
                 SheetReminderToolBar(
                     actionCancel: {
                         if hasChanges {
+                            print(selectedDate)
+                            print($newTitle)
                             showingDiscardAlert = true
                         } else {
+                            print("confirmou")
+                            print(selectedDate)
+                            print($newTitle)
                             dismiss()
                         }
                     },
                     actionConfirm: {
-                        dismiss()
+                        
+                        // Validação do Título
+                        if newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            errorMessage = "Insira um título para o lembrete."
+                            showErrorAlert = true
+                            return
+                        }
+
+                        if isDateEnabled && selectedDate < Date() {
+                            errorMessage = "O lembrete não pode estar em uma data ou hora passadas."
+                            showErrorAlert = true
+                            return
+                        }
+                        
+                        if lockReminder && newTitle.count < 3 {
+                            errorMessage = "Lembretes trancados precisam ter um título com pelo menos 3 caracteres."
+                            showErrorAlert = true
+                            return
+                        }
+                        
+                        for subtask in subtasks {
+                            if subtask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                errorMessage = "Todas as subtarefas devem ter um título."
+                                showErrorAlert = true
+                                return
+                            }
+                        }
+                        
+                        let newReminder = viewModel.addNewReminder(listId: selectedListId, isLocked: lockReminder, title: newTitle, description: description, subtasks: subtasks, dueDate: selectedDate, isImportant: signposted)
+                        
+                        if newReminder != nil {
+                            dismiss()
+                        } else {
+                            errorMessage = "Não foi possível encontrar a lista selecionada. Tente novamente."
+                            showErrorAlert = true
+                        }
+                        
+                        //dismiss()
+                        
                     },
                     actionDiscard: {
                         dismiss()
                     },
                     
-                    disableAdd: newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, showingDiscardAlert: $showingDiscardAlert)
+                    disableAdd: false,
+                                        
+                    color: list?.color,
+                    
+                    showingDiscardAlert: $showingDiscardAlert
+                )
+                
             }
             
         }
     }
 }
 
-
 #Preview {
-    SheetEditView()
+    SheetEditView(list: nil)
+        .environmentObject(ReminderViewModel())
 }

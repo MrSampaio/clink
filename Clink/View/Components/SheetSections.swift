@@ -9,48 +9,81 @@ import SwiftUI
 
 struct DetailsSectionView: View {
     @Binding var newTitle: String
-    @Binding var notas: String
+    @Binding var description: String
     
     var body: some View {
         Section {
             TextField("Título", text: $newTitle)
             
-            TextField("Escreva uma descrição", text: $notas, axis: .vertical)
+            TextField("Escreva uma descrição", text: $description, axis: .vertical)
                 .lineLimit(3...5)
         }
     }
 }
 
 struct SubtaskSectionView: View {
+    @Binding var subtasks: [SubTask]
+    //@Binding var reminderId: Int
+    var color: Color = .blue
+    
     var body: some View {
         Section {
-            HStack(spacing: 16) {
-                Image(systemName: "circle")
-                    .foregroundColor(.gray)
-                    .font(.system(size: 20))
+            ForEach($subtasks) { $subtask in
+                HStack(spacing: 16) {
+                    CheckBox(isMarked: $subtask.isCompleted, color: color)
+                        .frame(width: 20, height: 20)
+
+                    TextField("Nova subtarefa", text: $subtask.title)
+                        .foregroundColor(.primary)
+                    
+                    Button(action: {
+                        withAnimation{
+                            if (!subtasks.isEmpty) {
+                                subtasks.removeAll(where: { $0.id == subtask.id })
+                            }
+                        }
+                        
+                    }) {
+                        HStack() {
+                            Image(systemName: "minus.circle.fill")
+                        }
+                        .foregroundColor(.red)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
                 
-                Text("Subtarefa 1")
-                    .foregroundColor(.primary)
             }
-            HStack(spacing: 16) {
-                Text("Adicionar subtarefa")
+            
+            Button(action: {
+                withAnimation {
+                    subtasks.append(SubTask(title: ""))
+                }
+            }) {
+                HStack(spacing: 16) {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Adicionar subtarefa")
+                }
+                .foregroundColor(color)
             }
-            .foregroundColor(.blue)
+            
+            
         }
     }
 }
-
 struct AlertSectionView: View {
     @Binding var isDateEnabled: Bool
     @Binding var isTimeEnabled: Bool
     @Binding var selectedDate: Date
+    
+    var color: Color? = .green
     
     var body: some View {
         
         Section(header: Text("Alerta")) {
             Toggle(isOn: $isDateEnabled) {
                 Text("Data")
-            }
+            } .tint(color)
+            
             if isDateEnabled {
                 HStack {
                     Image(systemName: "calendar")
@@ -62,6 +95,9 @@ struct AlertSectionView: View {
                     )
                     .labelsHidden()
                     .datePickerStyle(.compact)
+                    
+                    // muda a linguagem do calendário depois
+                    //.typesettingLanguage(.explicit(Locale.Language))
                 }
                 .frame(maxWidth: .infinity, minHeight: 60)
                 .background(Color(.systemGray4))
@@ -72,7 +108,7 @@ struct AlertSectionView: View {
         Section(footer: Text("Um horário precisa de uma data definida.")) {
             Toggle(isOn: $isTimeEnabled) {
                 Text("Hora")
-            }
+            }.tint(color)
             if isTimeEnabled {
                 HStack {
                     Image(systemName: "clock")
@@ -99,15 +135,19 @@ struct NotificationSectionView: View {
     @Binding var notification: Bool
     @Binding var repeatReminder: Bool
     
+    var color: Color? = .green
+    
     var body: some View {
         Section {
             HStack {
                 Image(systemName: "bell")
                 Toggle("Notificações", isOn: $notification)
+                    .tint(color)
             }
             HStack {
                 Image(systemName: "repeat")
                 Toggle("Repetir lembrete", isOn: $repeatReminder)
+                    .tint(color)
             }
         }
     }
@@ -115,12 +155,14 @@ struct NotificationSectionView: View {
 
 struct PrivacySectionView: View {
     @Binding var lockReminder: Bool
+    var color: Color? = .green
     
     var body: some View {
         Section(header: Text("Privacidade"), footer: Text("Ao trancar um lembrete, você só poderá acessá-lo com o FaceID.")) {
             HStack {
                 Image(systemName: "lock")
                 Toggle("Trancar lembrete", isOn: $lockReminder)
+                    .tint(color)
             }
         }
     }
@@ -128,19 +170,25 @@ struct PrivacySectionView: View {
 
 struct OrganizationSectionView: View {
     @Binding var signposted: Bool
-    @Binding var priority: String
-    let prioridades: [String]
+    @Binding var selectedListId: Int
+    var color: Color? = .green
+    
+    @EnvironmentObject var viewModel: ReminderViewModel
     
     var body: some View {
         Section(header: Text("Classificar")) {
             Toggle(isOn: $signposted) {
                 Label("Sinalizar", systemImage: "flag")
             }
+            .tint(color)
             .foregroundColor(.primary)
             
-            Picker("Mover para lista", selection: $priority) {
-                ForEach(prioridades, id: \.self) { prio in
-                    Text(prio).tag(prio)
+            Picker("Mover para lista", selection: $selectedListId) {
+                
+                ForEach(viewModel.customLists) { list in
+                    
+                    Text(list.title).tag(list.id)
+                    
                 }
             }
         }

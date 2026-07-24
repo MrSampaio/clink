@@ -11,6 +11,8 @@ import SwiftUI
 struct ReminderCard: View {
     @Binding var reminder: Reminder
     
+    @State private var showEditSheet = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
@@ -23,21 +25,34 @@ struct ReminderCard: View {
                         .font(.headline)
                         .foregroundColor(.font)
                     
-                    Text(reminder.description)
+                    Text(reminder.description ?? "")
                         .font(.subheadline)
                         .foregroundColor(.font)
                 }
                 
                 Spacer()
                 
-                Image(systemName: "info.circle")
-                    .foregroundColor(Color(reminder.color))
-                    .font(.title3)
+                Button(action: {
+                    showEditSheet = true
+                    
+                }) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(reminder.color)
+                        .font(.system(size: 22, weight: .bold))
+                }
+                
+                .buttonStyle(PlainButtonStyle())
+                
+                
+            }
+            .sheet(isPresented: $showEditSheet) {
+                SheetEditView()
+                    .presentationDragIndicator(.visible)
             }
             
-            if reminder.subtasks.isEmpty == false {
+            if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty{
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach($reminder.subtasks) { $subtask in
+                    ForEach(subtasksBinding) { $subtask in
                         HStack(spacing: 12) {
                             CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
                                 .frame(width: 24, height: 24)
@@ -55,8 +70,8 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
-                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.dueDate!.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
+                BadgeView(text: reminder.dueDate!.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
                 BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()
@@ -78,9 +93,10 @@ struct ReminderCard: View {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
             listId: 1,
-            title: "Campanha Ria Green",
+            isLocked: false,
+            title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
-            isCompleted: false,
+            isCompleted: true,
             subtasks: [
                 SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
