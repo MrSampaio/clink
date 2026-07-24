@@ -28,7 +28,7 @@ struct ReminderList: Identifiable {
     //var reminderCount: Int
 }
 
-struct Reminder: Identifiable {
+struct Reminder: Identifiable{
     let id = UUID()
     var listId: Int // -> depois muda aqui pra UUID, quando a página de inserir lembrete estiver pronta
     var isLocked: Bool

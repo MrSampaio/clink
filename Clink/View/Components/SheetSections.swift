@@ -23,6 +23,7 @@ struct DetailsSectionView: View {
 
 struct SubtaskSectionView: View {
     @Binding var subtasks: [SubTask]
+    //@Binding var reminderId: Int
     var color: Color = .blue
     
     var body: some View {
@@ -50,6 +51,7 @@ struct SubtaskSectionView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
+                
             }
             
             Button(action: {
@@ -133,15 +135,19 @@ struct NotificationSectionView: View {
     @Binding var notification: Bool
     @Binding var repeatReminder: Bool
     
+    var color: Color? = .green
+    
     var body: some View {
         Section {
             HStack {
                 Image(systemName: "bell")
                 Toggle("Notificações", isOn: $notification)
+                    .tint(color)
             }
             HStack {
                 Image(systemName: "repeat")
                 Toggle("Repetir lembrete", isOn: $repeatReminder)
+                    .tint(color)
             }
         }
     }
@@ -149,12 +155,14 @@ struct NotificationSectionView: View {
 
 struct PrivacySectionView: View {
     @Binding var lockReminder: Bool
+    var color: Color? = .green
     
     var body: some View {
         Section(header: Text("Privacidade"), footer: Text("Ao trancar um lembrete, você só poderá acessá-lo com o FaceID.")) {
             HStack {
                 Image(systemName: "lock")
                 Toggle("Trancar lembrete", isOn: $lockReminder)
+                    .tint(color)
             }
         }
     }
@@ -163,6 +171,7 @@ struct PrivacySectionView: View {
 struct OrganizationSectionView: View {
     @Binding var signposted: Bool
     @Binding var selectedListId: Int
+    var color: Color? = .green
     
     @EnvironmentObject var viewModel: ReminderViewModel
     
@@ -171,6 +180,7 @@ struct OrganizationSectionView: View {
             Toggle(isOn: $signposted) {
                 Label("Sinalizar", systemImage: "flag")
             }
+            .tint(color)
             .foregroundColor(.primary)
             
             Picker("Mover para lista", selection: $selectedListId) {

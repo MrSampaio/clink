@@ -151,7 +151,6 @@ class ReminderViewModel: ObservableObject{
             Calendar.current.isDateInToday(reminders[$0].dueDate!)
         }
         
-        
         // ORDENAÇÃO PELA DATA DE VENCIMENTO
         // return indices.sorted { reminders[$0].dueDate < reminders[$1].dueDate }
         
@@ -165,6 +164,7 @@ class ReminderViewModel: ObservableObject{
             let isSameWeek = Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .weekOfYear)
             // remove os que já apareceram nos lembretes do dia
             let isNotToday = !Calendar.current.isDateInToday(reminders[$0].dueDate!)
+            
             
             return isSameWeek && isNotToday
         }
@@ -201,7 +201,10 @@ class ReminderViewModel: ObservableObject{
     // MARK: esses são os filtros por listas individuais
     
     func remindersIndicesByList(for listId: Int) -> [Int] {
-        reminders.indices.filter { reminders[$0].listId == listId }
+        let indices = reminders.indices.filter { reminders[$0].listId == listId }
+        
+        return indices.reversed()
+        
     }
     
     // cálculos para o ListComponent
@@ -239,15 +242,16 @@ class ReminderViewModel: ObservableObject{
             listId: listId,
             isLocked: isLocked,
             title: title,
-            description: description,
-            subtasks: subtasks,
+            description: description!.isEmpty ? nil : description,
+            isCompleted: false,
+            subtasks: subtasks?.isEmpty == true ? nil : subtasks,
             dueDate: dueDate,
             isImportant: isImportant,
             color: getListColor,
             category: getListTitle
         )
-        reminders.append(newReminder)
         
+        reminders.append(newReminder)
         return newReminder
     }
     

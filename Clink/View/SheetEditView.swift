@@ -38,6 +38,8 @@ struct SheetEditView: View {
     
     @State private var subtasks: [SubTask] = []
     
+    //@State private var reminderId = (viewModel.totalReminders) + 1
+    
     // lógica que faz com que a lista da qual o usuário veio já venha selecionada por padrão
     init(list: ReminderList? = nil) {
             self.list = list
@@ -60,11 +62,11 @@ struct SheetEditView: View {
                 
                 AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: list?.color)
                 
-                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder)
+                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder, color: list?.color)
                 
-                PrivacySectionView(lockReminder: $lockReminder)
+                PrivacySectionView(lockReminder: $lockReminder, color: list?.color)
                 
-                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId)
+                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId, color: list?.color)
                 
                 AttachmentSectionView()
             }

@@ -11,6 +11,8 @@ import SwiftUI
 struct ReminderCard: View {
     @Binding var reminder: Reminder
     
+    @State private var showEditSheet = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
@@ -30,9 +32,22 @@ struct ReminderCard: View {
                 
                 Spacer()
                 
-                Image(systemName: "info.circle")
-                    .foregroundColor(Color(reminder.color))
-                    .font(.title3)
+                Button(action: {
+                    showEditSheet = true
+                    
+                }) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(reminder.color)
+                        .font(.system(size: 22, weight: .bold))
+                }
+                
+                .buttonStyle(PlainButtonStyle())
+                
+                
+            }
+            .sheet(isPresented: $showEditSheet) {
+                SheetEditView()
+                    .presentationDragIndicator(.visible)
             }
             
             if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty{
