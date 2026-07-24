@@ -5,7 +5,6 @@
 //  Created by Julio Sampaio on 19/07/26.
 //
 
-import Foundation
 import SwiftUI
 
 struct CreateWidgetsView: View {
@@ -13,7 +12,9 @@ struct CreateWidgetsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 18) {
+            VStack {
+                Title(title: "Widgets", subtitle: "Crie widgets personalizados como lembretes!")
+                    .padding(16)
                 
                 Spacer()
                 
@@ -21,30 +22,22 @@ struct CreateWidgetsView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         
                         HStack(alignment: .center, spacing: 40) {
-                            WidgetCard(image: "⛈️", mensagem: "Tirar a roupa", colorBackground: Color.indigo)
-                                .id(0)
-                                .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
-                                        .opacity(phase.isIdentity ? 1.0 : 0.5)
-                                }
                             
-                            AddWidgetCard()
-                                .id(1)
-                                .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
-                                        .opacity(phase.isIdentity ? 1.0 : 0.5)
-                                }
-                            
-                            
-                            WidgetCard(image: "⚽️", mensagem: "Futebol hoje", colorBackground: Color.green)
-                                .id(2)
-                                .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
-                                        .opacity(phase.isIdentity ? 1.0 : 0.5)
-                                }
+                            Group {
+                                WidgetCard(image: "⛈️", mensagem: "Tirar a roupa do varal", colorBackground: .indigoGradient)
+                                    .id(0)
+                                
+                                AddWidgetCard()
+                                    .id(1)
+                                
+                                WidgetCard(image: "⚽️", mensagem: "Futebol hoje", colorBackground: .greenGradient)
+                                    .id(2)
+                            }
+                            .scrollTransition(.interactive, axis: .horizontal) { content, phase in
+                                content
+                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
+                                    .opacity(phase.isIdentity ? 1.0 : 0.5)
+                            }
                         }
                         .scrollTargetLayout()
                     }
@@ -69,23 +62,31 @@ struct CreateWidgetsView: View {
                 Spacer()
                 
                 Button(action: {
+                    
+                    guard selectedCard == 1 else { return }
+                    
+                    print ("Adicionar Widget")
+                    
                 }) {
-                    Text(selectedCard == 1 ? "Criar Novo Widget" : "+ Adicionar Widget")
+                    Label("Adicionar Widget", systemImage: "plus.circle.fill")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
-                        .clipShape(Capsule())
                 }
+                .buttonStyle(.glassProminent)
+                .tint(.blue)
                 .padding(.horizontal, 32)
                 .padding(.bottom, 20)
+                .opacity(selectedCard == 1 ? 0.0 : 1.0)
+                .disabled(selectedCard == 1)
+                .animation(.easeInOut, value: selectedCard)
             }
             .background(Color(UIColor.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { WidgetToolBar() }
             .onAppear {
-                //Atraso o GeometryReader calcular a tela
+                // Atraso para o GeometryReader calcular a tela
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         selectedCard = 1

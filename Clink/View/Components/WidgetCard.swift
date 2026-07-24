@@ -10,16 +10,19 @@ import SwiftUI
 struct WidgetCard: View {
     var image: String
     var mensagem: String
-    var colorBackground: Color
+    var colorBackground: LinearGradient
     
     var body: some View {
         VStack(spacing: 16) {
             HStack {
                 Text(image)
                     .font(.system(size: 35))
+                    .shadow(color: .black, radius: 2, x: 0, y: 2)
+
                 Spacer()
                 Image(systemName: "ellipsis")
                     .foregroundColor(.white.opacity(0.8))
+                
             }
             
             Text(mensagem)
@@ -33,7 +36,7 @@ struct WidgetCard: View {
         .frame(width: 165, height: 165)
         .background(colorBackground)
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+        .shadow(color: .black.opacity(0.15), radius: 1, x: 0, y: 0)
     }
 }
 
@@ -44,7 +47,7 @@ struct AddWidgetCard: View {
                 .font(.system(size: 35))
             
             Text("Clique para criar seu Widget")
-                .font(.headline)
+                .font(.default)
                 .multilineTextAlignment(.center)
         }
         .foregroundColor(.primary)
@@ -52,6 +55,7 @@ struct AddWidgetCard: View {
         .frame(width: 165, height: 165)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
+        .shadow(color: .black.opacity(0.15), radius: 1, x: 0, y: 0)
+
     }
 }
