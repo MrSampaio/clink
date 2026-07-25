@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 
 struct ReminderCard: View {
+    @EnvironmentObject var viewModel: ReminderViewModel
     @Binding var reminder: Reminder
+    @State private var showEditSheet = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -23,21 +25,34 @@ struct ReminderCard: View {
                         .font(.headline)
                         .foregroundColor(.font)
                     
-                    Text(reminder.description)
+                    Text(reminder.description ?? "")
                         .font(.subheadline)
                         .foregroundColor(.font)
                 }
                 
                 Spacer()
                 
-                Image(systemName: "info.circle")
-                    .foregroundColor(Color(reminder.color))
-                    .font(.title3)
+                Button(action: {
+                    showEditSheet = true
+                    
+                }) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(reminder.color)
+                        .font(.system(size: 22, weight: .bold))
+                }
+                
+                .buttonStyle(PlainButtonStyle())
+                
+                
+            }
+            .sheet(isPresented: $showEditSheet) {
+                SheetEditView(reminderToEdit: reminder)
+                    .presentationDragIndicator(.visible)
             }
             
-            if reminder.subtasks.isEmpty == false {
+            if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty{
                 VStack(alignment: .leading, spacing: 12) {
-                    ForEach($reminder.subtasks) { $subtask in
+                    ForEach(subtasksBinding) { $subtask in
                         HStack(spacing: 12) {
                             CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
                                 .frame(width: 24, height: 24)
@@ -55,8 +70,11 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.dueDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
-                BadgeView(text: reminder.dueDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                if let safeDate = reminder.dueDate {
+                    BadgeView(text: safeDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
+                    BadgeView(text: safeDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                }
+
                 BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()
@@ -71,22 +89,32 @@ struct ReminderCard: View {
         .padding(25)
         .background(Color(.cardBackground))
         .cornerRadius(30)
+        
+        .contextMenu {
+            Button(role: .destructive) {
+                viewModel.deleteReminder(id: reminder.id)
+            } label: {
+                Label("Apagar Lembrete", systemImage: "trash")
+            }
+        }
     }
 }
 
 #Preview {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
-            title: "Enviar relatório",
-            description: "Terminar o projeto e enviar o relatório",
-            isCompleted: false,
+            listId: 1,
+            isLocked: false,
+            title: "Campanha",
+            description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
+            isCompleted: true,
             subtasks: [
-                SubTask(title: "Falar com o chefe", isCompleted: true)
+                SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
-            dueDate: Date(),
+            dueDate: Date(), // Hoje
             isImportant: true,
-            category: "Trabalho",
-            color: .blue
+            color: .listColor1,
+            category: "Trabalho"
         )
         
         var body: some View {
@@ -102,4 +130,5 @@ struct ReminderCard: View {
     }
     
     return ReminderCardPreviewWrapper()
+        .environmentObject(ReminderViewModel())
 }
