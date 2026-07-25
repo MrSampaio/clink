@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 struct ReminderCard: View {
+    @EnvironmentObject var viewModel: ReminderViewModel
     @Binding var reminder: Reminder
-    
     @State private var showEditSheet = false
     
     var body: some View {
@@ -89,6 +89,14 @@ struct ReminderCard: View {
         .padding(25)
         .background(Color(.cardBackground))
         .cornerRadius(30)
+        
+        .contextMenu {
+            Button(role: .destructive) {
+                viewModel.deleteReminder(id: reminder.id)
+            } label: {
+                Label("Apagar Lembrete", systemImage: "trash")
+            }
+        }
     }
 }
 
@@ -122,4 +130,5 @@ struct ReminderCard: View {
     }
     
     return ReminderCardPreviewWrapper()
+        .environmentObject(ReminderViewModel())
 }

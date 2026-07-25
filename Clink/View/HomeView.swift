@@ -26,6 +26,7 @@ struct HomeView: View {
                         indices: viewModel.todayRemindersIndices,
                         reminders: $viewModel.reminders
                     )
+                    
                     DisclosureGroupComponent(
                         title: "Esta Semana",
                         indices: viewModel.thisWeekRemindersIndices,
@@ -48,6 +49,7 @@ struct HomeView: View {
             .toolbar {
                 HomeToolBar()
             }
+            
         }
     }
 }

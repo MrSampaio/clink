@@ -275,6 +275,10 @@ class ReminderViewModel: ObservableObject{
             reminders[index].color = newListColor
         }
     }
+    
+    func deleteReminder(id: UUID) {
+        reminders.removeAll(where: { $0.id == id })
+    }
 }
 
 // ----------------------- futuras funções para criar lembretes e listas---------------
