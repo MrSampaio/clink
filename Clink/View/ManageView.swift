@@ -11,7 +11,7 @@ import LocalAuthentication
 struct ManageView: View {
     
     @State private var selectedPicker = 0
-    @State private var securityPicker = 0
+    //@State private var securityPicker = 0
     
     
     var currentCount: String {
@@ -46,13 +46,13 @@ struct ManageView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding(16)
-                    .onChange(of: selectedPicker) { oldValue, newValue in
-                        if newValue == 2 {
-                            faceidManage()
-                        } else {
-                            securityPicker = newValue
-                        }
-                    }
+                    //.onChange(of: selectedPicker) { oldValue, newValue in
+                    //  if newValue == 2 {
+                    //      faceidManage()
+                    //  } else {
+                    //      securityPicker = newValue
+                    //    }
+                    //  }
                 }
                 
                 VStack(spacing: 12) {
@@ -67,31 +67,32 @@ struct ManageView: View {
             }
         }
     }
-    
-    func faceidManage() {
-        let context = LAContext()
-        var error: NSError?
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Autentique para ver seus lembretes trancados."
-            
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, _ in
-                DispatchQueue.main.async {
-                    if success {
-                        self.securityPicker = 2
-                    } else {
-                        self.selectedPicker = self.securityPicker
-                    }
-                }
-            }
-        } else {
-            print("Biometria não configurada.")
-            DispatchQueue.main.async {
-                self.selectedPicker = self.securityPicker
-            }
-        }
-    }
 }
+    
+//    func faceidManage() {
+//        let context = LAContext()
+//        var error: NSError?
+//        
+//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+//            let reason = "Autentique para ver seus lembretes trancados."
+//            
+//            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, _ in
+//                DispatchQueue.main.async {
+//                    if success {
+//                        self.securityPicker = 2
+//                    } else {
+//                        self.selectedPicker = self.securityPicker
+//                    }
+//                }
+//            }
+//        } else {
+//            print("Biometria não configurada.")
+//            DispatchQueue.main.async {
+//                self.selectedPicker = self.securityPicker
+//            }
+//        }
+//    }
+//}
 
 #Preview {
     ManageView()
