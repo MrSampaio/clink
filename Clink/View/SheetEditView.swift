@@ -1,53 +1,54 @@
-//
-//  SheetEditView.swift
-//  Clink
-//
-//  Created by Vitor Silva Souza on 21/07/26.
-//
+// IMPORTANTE: faz uma lógica de receber as cores da lista quando edita o lembrete
 
 import SwiftUI
 
 struct SheetEditView: View {
     @Environment(\.dismiss) var dismiss
-    
     @EnvironmentObject var viewModel: ReminderViewModel
     
     var list: ReminderList?
+    var reminderToEdit: Reminder?
     
     @State private var selectedListId: Int
-    
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
-    // também faz uma função pra conseguir editar um lembrete já criado!!!!
-    
     @State private var showingDiscardAlert = false
-    
     @State private var newTitle = ""
     @State private var description = ""
-    
     @State private var isDateEnabled = false
     @State private var isTimeEnabled = false
     @State private var selectedDate = Date()
-    
     @State private var notification = false
     @State private var repeatReminder = false
     @State private var lockReminder = false
-    
     @State private var signposted = false
     @State private var priority = "Nenhuma"
-    
     @State private var subtasks: [SubTask] = []
+
     
-    //@State private var reminderId = (viewModel.totalReminders) + 1
     
     // lógica que faz com que a lista da qual o usuário veio já venha selecionada por padrão
-    init(list: ReminderList? = nil) {
-            self.list = list
-            _selectedListId = State(initialValue: list?.id ?? 1)
+    init(list: ReminderList? = nil, reminderToEdit: Reminder? = nil) {
+        self.list = list
+        self.reminderToEdit = reminderToEdit
+        
+        // caso tenha lembrete pra editar, já preenche os inputs com os dados dele.
+        // caso contrário, seta os valores como vazio
+        _selectedListId = State(initialValue: reminderToEdit?.listId ?? list?.id ?? 1)
+        _newTitle = State(initialValue: reminderToEdit?.title ?? "")
+        _description = State(initialValue: reminderToEdit?.description ?? "")
+        _subtasks = State(initialValue: reminderToEdit?.subtasks ?? [])
+        _lockReminder = State(initialValue: reminderToEdit?.isLocked ?? false)
+        _signposted = State(initialValue: reminderToEdit?.isImportant ?? false)
+        
+        if let existingDate = reminderToEdit?.dueDate {
+            _isDateEnabled = State(initialValue: true)
+            _selectedDate = State(initialValue: existingDate)
+        } else {
+            _isDateEnabled = State(initialValue: false)
+            _selectedDate = State(initialValue: Date())
+        }
     }
-    
-    // depois faz uma lógica pra chamar a sheetview pela home view e outra pra chamar ela direto pela página da lista individual, aí ela recebe como parâmetro o nome da lista pra aparecer no modal de "mover para a lista"
-//    @State private var selectedListId: Int = 1
     
     var hasChanges: Bool {
         !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
@@ -81,13 +82,8 @@ struct SheetEditView: View {
                 SheetReminderToolBar(
                     actionCancel: {
                         if hasChanges {
-                            print(selectedDate)
-                            print($newTitle)
                             showingDiscardAlert = true
                         } else {
-                            print("confirmou")
-                            print(selectedDate)
-                            print($newTitle)
                             dismiss()
                         }
                     },
@@ -100,11 +96,11 @@ struct SheetEditView: View {
                             return
                         }
 
-                        if isDateEnabled && selectedDate < Date() {
-                            errorMessage = "O lembrete não pode estar em uma data ou hora passadas."
-                            showErrorAlert = true
-                            return
-                        }
+//                        if isDateEnabled && selectedDate < Date() {
+//                            errorMessage = "O lembrete não pode estar em uma data ou hora passadas."
+//                            showErrorAlert = true
+//                            return
+//                        }
                         
                         if lockReminder && newTitle.count < 3 {
                             errorMessage = "Lembretes trancados precisam ter um título com pelo menos 3 caracteres."
@@ -112,21 +108,52 @@ struct SheetEditView: View {
                             return
                         }
                         
-                        for subtask in subtasks {
-                            if subtask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                errorMessage = "Todas as subtarefas devem ter um título."
-                                showErrorAlert = true
-                                return
-                            }
+                        let validSubtasks = subtasks.filter { subtask in
+                            !subtask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                         }
                         
-                        let newReminder = viewModel.addNewReminder(listId: selectedListId, isLocked: lockReminder, title: newTitle, description: description, subtasks: subtasks, dueDate: selectedDate, isImportant: signposted)
+//                        for subtask in subtasks {
+//                            if subtask.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+//                                
+//                                
+//                                errorMessage = "Todas as subtarefas devem ter um título."
+//                                showErrorAlert = true
+//                                return
+//                            }
+//                        }
                         
-                        if newReminder != nil {
+
+                        
+                        if let existingReminder = reminderToEdit {
+                            viewModel.updateReminder(
+                                id: existingReminder.id,
+                                listId: selectedListId,
+                                isLocked: lockReminder,
+                                title: newTitle,
+                                description: description,
+                                subtasks: validSubtasks,
+                                dueDate: isDateEnabled ? selectedDate : nil,
+                                isImportant: signposted
+                            )
                             dismiss()
+                            
                         } else {
-                            errorMessage = "Não foi possível encontrar a lista selecionada. Tente novamente."
-                            showErrorAlert = true
+                            let newReminder = viewModel.addNewReminder(
+                                listId: selectedListId,
+                                isLocked: lockReminder,
+                                title: newTitle,
+                                description: description,
+                                subtasks: validSubtasks,
+                                dueDate: isDateEnabled ? selectedDate : nil,
+                                isImportant: signposted
+                            )
+                            
+                            if newReminder != nil {
+                                dismiss()
+                            } else {
+                                errorMessage = "Erro interno ao criar lembrete. Tente novamente."
+                                showErrorAlert = true
+                            }
                         }
                         
                         //dismiss()

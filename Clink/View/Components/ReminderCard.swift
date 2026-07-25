@@ -46,7 +46,7 @@ struct ReminderCard: View {
                 
             }
             .sheet(isPresented: $showEditSheet) {
-                SheetEditView()
+                SheetEditView(reminderToEdit: reminder)
                     .presentationDragIndicator(.visible)
             }
             
@@ -70,8 +70,11 @@ struct ReminderCard: View {
                 .background(Color(.gray))
             
             HStack {
-                BadgeView(text: reminder.dueDate!.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
-                BadgeView(text: reminder.dueDate!.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                if let safeDate = reminder.dueDate {
+                    BadgeView(text: safeDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
+                    BadgeView(text: safeDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
+                }
+
                 BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()

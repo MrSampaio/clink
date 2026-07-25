@@ -28,6 +28,8 @@ struct ReminderList: Identifiable {
     //var reminderCount: Int
 }
 
+
+// -> não esquece de fazer uma lógica pra adicionar as horas no lembrete!!!!
 struct Reminder: Identifiable{
     let id = UUID()
     var listId: Int // -> depois muda aqui pra UUID, quando a página de inserir lembrete estiver pronta

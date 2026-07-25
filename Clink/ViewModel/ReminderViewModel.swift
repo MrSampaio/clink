@@ -147,24 +147,20 @@ class ReminderViewModel: ObservableObject{
     
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
-        let indices = reminders.indices.filter {
-            Calendar.current.isDateInToday(reminders[$0].dueDate!)
+        let indices = reminders.indices.filter { index in
+            guard let date = reminders[index].dueDate else { return false }
+            return Calendar.current.isDateInToday(date)
         }
-        
-        // ORDENAÇÃO PELA DATA DE VENCIMENTO
-        // return indices.sorted { reminders[$0].dueDate < reminders[$1].dueDate }
-        
         return indices.reversed()
     }
     
     // lembretes dessa semana
     var thisWeekRemindersIndices: [Int] {
-        reminders.indices.filter {
-            // testa se é da mesma semana
-            let isSameWeek = Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .weekOfYear)
-            // remove os que já apareceram nos lembretes do dia
-            let isNotToday = !Calendar.current.isDateInToday(reminders[$0].dueDate!)
+        reminders.indices.filter { index in
+            guard let date = reminders[index].dueDate else { return false }
             
+            let isSameWeek = Calendar.current.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
+            let isNotToday = !Calendar.current.isDateInToday(date)
             
             return isSameWeek && isNotToday
         }
@@ -172,11 +168,14 @@ class ReminderViewModel: ObservableObject{
     
     // lembretes desse mês
     var thisMonthRemindersIndices: [Int] {
-        reminders.indices.filter {
+        reminders.indices.filter { index in
+            
+            guard let date = reminders[index].dueDate else { return false }
+            
             // testa se é do mesmo mês
-            let isSameMonth = Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .month)
+            let isSameMonth = Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
             // remove os que já apareceram essa semana (acaba tirando os de "hoje" também)
-            let isNotThisWeek = !Calendar.current.isDate(reminders[$0].dueDate!, equalTo: Date(), toGranularity: .weekOfYear)
+            let isNotThisWeek = !Calendar.current.isDate(date, equalTo: Date(), toGranularity: .weekOfYear)
             
             return isSameMonth && isNotThisWeek
         }
@@ -185,8 +184,10 @@ class ReminderViewModel: ObservableObject{
     // lembretes atrasados
     var overdueRemindersIndices: [Int] {
         let startOfToday = Calendar.current.startOfDay(for: Date())
-        return reminders.indices.filter {
-            reminders[$0].dueDate! < startOfToday && !reminders[$0].isCompleted
+        return reminders.indices.filter { index in
+            guard let date = reminders[index].dueDate else { return false }
+            
+            return date < startOfToday && !reminders[index].isCompleted
         }
     }
     
@@ -242,7 +243,7 @@ class ReminderViewModel: ObservableObject{
             listId: listId,
             isLocked: isLocked,
             title: title,
-            description: description!.isEmpty ? nil : description,
+            description: (description?.isEmpty == true) ? nil : description,
             isCompleted: false,
             subtasks: subtasks?.isEmpty == true ? nil : subtasks,
             dueDate: dueDate,
@@ -255,40 +256,60 @@ class ReminderViewModel: ObservableObject{
         return newReminder
     }
     
-    // ----------------------- futuras funções para criar lembretes e listas---------------
-    
-    //    @Published var customLists: [ReminderList] = []
-    //    @Published var reminders: [Reminder] = []
-    
-    //
-    
-    //
-    //    }
-    
-    // -------------------------------------------------------------------------
-    
-    
-    //
-    //struct RemindersListView: View {
-    //    var body: some View {
-    //        ScrollView {
-    //            VStack(spacing: 16) {
-    //
-    //                ForEach($reminders) { $reminder in
-    //
-    //                    if Calendar.current.isDateInToday(reminder.dueDate) {
-    //                        ReminderCard(reminder: $reminder)
-    //                    }
-    //
-    //                }
-    //            }
-    //            .padding()
-    //        }
-    //        .background(Color.white.edgesIgnoringSafeArea(.all))
-    //    }
-    //}
-    //
-    //#Preview {
-    //    RemindersListView()
-    //}
+    func updateReminder(id: UUID, listId: Int, isLocked: Bool, title: String, description: String, subtasks: [SubTask]?, dueDate: Date?, isImportant: Bool) {
+            
+        if let index = reminders.firstIndex(where: { $0.id == id }) {
+            
+            let newListTitle = customLists.first(where: { $0.id == listId })?.title ?? "Geral"
+            let newListColor = customLists.first(where: { $0.id == listId })?.color ?? .blue
+            
+            // atualiza as propriedades do lembrete
+            reminders[index].listId = listId
+            reminders[index].title = title
+            reminders[index].description = description.isEmpty ? nil : description
+            reminders[index].isLocked = isLocked
+            reminders[index].subtasks = subtasks?.isEmpty == true ? nil : subtasks
+            reminders[index].dueDate = dueDate
+            reminders[index].isImportant = isImportant
+            reminders[index].category = newListTitle
+            reminders[index].color = newListColor
+        }
+    }
 }
+
+// ----------------------- futuras funções para criar lembretes e listas---------------
+
+//    @Published var customLists: [ReminderList] = []
+//    @Published var reminders: [Reminder] = []
+
+//
+
+//
+//    }
+
+// -------------------------------------------------------------------------
+
+
+//
+//struct RemindersListView: View {
+//    var body: some View {
+//        ScrollView {
+//            VStack(spacing: 16) {
+//
+//                ForEach($reminders) { $reminder in
+//
+//                    if Calendar.current.isDateInToday(reminder.dueDate) {
+//                        ReminderCard(reminder: $reminder)
+//                    }
+//
+//                }
+//            }
+//            .padding()
+//        }
+//        .background(Color.white.edgesIgnoringSafeArea(.all))
+//    }
+//}
+//
+//#Preview {
+//    RemindersListView()
+//}

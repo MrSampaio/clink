@@ -122,14 +122,14 @@ struct SheetReminderToolBar: ToolbarContent {
                 isPresented: $showingDiscardAlert,
                 titleVisibility: .hidden
             ) {
-                Button("Descartar Lembrete", role: .destructive) {
+                Button("Descartar", role: .destructive) {
                     actionDiscard()
                 }
                 
                 Button("Continuar Editando", role: .cancel) { }
                 
             } message: {
-                Text("Deseja mesmo descartar esse lembrete?")
+                Text("Deseja mesmo descartar a edição deste lembrete?")
             }
         }
         
