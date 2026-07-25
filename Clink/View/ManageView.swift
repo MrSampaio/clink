@@ -10,15 +10,15 @@ import LocalAuthentication
 
 struct ManageView: View {
     
+    @EnvironmentObject var viewModel: ReminderViewModel
+    @StateObject private var securityVM = SecurityViewModel()
     @State private var selectedPicker = 0
-    //@State private var securityPicker = 0
-    
     
     var currentCount: String {
         switch selectedPicker {
-        case 0: return "15"
-        case 1: return "2"
-        case 2: return "4"
+        case 0: return "\(viewModel.concludedRemindersIndices.count)"
+        case 1: return "\(viewModel.deletedReminders.count)"
+        case 2: return "\(viewModel.lockedRemindersIndices.count)"
         default: return "0"
         }
     }
@@ -34,65 +34,108 @@ struct ManageView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                
-                Title(title: "Gerenciar", subtitle: "")
-                    .padding(16)
-                VStack {
-                    Picker("FilterManage", selection: $selectedPicker) {
-                        Text("Concluídos").tag(0)
-                        Text("Apagados").tag(1)
-                        Text("Trancados").tag(2)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(16)
-                    //.onChange(of: selectedPicker) { oldValue, newValue in
-                    //  if newValue == 2 {
-                    //      faceidManage()
-                    //  } else {
-                    //      securityPicker = newValue
-                    //    }
-                    //  }
+            Group {
+                if securityVM.isAuthenticated {
+                    mainContent
+                } else {
+                    lockedContent
                 }
-                
-                VStack(spacing: 12) {
-                    Text(currentCount)
-                        .font(.system(size: 41, weight: .bold))
-                    Text(currentDescription)
-                }
-                .padding(38)
             }
             .toolbar {
-                ManageToolBar()
+                if securityVM.isAuthenticated {
+                    ManageToolBar()
+                }
             }
         }
+        
+        .onAppear {
+            if !securityVM.isAuthenticated {
+                securityVM.authenticate()
+            }
+        }
+        .onDisappear {
+            securityVM.lock()
+        }
     }
-}
     
-//    func faceidManage() {
-//        let context = LAContext()
-//        var error: NSError?
-//        
-//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-//            let reason = "Autentique para ver seus lembretes trancados."
-//            
-//            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, _ in
-//                DispatchQueue.main.async {
-//                    if success {
-//                        self.securityPicker = 2
-//                    } else {
-//                        self.selectedPicker = self.securityPicker
-//                    }
-//                }
-//            }
-//        } else {
-//            print("Biometria não configurada.")
-//            DispatchQueue.main.async {
-//                self.selectedPicker = self.securityPicker
-//            }
-//        }
-//    }
-//}
+    // MARK: - Tela Principal (Conteúdo Liberado)
+    @ViewBuilder
+    var mainContent: some View {
+        ScrollView {
+            Title(title: "Gerenciar", subtitle: "Visualize seus lembretes concluídos, apagados ou trancados")
+                .padding(16)
+            
+            VStack {
+                Picker("FilterManage", selection: $selectedPicker) {
+                    Text("Concluídos").tag(0)
+                    Text("Apagados").tag(1)
+                    Text("Trancados").tag(2)
+                }
+               
+                .pickerStyle(.segmented)
+                .padding(16)
+            }
+            
+            VStack(spacing: 12) {
+                Text(currentCount)
+                    .font(.system(size: 41, weight: .bold))
+                Text(currentDescription)
+                
+                if selectedPicker == 0 {
+                    ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
+                        ReminderCard(reminder: $viewModel.reminders[index])
+                            .padding(.top, 15)
+                    }
+                } else if selectedPicker == 1 {
+                    ForEach($viewModel.deletedReminders) { $deletedReminder in
+                        ReminderCard(reminder: $deletedReminder)
+                            .padding(.top, 15)
+                    }
+                } else if selectedPicker == 2 {
+                    ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
+                        ReminderCard(reminder: $viewModel.reminders[index])
+                            .padding(.top, 15)
+                    }
+                }
+            }
+            .padding(.horizontal, 5)
+        } .background(Color(.background))
+    }
+    
+    // lógica da tela de bloqueio
+    @ViewBuilder
+    var lockedContent: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.blue)
+            
+            Text("Área Restrita")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Text("Use o FaceID para acessar seus lembretes e lixeira.")
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+                .padding(.horizontal)
+            
+            if let authError = securityVM.authError{
+                Text(authError)
+                    .foregroundColor(.red)
+                    .font(.footnote)
+                    .padding(.top, 10)
+            }
+            
+            Button("Tentar Novamente") {
+                securityVM.authenticate()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 10)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.background))
+    }    
+}
 
 #Preview {
     ManageView()
