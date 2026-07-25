@@ -52,21 +52,24 @@ struct SheetEditView: View {
     var hasChanges: Bool {
         !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
     }
+    var selectedListColor: Color {
+        viewModel.customLists.first(where: { $0.id == selectedListId })?.color ?? .blue
+    }
     
     var body: some View {
         NavigationStack {
             Form {
                 DetailsSectionView(newTitle: $newTitle, description: $description)
                 
-                SubtaskSectionView(subtasks: $subtasks, color: list?.color ?? .blue)
+                SubtaskSectionView(subtasks: $subtasks, color: selectedListColor)
                 
-                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: list?.color)
+                AlertSectionView(isDateEnabled: $isDateEnabled, isTimeEnabled: $isTimeEnabled, selectedDate: $selectedDate, color: selectedListColor)
                 
-                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder, color: list?.color)
+                NotificationSectionView(notification: $notification, repeatReminder: $repeatReminder, color: selectedListColor)
                 
-                PrivacySectionView(lockReminder: $lockReminder, color: list?.color)
+                PrivacySectionView(lockReminder: $lockReminder, color: selectedListColor)
                 
-                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId, color: list?.color)
+                OrganizationSectionView(signposted: $signposted, selectedListId: $selectedListId, color: selectedListColor)
                 
                 AttachmentSectionView()
             }
