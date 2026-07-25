@@ -103,7 +103,9 @@ struct SheetReminderToolBar: ToolbarContent {
     let actionCancel: () -> Void
     let actionConfirm: () -> Void
     let actionDiscard: () -> Void
+    let actionDelete: () -> Void
     let disableAdd: Bool
+    var isEditing: Bool
     
     var color: Color? = .blue
     
@@ -136,6 +138,20 @@ struct SheetReminderToolBar: ToolbarContent {
         ToolbarItem(placement: .principal) {
             Text("Editar")
                 .font(.system(size: 20, weight: .semibold))
+        }
+        if isEditing {
+            ToolbarItem(placement: .destructiveAction){
+                Button(action: {
+                    actionDelete()
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
+                .tint(.red)
+                .disabled(disableAdd)
+            }
         }
         
         ToolbarItem(placement: .confirmationAction) {

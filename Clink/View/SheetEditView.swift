@@ -11,6 +11,7 @@ struct SheetEditView: View {
     
     @State private var selectedListId: Int
     @State private var showErrorAlert = false
+    @State private var showingDeleteAlert = false
     @State private var errorMessage = ""
     @State private var showingDiscardAlert = false
     @State private var newTitle = ""
@@ -25,8 +26,6 @@ struct SheetEditView: View {
     @State private var priority = "Nenhuma"
     @State private var subtasks: [SubTask] = []
 
-    
-    
     // lógica que faz com que a lista da qual o usuário veio já venha selecionada por padrão
     init(list: ReminderList? = nil, reminderToEdit: Reminder? = nil) {
         self.list = list
@@ -76,6 +75,21 @@ struct SheetEditView: View {
                 } message: {
                     Text(errorMessage)
                 }
+            .alert("Apagar Lembrete", isPresented: $showingDeleteAlert) {
+                Button("Cancelar", role: .cancel) {}
+                
+                Button("Apagar", role: .destructive) {
+                    if let existingReminder = reminderToEdit {
+                        viewModel.deleteReminder(id: existingReminder.id)
+                        withAnimation{
+                            dismiss()
+                        }
+                        
+                    }
+                }
+            } message: {
+                Text("Tem certeza de que deseja apagar este lembrete? Esta ação não pode ser desfeita.")
+            }
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
@@ -163,7 +177,13 @@ struct SheetEditView: View {
                         dismiss()
                     },
                     
+                    actionDelete: {
+                        showingDeleteAlert = true
+                    },
+                    
                     disableAdd: false,
+                    
+                    isEditing: reminderToEdit != nil,
                                         
                     color: list?.color,
                     
@@ -171,6 +191,7 @@ struct SheetEditView: View {
                 )
                 
             }
+            
             
         }
     }
