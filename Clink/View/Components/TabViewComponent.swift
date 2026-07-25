@@ -38,4 +38,5 @@ public struct TabViewComponent: View {
 
 #Preview {
     TabViewComponent()
+        .environmentObject(ReminderViewModel())
 }

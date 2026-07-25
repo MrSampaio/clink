@@ -10,9 +10,9 @@ import LocalAuthentication
 
 struct ManageView: View {
     
+    @EnvironmentObject var viewModel: ReminderViewModel
     @State private var selectedPicker = 0
     //@State private var securityPicker = 0
-    
     
     var currentCount: String {
         switch selectedPicker {
@@ -59,8 +59,27 @@ struct ManageView: View {
                     Text(currentCount)
                         .font(.system(size: 41, weight: .bold))
                     Text(currentDescription)
+                    
+                    if (selectedPicker == 0){
+                        ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
+                            ReminderCard(reminder: $viewModel.reminders[index])
+                                   .padding(.top, 15)
+                        }
+                    } else if(selectedPicker == 1){
+                        ForEach($viewModel.deletedReminders) { $deletedReminder in
+                            ReminderCard(reminder: $deletedReminder)
+                                .padding(.top, 15)
+                        }
+                    } else if(selectedPicker == 2){
+                        ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
+                            ReminderCard(reminder: $viewModel.reminders[index])
+                                   .padding(.top, 15)
+                        }
+                    }
+                    
+                    
                 }
-                .padding(38)
+                .padding(.horizontal, 5)
             }
             .toolbar {
                 ManageToolBar()
@@ -96,4 +115,5 @@ struct ManageView: View {
 
 #Preview {
     ManageView()
+        .environmentObject(ReminderViewModel())
 }

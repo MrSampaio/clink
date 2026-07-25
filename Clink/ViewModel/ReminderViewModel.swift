@@ -145,6 +145,21 @@ class ReminderViewModel: ObservableObject{
         )
     ]
     
+    @Published var deletedReminders: [Reminder] = [
+        Reminder(
+            listId: 1,
+            isLocked: false,
+            title: "Exemplo de lembrete apagado",
+            description: "Esse aqui é só pra ver o lembrete apagado",
+            isCompleted: true,
+            subtasks: [],
+            dueDate: Date(),
+            isImportant: true,
+            color: .listColor3,
+            category: "Geral"
+        ),
+    ]
+    
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
         let indices = reminders.indices.filter { index in
@@ -191,6 +206,18 @@ class ReminderViewModel: ObservableObject{
         }
     }
     
+    var concludedRemindersIndices: [Int] {
+        let indices = reminders.indices.filter { reminders[$0].isCompleted }
+        
+        return indices.reversed()
+    }
+    
+    var lockedRemindersIndices: [Int] {
+        let indices = reminders.indices.filter { reminders[$0].isLocked }
+        
+        return indices.reversed()
+    }
+    
     var totalReminders: Int {
         reminders.count
     }
@@ -199,11 +226,14 @@ class ReminderViewModel: ObservableObject{
         customLists.count
     }
     
+    var totalCompletedReminders: Int {
+        reminders.filter { $0.isCompleted }.count
+    }
+    
     // MARK: esses são os filtros por listas individuais
     
     func remindersIndicesByList(for listId: Int) -> [Int] {
         let indices = reminders.indices.filter { reminders[$0].listId == listId }
-        
         return indices.reversed()
         
     }
@@ -277,7 +307,10 @@ class ReminderViewModel: ObservableObject{
     }
     
     func deleteReminder(id: UUID) {
-        reminders.removeAll(where: { $0.id == id })
+        if let reminderToDelete = reminders.first(where: { $0.id == id }) {
+            deletedReminders.append(reminderToDelete)
+            reminders.removeAll(where: { $0.id == id })
+        }
     }
 }
 
