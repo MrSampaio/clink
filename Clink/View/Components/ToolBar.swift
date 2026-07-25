@@ -20,9 +20,6 @@ struct HomeToolBar: ToolbarContent {
                 print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
             
             Button(action: {
-                print("Lixo Clicado")}) { Image(systemName: "trash")}
-            
-            Button(action: {
                 print("Menu Clicado") }) { Image(systemName: "ellipsis")}
         }
     }
