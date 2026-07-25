@@ -167,7 +167,7 @@ struct ManageToolBar: ToolbarContent {
         
         ToolbarItem(placement: .navigationBarTrailing) {
             Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "elliipsis")}
+                print ("Menu Clicada") }) { Image(systemName: "ellipsis")}
         }
     }
 }
