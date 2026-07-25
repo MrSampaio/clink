@@ -15,7 +15,7 @@ class ReminderViewModel: ObservableObject{
         ReminderList(id: 3, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
         ReminderList(id: 2, title: "Estudos", color: .listColor2, icon: "graduationcap.fill"),
         ReminderList(id: 4, title: "Finanças", color: .listColor4, icon: "creditcard.fill"),
-        ReminderList(id: 5, title: "Casa", color: .listColor8, icon: "house.fill"),
+        ReminderList(id: 5, title: "Casa", color: .listColor9, icon: "house.fill"),
         ReminderList(id: 6, title: "Família", color: .listColor6, icon: "heart.fill")
     ]
     @Published var reminders: [Reminder] = [

@@ -25,7 +25,7 @@ public struct TabViewComponent: View {
             
             CreateWidgetsView()
                 .tabItem {
-                    Label("Widget", systemImage: "widget.small.badge.plus")
+                    Label("Widgets", systemImage: "widget.small.badge.plus")
                 }
             
             ManageView()
