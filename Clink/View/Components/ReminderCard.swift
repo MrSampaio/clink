@@ -111,7 +111,7 @@ struct ReminderCard: View {
             subtasks: [
                 SubTask(title: "Revisar calendário de posts", isCompleted: true)
             ],
-            dueDate: Date(), // Hoje
+            dueDate: Date(),
             isImportant: true,
             color: .listColor1,
             category: "Trabalho"
