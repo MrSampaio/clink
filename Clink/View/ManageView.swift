@@ -83,17 +83,17 @@ struct ManageView: View {
                 
                 if selectedPicker == 0 {
                     ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
-                        ReminderCard(reminder: $viewModel.reminders[index])
+                        ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
                             .padding(.top, 15)
                     }
                 } else if selectedPicker == 1 {
                     ForEach($viewModel.deletedReminders) { $deletedReminder in
-                        ReminderCard(reminder: $deletedReminder)
+                        ReminderCard(reminder: $deletedReminder, enableEdit: false)
                             .padding(.top, 15)
                     }
                 } else if selectedPicker == 2 {
                     ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
-                        ReminderCard(reminder: $viewModel.reminders[index])
+                        ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
                             .padding(.top, 15)
                     }
                 }

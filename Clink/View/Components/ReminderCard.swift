@@ -13,6 +13,8 @@ struct ReminderCard: View {
     @Binding var reminder: Reminder
     @State private var showEditSheet = false
     
+    var enableEdit: Bool = true
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             
@@ -32,16 +34,19 @@ struct ReminderCard: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    showEditSheet = true
+                if(enableEdit){
+                    Button(action: {
+                        showEditSheet = true
+                        
+                    }) {
+                        Image(systemName: "pencil")
+                            .foregroundColor(reminder.color)
+                            .font(.system(size: 22, weight: .bold))
+                    }
                     
-                }) {
-                    Image(systemName: "pencil")
-                        .foregroundColor(reminder.color)
-                        .font(.system(size: 22, weight: .bold))
+                    .buttonStyle(PlainButtonStyle())
                 }
-                
-                .buttonStyle(PlainButtonStyle())
+
                 
                 
             }
@@ -89,12 +94,13 @@ struct ReminderCard: View {
         .padding(25)
         .background(Color(.cardBackground))
         .cornerRadius(30)
-        
         .contextMenu {
-            Button(role: .destructive) {
-                viewModel.deleteReminder(id: reminder.id)
-            } label: {
-                Label("Apagar Lembrete", systemImage: "trash")
+            if(enableEdit){
+                Button(role: .destructive) {
+                    viewModel.deleteReminder(id: reminder.id)
+                } label: {
+                    Label("Apagar Lembrete", systemImage: "trash")
+                }
             }
         }
     }
