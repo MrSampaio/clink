@@ -308,7 +308,8 @@ class ReminderViewModel: ObservableObject{
     
     func deleteReminder(id: UUID) {
         if let reminderToDelete = reminders.first(where: { $0.id == id }) {
-            deletedReminders.append(reminderToDelete)
+            deletedReminders.insert(reminderToDelete, at: 0)
+            
             reminders.removeAll(where: { $0.id == id })
         }
     }
