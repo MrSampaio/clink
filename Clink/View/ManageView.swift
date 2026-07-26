@@ -93,7 +93,7 @@ struct ManageView: View {
                     }
                 } else if selectedPicker == 2 {
                     ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
-                        ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
+                        ReminderCard(reminder: $viewModel.reminders[index], forceUnlock: true)
                             .padding(.top, 15)
                     }
                 }

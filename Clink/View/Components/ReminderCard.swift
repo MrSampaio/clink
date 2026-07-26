@@ -11,64 +11,86 @@ import SwiftUI
 struct ReminderCard: View {
     @EnvironmentObject var viewModel: ReminderViewModel
     @Binding var reminder: Reminder
-    @State private var showEditSheet = false
     
+    @StateObject private var securityVM = SecurityViewModel()
+    
+    @State private var showEditSheet = false
     var enableEdit: Bool = true
+    
+    var forceUnlock: Bool = false
+    
+    var isContentVisible: Bool {
+        !reminder.isLocked || forceUnlock || securityVM.isAuthenticated
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            
-            HStack(alignment: .top, spacing: 12) {
-                CheckBox(isMarked: $reminder.isCompleted, color: reminder.color)
-                    .frame(width: 24, height: 24)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(reminder.title)
-                        .font(.headline)
-                        .foregroundColor(.font)
+            if isContentVisible {
+
+                HStack(alignment: .top, spacing: 12) {
+                    CheckBox(isMarked: $reminder.isCompleted, color: reminder.color)
+                        .frame(width: 24, height: 24)
                     
-                    Text(reminder.description ?? "")
-                        .font(.subheadline)
-                        .foregroundColor(.font)
-                }
-                
-                Spacer()
-                
-                if(enableEdit){
-                    Button(action: {
-                        showEditSheet = true
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(reminder.title)
+                            .font(.headline)
+                            .foregroundColor(.font)
                         
-                    }) {
-                        Image(systemName: "pencil")
-                            .foregroundColor(reminder.color)
-                            .font(.system(size: 22, weight: .bold))
+                        Text(reminder.description ?? "")
+                            .font(.subheadline)
+                            .foregroundColor(.font)
                     }
                     
-                    .buttonStyle(PlainButtonStyle())
+                    Spacer()
+                    
+                    if enableEdit {
+                        Button(action: { showEditSheet = true }) {
+                            Image(systemName: "pencil")
+                                .foregroundColor(reminder.color)
+                                .font(.system(size: 22, weight: .bold))
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
                 }
-
                 
-                
-            }
-            .sheet(isPresented: $showEditSheet) {
-                SheetEditView(reminderToEdit: reminder)
-                    .presentationDragIndicator(.visible)
-            }
-            
-            if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty{
-                VStack(alignment: .leading, spacing: 12) {
-                    ForEach(subtasksBinding) { $subtask in
-                        HStack(spacing: 12) {
-                            CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
-                                .frame(width: 24, height: 24)
-                            
-                            Text(subtask.title)
-                                .font(.subheadline)
-                                .foregroundColor(.font)
+                if let subtasksBinding = Binding($reminder.subtasks), !subtasksBinding.wrappedValue.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        ForEach(subtasksBinding) { $subtask in
+                            HStack(spacing: 12) {
+                                CheckBox(isMarked: $subtask.isCompleted, color: reminder.color)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text(subtask.title)
+                                    .font(.subheadline)
+                                    .foregroundColor(.font)
+                            }
                         }
                     }
+                    .padding(.leading, 36)
                 }
-                .padding(.leading, 36)
+                
+            } else {
+                
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "lock.fill")
+                        .foregroundColor(reminder.color)
+                        .font(.system(size: 25, weight: .bold))
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Lembrete trancado")
+                            .font(.headline)
+                            .foregroundColor(.font)
+                        
+                        Text("Toque para desbloquear o conteúdo")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    securityVM.authenticate()
+                }
             }
             
             Divider()
@@ -79,23 +101,28 @@ struct ReminderCard: View {
                     BadgeView(text: safeDate.formatted(date: .abbreviated, time: .omitted), color: reminder.color, icon: nil)
                     BadgeView(text: safeDate.formatted(date: .omitted, time: .shortened), color: reminder.color, icon: nil)
                 }
-
+                
                 BadgeView(text: reminder.category, color: reminder.color, icon: "briefcase.fill")
                 
                 Spacer()
                 
-                if reminder.isImportant{
+                if reminder.isImportant {
                     Image(systemName: "flag.fill")
                         .foregroundColor(Color(.red))
                 }
-                
             }
         }
         .padding(25)
         .background(Color(.cardBackground))
         .cornerRadius(30)
+        
+        .sheet(isPresented: $showEditSheet) {
+            SheetEditView(reminderToEdit: reminder)
+                .presentationDragIndicator(.visible)
+        }
+        
         .contextMenu {
-            if(enableEdit){
+            if enableEdit {
                 Button(role: .destructive) {
                     viewModel.deleteReminder(id: reminder.id)
                 } label: {
@@ -110,7 +137,7 @@ struct ReminderCard: View {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
             listId: 1,
-            isLocked: false,
+            isLocked: true,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: true,

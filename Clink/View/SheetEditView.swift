@@ -1,5 +1,3 @@
-// IMPORTANTE: faz uma lógica de receber as cores da lista quando edita o lembrete
-
 import SwiftUI
 
 struct SheetEditView: View {
@@ -87,7 +85,6 @@ struct SheetEditView: View {
                         withAnimation{
                             dismiss()
                         }
-                        
                     }
                 }
             } message: {
@@ -194,8 +191,6 @@ struct SheetEditView: View {
                 )
                 
             }
-            
-            
         }
     }
 }

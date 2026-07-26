@@ -1,5 +1,5 @@
 //
-//  Authenticate.swift
+//  SecurityViewModel.swift
 //  Clink
 //
 //  Created by Julio Sampaio on 25/07/26.
