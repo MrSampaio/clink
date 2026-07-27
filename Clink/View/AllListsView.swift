@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+//import UIKit
 
 struct AllListsView: View {
     @EnvironmentObject var viewModel: ReminderViewModel
@@ -61,7 +62,7 @@ struct AllListsView: View {
                     
                     LazyVStack(spacing: 20){
                         
-                        if searchText.isEmpty {
+                        if searchText.isEmpty{
                             ForEach(viewModel.customLists){ list in
                                 ListComponent(list: list)
                                 
@@ -73,16 +74,13 @@ struct AllListsView: View {
                                 Text("Nenhuma lista encontrada.")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                    .padding(.top, 40)
+
                             } else {
                                 ForEach(filteredIndices, id: \.self) { index in
                                     ListComponent(list: viewModel.customLists[index])
                                 }
                             }
                         }
-                        
-                        
-
                     }
                     .padding(.vertical, 20)
                     .padding(.horizontal, 20)
@@ -97,8 +95,15 @@ struct AllListsView: View {
                 //testToolbar()
                 AllListsToolBar()
             }
-            .searchable(text: $searchText)
+            .searchable(text: $searchText, prompt: "Buscar listas...")
             .background(Color(.background))
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
+                
             
         }
     }

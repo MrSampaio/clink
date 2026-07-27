@@ -4,12 +4,6 @@
 //
 //  Created by Julio Sampaio on 19/07/26.
 //
-//
-//  ManageView.swift
-//  Clink
-//
-//  Created by Julio Sampaio on 19/07/26.
-//
 
 import SwiftUI
 import LocalAuthentication
@@ -199,6 +193,12 @@ struct ManageView: View {
         }
         .background(Color(.background))
         .searchable(text: $searchText, prompt: "Buscar lembretes...")
+        .onTapGesture {
+            #if canImport(UIKit)
+                hideKeyboard()
+            #endif
+        }
+        .scrollDismissesKeyboard(.interactively)
     }
     
     @ViewBuilder

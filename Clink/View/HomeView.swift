@@ -12,6 +12,8 @@ struct HomeView: View {
     @State private var isExpanded = false
     @EnvironmentObject var viewModel: ReminderViewModel
     
+//    @Environment(\.isSearching) private var isSearching
+    
     @State private var sortOrder: SortOrder = .newest
     @State private var showConcluded: Bool = false
     @State private var showLocked: Bool = false
@@ -37,7 +39,7 @@ struct HomeView: View {
                 
                 VStack(spacing: 10){
                     
-                    if searchText.isEmpty {
+                    if searchText.isEmpty{
                         
                         Title(title: "Lembretes", subtitle: " \(viewModel.totalReminders) lembretes")
                             .padding(.bottom, 30)
@@ -96,11 +98,13 @@ struct HomeView: View {
                     
                         
                     } else {
-                        if filteredIndices.isEmpty {
+                        if filteredIndices.isEmpty{
                             Text("Nenhum lembrete encontrado.")
+                                .frame(maxWidth: .infinity)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .padding(.top, 40)
+                            
                         } else {
                             ForEach(filteredIndices, id: \.self) { index in
                                 ReminderCard(reminder: $viewModel.reminders[index])
@@ -124,6 +128,12 @@ struct HomeView: View {
                 )
             }
             .searchable(text: $searchText, prompt: "Buscar lembretes...")
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
             
         }
     }
