@@ -11,6 +11,19 @@ import SwiftUI
 struct AllListsView: View {
     @EnvironmentObject var viewModel: ReminderViewModel
     
+    @State var searchText: String = ""
+    var filteredIndices: [Int] {
+        if searchText.isEmpty {
+            return []
+        } else {
+            return viewModel.customLists.indices.filter { index in
+                let list = viewModel.customLists[index]
+                let matchTitle = list.title.localizedCaseInsensitiveContains(searchText)
+                return matchTitle
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack{
             ScrollView{
@@ -47,12 +60,29 @@ struct AllListsView: View {
                     
                     
                     LazyVStack(spacing: 20){
-                        ForEach(viewModel.customLists){ list in
-                            ListComponent(list: list)
-                            
-                            Divider()
-                                .padding(.horizontal, 30)
+                        
+                        if searchText.isEmpty {
+                            ForEach(viewModel.customLists){ list in
+                                ListComponent(list: list)
+                                
+                                Divider()
+                                    .padding(.horizontal, 30)
+                            }
+                        } else{
+                            if filteredIndices.isEmpty {
+                                Text("Nenhuma lista encontrada.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, 40)
+                            } else {
+                                ForEach(filteredIndices, id: \.self) { index in
+                                    ListComponent(list: viewModel.customLists[index])
+                                }
+                            }
                         }
+                        
+                        
+
                     }
                     .padding(.vertical, 20)
                     .padding(.horizontal, 20)
@@ -67,6 +97,7 @@ struct AllListsView: View {
                 //testToolbar()
                 AllListsToolBar()
             }
+            .searchable(text: $searchText)
             .background(Color(.background))
             
         }

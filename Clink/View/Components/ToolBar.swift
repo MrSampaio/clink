@@ -10,13 +10,14 @@ import SwiftUI
 struct HomeToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                print("Pequisar Clicado") }) { Image(systemName: "magnifyingglass")}
-        }
+//        ToolbarItem(placement: .navigationBarTrailing) {
+//            Button(action: {
+//                print("Pequisar Clicado") }) { Image(systemName: "magnifyingglass")}
+//        }
         
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             Button(action: {
+                
                 print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
             
             Button(action: {
