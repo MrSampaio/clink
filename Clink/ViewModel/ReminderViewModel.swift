@@ -160,6 +160,9 @@ class ReminderViewModel: ObservableObject{
         ),
     ]
     
+    @Published var selectedTab: Int = 0
+    @Published var managePickerSelection: Int = 0
+    
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
         let indices = reminders.indices.filter { index in

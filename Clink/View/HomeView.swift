@@ -12,6 +12,9 @@ struct HomeView: View {
     @State private var isExpanded = false
     @EnvironmentObject var viewModel: ReminderViewModel
     
+    @State private var sortOrder: SortOrder = .newest
+    @State private var showConcluded: Bool = false
+    @State private var showLocked: Bool = false
     @State private var searchText = ""
     
     var filteredIndices: [Int] {
@@ -35,33 +38,63 @@ struct HomeView: View {
                 VStack(spacing: 10){
                     
                     if searchText.isEmpty {
-                    
+                        
                         Title(title: "Lembretes", subtitle: " \(viewModel.totalReminders) lembretes")
                             .padding(.bottom, 30)
                         
-                        DisclosureGroupComponent(
-                            title: "Hoje",
-                            indices: viewModel.todayRemindersIndices,
-                            reminders: $viewModel.reminders
-                        )
+                        switch sortOrder {
+                        case .newest:
+                            
+                            DisclosureGroupComponent(
+                                title: "Hoje",
+                                indices: viewModel.todayRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Esta Semana",
+                                indices: viewModel.thisWeekRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Este Mês",
+                                indices: viewModel.thisMonthRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Atrasados",
+                                indices: viewModel.overdueRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                        case .oldest:
+                            DisclosureGroupComponent(
+                                title: "Atrasados",
+                                indices: viewModel.overdueRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Este Mês",
+                                indices: viewModel.thisMonthRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Esta Semana",
+                                indices: viewModel.thisWeekRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                            
+                            DisclosureGroupComponent(
+                                title: "Hoje",
+                                indices: viewModel.todayRemindersIndices,
+                                reminders: $viewModel.reminders
+                            )
+                        }
+                    
                         
-                        DisclosureGroupComponent(
-                            title: "Esta Semana",
-                            indices: viewModel.thisWeekRemindersIndices,
-                            reminders: $viewModel.reminders
-                        )
-                        
-                        DisclosureGroupComponent(
-                            title: "Este Mês",
-                            indices: viewModel.thisMonthRemindersIndices,
-                            reminders: $viewModel.reminders
-                        )
-                        
-                        DisclosureGroupComponent(
-                            title: "Atrasados",
-                            indices: viewModel.overdueRemindersIndices,
-                            reminders: $viewModel.reminders
-                        )
                     } else {
                         if filteredIndices.isEmpty {
                             Text("Nenhum lembrete encontrado.")
@@ -80,7 +113,15 @@ struct HomeView: View {
             }
             .background(Color(.background))
             .toolbar {
-                HomeToolBar()
+                HomeToolBar(
+                    sortOrder: $sortOrder,
+                    showConcluded: $showConcluded,
+                    showLocked: $showLocked,
+                    onTrashTapped: {
+                        viewModel.managePickerSelection = 1
+                        viewModel.selectedTab = 3
+                    }
+                )
             }
             .searchable(text: $searchText, prompt: "Buscar lembretes...")
             

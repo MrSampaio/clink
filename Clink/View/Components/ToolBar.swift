@@ -7,21 +7,51 @@
 
 import SwiftUI
 
+enum SortOrder {
+    case newest
+    case oldest
+}
+
 struct HomeToolBar: ToolbarContent {
+    
+    @Binding var sortOrder: SortOrder
+    @Binding var showConcluded: Bool
+    @Binding var showLocked: Bool
+    
+    // closure (ação) para avisar a HomeView que a lixeira foi clicada
+    var onTrashTapped: () -> Void
+    
     var body: some ToolbarContent {
-        
-//        ToolbarItem(placement: .navigationBarTrailing) {
-//            Button(action: {
-//                print("Pequisar Clicado") }) { Image(systemName: "magnifyingglass")}
-//        }
-        
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: {
-                
-                print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
+            Menu {
+                Picker("Organizar", selection: $sortOrder) {
+                    Text("Mais recentes primeiro").tag(SortOrder.newest)
+                    Text("Mais antigos primeiro").tag(SortOrder.oldest)
+                }
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
+            }
             
-            Button(action: {
-                print("Menu Clicado") }) { Image(systemName: "ellipsis")}
+            Menu {
+                Toggle(isOn: $showConcluded) {
+                    Label("Mostrar concluídos", systemImage: "checkmark.circle")
+                }
+                
+                Toggle(isOn: $showLocked) {
+                    Label("Mostrar trancados", systemImage: "lock")
+                }
+                
+                Divider()
+                
+                Button(role: .destructive, action: {
+                    onTrashTapped()
+                }) {
+                    Label("Lixeira", systemImage: "trash")
+                }
+                
+            } label: {
+                Image(systemName: "ellipsis")
+            }
         }
     }
 }

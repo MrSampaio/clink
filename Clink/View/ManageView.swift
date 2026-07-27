@@ -18,12 +18,12 @@ struct ManageView: View {
     
     @EnvironmentObject var viewModel: ReminderViewModel
     @StateObject private var securityVM = SecurityViewModel()
-    @State private var selectedPicker = 0
+    //@State private var selectedPicker = 0
     
     @State private var searchText = ""
     
     var currentCount: String {
-        switch selectedPicker {
+        switch viewModel.managePickerSelection {
         case 0: return "\(viewModel.concludedRemindersIndices.count)"
         case 1: return "\(viewModel.deletedReminders.count)"
         case 2: return "\(viewModel.lockedRemindersIndices.count)"
@@ -32,7 +32,7 @@ struct ManageView: View {
     }
     
     var currentDescription: String {
-        switch selectedPicker {
+        switch viewModel.managePickerSelection {
         case 0: return "Lembretes concluídos"
         case 1: return "Lembretes apagados"
         case 2: return "Lembretes trancados"
@@ -99,7 +99,7 @@ struct ManageView: View {
                     .padding(16)
                 
                 VStack {
-                    Picker("FilterManage", selection: $selectedPicker) {
+                    Picker("FilterManage", selection: $viewModel.managePickerSelection) {
                         Text("Concluídos").tag(0)
                         Text("Apagados").tag(1)
                         Text("Trancados").tag(2)
@@ -108,45 +108,43 @@ struct ManageView: View {
                     .padding(16)
                 }
                 
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
                     Text(currentCount)
                         .font(.system(size: 41, weight: .bold))
                     Text(currentDescription)
                     
-                    if selectedPicker == 0 {
-                        if viewModel.concludedRemindersIndices.isEmpty {
-                           Text("Nenhum lembrete concluído foi encontrado.")
-                                .padding(.top, 40)
-                        } else{
-                            ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
-                                ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
-                                    .padding(.top, 15)
+                    switch viewModel.managePickerSelection {
+                        case 0:
+                            if viewModel.concludedRemindersIndices.isEmpty {
+                               Text("Nenhum lembrete concluído foi encontrado.")
+                                    .padding(.top, 40)
+                            } else{
+                                ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
+                                    ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
+                                }
                             }
-                        }
-                        
-                    } else if selectedPicker == 1 {
-                        if viewModel.deletedReminders.isEmpty {
-                            Text("Nenhum lembrete apagado foi encontrado.")
-                                 .padding(.top, 40)
-                        } else{
-                            ForEach($viewModel.deletedReminders) { $deletedReminder in
-                                ReminderCard(reminder: $deletedReminder, enableEdit: false)
-                                    .padding(.top, 15)
+                        case 1:
+                            if viewModel.deletedReminders.isEmpty {
+                                Text("Nenhum lembrete apagado foi encontrado.")
+                                     .padding(.top, 40)
+                            } else{
+                                ForEach($viewModel.deletedReminders) { $deletedReminder in
+                                    ReminderCard(reminder: $deletedReminder, enableEdit: false)
+                                }
                             }
-                        }
-                        
-                    } else if selectedPicker == 2 {
-                        if viewModel.lockedRemindersIndices.isEmpty {
-                            Text("Nenhum lembrete trancado foi encontrado.")
-                                 .padding(.top, 40)
-                        } else{
-                            ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
-                                ReminderCard(reminder: $viewModel.reminders[index], forceUnlock: true)
-                                    .padding(.top, 15)
+                        case 2:
+                            if viewModel.lockedRemindersIndices.isEmpty {
+                                Text("Nenhum lembrete trancado foi encontrado.")
+                                     .padding(.top, 40)
+                            } else{
+                                ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
+                                    ReminderCard(reminder: $viewModel.reminders[index], forceUnlock: true)
+                                }
                             }
-                        }
-                        
+                    default:
+                        EmptyView()
                     }
+                    
                 }
                 .padding(.horizontal, 5)
                 
