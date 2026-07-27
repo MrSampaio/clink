@@ -27,7 +27,7 @@ struct IconAndTitleList: View {
             TextField("Insira o nome da lista", text: $listName)
                 .padding(16)
                 .frame(maxWidth: .infinity, minHeight: 50)
-                .background(.white)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 28))
         }
         .listRowBackground(Color.clear)
