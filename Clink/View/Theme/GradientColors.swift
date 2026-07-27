@@ -24,7 +24,7 @@ extension ShapeStyle where Self == LinearGradient {
             endPoint: .bottom)
     }
     
-    static var orageGradient: LinearGradient {
+    static var orangeGradient: LinearGradient {
         LinearGradient(
             colors: [.orange, Color(red: 197 / 255, green: 83 / 255, blue: 0 / 255)],
             startPoint: .top,
