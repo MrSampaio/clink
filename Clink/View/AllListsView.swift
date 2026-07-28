@@ -26,9 +26,9 @@ struct AllListsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 25) {
-                    Title(title: "Listas", subtitle: "\(viewModel.totalLists) listas criadas")
+                    Title(title: "Listas", subtitle: "\(viewModel.totalLists) listas criadas!")
                     
-                    VStack(spacing: 5) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Button(action: {
                             showSheetList.toggle()
                         }) {
@@ -44,23 +44,24 @@ struct AllListsView: View {
                                     .foregroundColor(.primary)
                             }
                         }
-                        .padding(15)
+                        .padding(16)
                         .background(Color(.buttonBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 28))
                         .overlay(
                             RoundedRectangle(cornerRadius: 28)
-                                .stroke(Color.border, lineWidth: 1)
+                                .stroke(Color.border, lineWidth: 0.5)
                         )
                         
                         Text("Ao criar uma nova lista, é necessário definir seu nome, cor e ícone antes de concluir.")
                             .font(.system(size: 13, weight: .regular))
-                            .padding(.horizontal, 10)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 15)
                     }
                     
                     LazyVStack(spacing: 20) {
                         if displayedLists.isEmpty {
                             
-                            Text(searchText.isEmpty ? "Nenhuma lista criada." : "Nenhuma lista encontrada.")
+                            Text(searchText.isEmpty ? "Nenhuma lista criada" : "Nenhuma lista encontrada")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .padding(.top, 20)
@@ -125,9 +126,9 @@ struct AllListsView: View {
             .searchable(text: $searchText, prompt: "Buscar listas...")
             .background(Color(.background))
             .onTapGesture {
-                #if canImport(UIKit)
-                    hideKeyboard()
-                #endif
+#if canImport(UIKit)
+                hideKeyboard()
+#endif
             }
             .scrollDismissesKeyboard(.interactively)
         }

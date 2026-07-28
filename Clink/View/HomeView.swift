@@ -53,16 +53,16 @@ struct HomeView: View {
                         
                         let visibleCount = applyFilters(to: Array(viewModel.reminders.indices)).count
                         
-                        Title(title: "Lembretes", subtitle: " \(visibleCount) lembretes")
+                        Title(title: "Todos", subtitle: " \(visibleCount) lembretes criados!")
                             .padding(.bottom, 30)
                         
                         switch sortOrder {
                         case .newest:
                             DisclosureGroupComponent(title: "Hoje", indices: applyFilters(to: viewModel.todayRemindersIndices), reminders: $viewModel.reminders)
                             
-                            DisclosureGroupComponent(title: "Esta Semana", indices: applyFilters(to: viewModel.thisWeekRemindersIndices), reminders: $viewModel.reminders)
+                            DisclosureGroupComponent(title: "Esta semana", indices: applyFilters(to: viewModel.thisWeekRemindersIndices), reminders: $viewModel.reminders)
                             
-                            DisclosureGroupComponent(title: "Este Mês", indices: applyFilters(to: viewModel.thisMonthRemindersIndices), reminders: $viewModel.reminders)
+                            DisclosureGroupComponent(title: "Este mês", indices: applyFilters(to: viewModel.thisMonthRemindersIndices), reminders: $viewModel.reminders)
                             
                             DisclosureGroupComponent(title: "Futuros", indices: applyFilters(to: viewModel.futureRemindersIndices), reminders: $viewModel.reminders)
                             
@@ -71,9 +71,9 @@ struct HomeView: View {
                         case .oldest:
                             DisclosureGroupComponent(title: "Atrasados", indices: applyFilters(to: viewModel.overdueRemindersIndices), reminders: $viewModel.reminders)
                             
-                            DisclosureGroupComponent(title: "Este Mês", indices: applyFilters(to: viewModel.thisMonthRemindersIndices), reminders: $viewModel.reminders)
+                            DisclosureGroupComponent(title: "Este mês", indices: applyFilters(to: viewModel.thisMonthRemindersIndices), reminders: $viewModel.reminders)
                             
-                            DisclosureGroupComponent(title: "Esta Semana", indices: applyFilters(to: viewModel.thisWeekRemindersIndices), reminders: $viewModel.reminders)
+                            DisclosureGroupComponent(title: "Esta semana", indices: applyFilters(to: viewModel.thisWeekRemindersIndices), reminders: $viewModel.reminders)
                             
                             DisclosureGroupComponent(title: "Hoje", indices: applyFilters(to: viewModel.todayRemindersIndices), reminders: $viewModel.reminders)
                             
@@ -83,7 +83,7 @@ struct HomeView: View {
                     } else {
                         
                         if filteredIndices.isEmpty {
-                            Text("Nenhum lembrete encontrado.")
+                            Text("Nenhum lembrete encontrado")
                                 .frame(maxWidth: .infinity)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
