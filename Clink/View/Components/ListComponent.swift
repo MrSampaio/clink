@@ -45,7 +45,7 @@ public struct ListComponent: View {
                             .foregroundColor(.font)
                             .opacity(0.7)
                     } else{
-                        Text("Nenhum lembrete.")
+                        Text("Nenhum lembrete")
                             .foregroundColor(.font)
                             .opacity(0.7)
                     }

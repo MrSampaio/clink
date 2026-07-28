@@ -81,7 +81,7 @@ struct SheetCreateListView: View {
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
                 SheetListToolBar(
-                    title: listToEdit == nil ? "Nova Lista" : "Editar Lista",
+                    title: listToEdit == nil ? "Criar Lista" : "Editar Lista",
                     
                     actionCancel: {
                         if hasChanges {

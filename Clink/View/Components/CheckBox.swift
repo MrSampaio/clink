@@ -27,7 +27,7 @@ struct CheckBox: View {
                         .font(.system(size: 14, weight: .bold))
                 } else{
                     Circle()
-                        .stroke(color, lineWidth: 3)
+                        .stroke(color, lineWidth: 1)
                 }
             }
             .contentShape(Circle())
