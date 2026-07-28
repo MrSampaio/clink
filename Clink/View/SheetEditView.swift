@@ -76,7 +76,7 @@ struct SheetEditView: View {
                 } message: {
                     Text(errorMessage)
                 }
-            .alert("Apagar Lembrete", isPresented: $showingDeleteAlert) {
+            .alert("Tem certeza que deseja apagar o lembrete?", isPresented: $showingDeleteAlert) {
                 Button("Cancelar", role: .cancel) {}
                 
                 Button("Apagar", role: .destructive) {
@@ -88,7 +88,7 @@ struct SheetEditView: View {
                     }
                 }
             } message: {
-                Text("Tem certeza de que deseja apagar este lembrete? Esta ação não pode ser desfeita.")
+                Text("O lembrete será movido para a lixeira e essa ação não poderá ser desfeita.")
             }
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled(hasChanges)

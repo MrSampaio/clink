@@ -13,7 +13,7 @@ enum SortOrder {
 }
 
 struct HomeToolBar: ToolbarContent {
-    
+
     @Binding var sortOrder: SortOrder
     @Binding var showConcluded: Bool
     @Binding var showLocked: Bool
@@ -63,53 +63,27 @@ struct HomeToolBar: ToolbarContent {
     }
 }
 
+enum ListSortOrder {
+    case alphabetical
+    case creation
+}
+
 struct AllListsToolBar: ToolbarContent {
+    
+    @Binding var sortOrder: ListSortOrder
+    
     var body: some ToolbarContent {
-        
+
         ToolbarItem(placement: .topBarTrailing) {
-            
-            HStack(spacing: 12) {
-                Button(action: {
-                    print("Pesquisar Clicado")
-                }) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.font)
-                        .frame(width: 50, height: 50)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle().stroke(Color.border.opacity(0.3), lineWidth: 1)
-                        )
-                        .shadow(color: .border.opacity(0.15), radius: 5, x: 0, y: 4)
+            Menu {
+                Picker("Organizar", selection: $sortOrder) {
+                    Text("Ordem alfabética").tag(ListSortOrder.alphabetical)
+                    Text("Ordem de criação").tag(ListSortOrder.creation)
                 }
-                
-                HStack(spacing: 20) {
-                    Button(action: { print("Organizar Clicado") }) {
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
-                    
-                    Button(action: { print("Lixo Clicado") }) {
-                        Image(systemName: "trash")
-                    }
-                    
-                    Button(action: { print("Menu Clicado") }) {
-                        Image(systemName: "ellipsis")
-                    }
-                }
-                .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.font)
-                .padding(.horizontal, 20)
-                .frame(height: 50)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule().stroke(Color.border.opacity(0.3), lineWidth: 1)
-                )
-                .shadow(color: .font.opacity(0.15), radius: 5, x: 0, y: 4)
-                
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
             }
-        } .sharedBackgroundVisibility(.hidden)
+        }
     }
 }
 
@@ -214,11 +188,20 @@ struct WidgetToolBar: ToolbarContent {
 }
 
 struct ManageToolBar: ToolbarContent {
+    
+    var onClearTapped: () -> Void
+    
     var body: some ToolbarContent {
-        
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "ellipsis")}
+            Menu {
+                Button(role: .destructive, action: {
+                    onClearTapped()
+                }) {
+                    Label("Limpar lixeira", systemImage: "trash")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+            }
         }
     }
 }

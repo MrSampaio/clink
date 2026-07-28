@@ -332,7 +332,23 @@ class ReminderViewModel: ObservableObject{
         }
     }
     
-    
+    func filteredAndSortedLists(searchText: String, sortOrder: ListSortOrder) -> [ReminderList] {
+        var result = customLists
+        
+        if !searchText.isEmpty {
+            result = result.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+        
+        switch sortOrder {
+        case .alphabetical:
+           
+            result.sort { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .creation:
+            break
+        }
+        
+        return result
+    }
 }
 
 #if canImport(UIKit)

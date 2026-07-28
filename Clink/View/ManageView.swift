@@ -68,7 +68,9 @@ struct ManageView: View {
             }
             .toolbar {
                 if securityVM.isAuthenticated {
-                    ManageToolBar()
+                    ManageToolBar(onClearTapped: {
+                        viewModel.deletedReminders.removeAll()
+                    })
                 }
             }
             //.searchable(text: $searchText, prompt: "Buscar lembretes...")
@@ -95,7 +97,7 @@ struct ManageView: View {
                 VStack {
                     Picker("FilterManage", selection: $viewModel.managePickerSelection) {
                         Text("Concluídos").tag(0)
-                        Text("Apagados").tag(1)
+                        Text("Lixeira").tag(1)
                         Text("Trancados").tag(2)
                     }
                     .pickerStyle(.segmented)
@@ -114,16 +116,16 @@ struct ManageView: View {
                                     .padding(.top, 40)
                             } else{
                                 ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
-                                    ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
+                                    ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false, forceUnlock: true)
                                 }
                             }
                         case 1:
                             if viewModel.deletedReminders.isEmpty {
-                                Text("Nenhum lembrete apagado foi encontrado.")
+                                Text("Nenhum lembrete na lixeira foi encontrado.")
                                      .padding(.top, 40)
                             } else{
                                 ForEach($viewModel.deletedReminders) { $deletedReminder in
-                                    ReminderCard(reminder: $deletedReminder, enableEdit: false)
+                                    ReminderCard(reminder: $deletedReminder, enableEdit: false, forceUnlock: true)
                                 }
                             }
                         case 2:
@@ -159,19 +161,19 @@ struct ManageView: View {
                                 .padding(.horizontal, 10)
                             
                             ForEach(filteredConcludedIndices, id: \.self) { index in
-                                ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false)
+                                ReminderCard(reminder: $viewModel.reminders[index], enableEdit: false, forceUnlock: true)
                             }
                         }
                         
                         if !filteredDeleted.isEmpty {
-                            Text("Encontrados em Apagados")
+                            Text("Encontrados na lixeira")
                                 .font(.title3.bold())
                                 .padding(.horizontal, 10)
                                 .padding(.top, 10)
                             
                             ForEach(filteredDeleted, id: \.id) { deletedReminder in
                                 if let index = viewModel.deletedReminders.firstIndex(where: { $0.id == deletedReminder.id }) {
-                                    ReminderCard(reminder: $viewModel.deletedReminders[index], enableEdit: false)
+                                    ReminderCard(reminder: $viewModel.deletedReminders[index], enableEdit: false, forceUnlock: true)
                                 }
                             }
                         }
