@@ -53,7 +53,7 @@ struct HomeView: View {
                         
                         let visibleCount = applyFilters(to: Array(viewModel.reminders.indices)).count
                         
-                        Title(title: "Todos", subtitle: " \(visibleCount) lembretes criados!")
+                        Title(title: "Lembretes", subtitle: " \(visibleCount) lembretes criados!")
                             .padding(.bottom, 30)
                         
                         switch sortOrder {
