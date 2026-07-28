@@ -1,35 +1,62 @@
 //
-//  GifImage.swift
+//  VideoPlayerUIView.swift
 //  Clink
 //
 //  Created by Julio Sampaio on 28/07/26.
 //
+//
+//  SplashVideoView.swift
+//  Clink
+//
 
-import Foundation
 import SwiftUI
-import WebKit
+import AVFoundation
 
-struct GIFImage: UIViewRepresentable {
-    let name: String
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        webView.isOpaque = false
-        webView.backgroundColor = .clear
-        webView.scrollView.isScrollEnabled = false
-
-        if let path = Bundle.main.path(forResource: name, ofType: "gif") {
-            let url = URL(fileURLWithPath: path)
-            let data = try? Data(contentsOf: url)
-            webView.load(
-                data!,
-                mimeType: "image/gif",
-                characterEncodingName: "UTF-8",
-                baseURL: url.deletingPathExtension()
-            )
+class VideoPlayerUIView: UIView {
+    private var playerLayer = AVPlayerLayer()
+    
+    init(videoName: String) {
+        super.init(frame: .zero)
+        self.backgroundColor = .clear
+        
+        guard let url = Bundle.main.url(forResource: videoName, withExtension: "mp4") else { return }
+        
+        let player = AVPlayer(url: url)
+        player.isMuted = true
+        
+        playerLayer.player = player
+        playerLayer.videoGravity = .resizeAspectFill
+        layer.addSublayer(playerLayer)
+        
+        player.play()
+        
+        
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player.currentItem,
+            queue: .main
+        ) { [weak player] _ in
+            player?.seek(to: .zero)
+            player?.play()
         }
-        return webView
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) não implementado")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        playerLayer.frame = bounds
+    }
+}
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+struct SplashVideoView: UIViewRepresentable {
+    var videoName: String
+    
+    func makeUIView(context: Context) -> UIView {
+        return VideoPlayerUIView(videoName: videoName)
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {}
 }
