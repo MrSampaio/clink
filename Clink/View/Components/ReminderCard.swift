@@ -118,7 +118,7 @@ struct ReminderCard: View {
         .cornerRadius(30)
         
         .sheet(isPresented: $showEditSheet) {
-            SheetEditView(reminderToEdit: reminder)
+            SheetEditReminderView(reminderToEdit: reminder)
                 .presentationDragIndicator(.visible)
         }
         

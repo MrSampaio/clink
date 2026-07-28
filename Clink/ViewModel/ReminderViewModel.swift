@@ -332,6 +332,43 @@ class ReminderViewModel: ObservableObject{
         }
     }
     
+    func createNewList(title: String, color: Color, icon: String) {
+        let newId = (customLists.map { $0.id }.max() ?? 0) + 1
+        
+        let newList = ReminderList(
+            id: newId,
+            title: title,
+            color: color,
+            icon: icon
+        )
+        
+        customLists.append(newList)
+    }
+    
+    func updateList(id: Int, title: String, color: Color, icon: String) {
+        if let index = customLists.firstIndex(where: { $0.id == id }) {
+            customLists[index].title = title
+            customLists[index].color = color
+            customLists[index].icon = icon
+            
+            for i in reminders.indices where reminders[i].listId == id {
+                reminders[i].category = title
+                reminders[i].color = color
+            }
+        }
+    }
+    
+    func deleteList(id: Int) {
+        let remindersToDelete = reminders.filter { $0.listId == id }
+        
+        deletedReminders.insert(contentsOf: remindersToDelete, at: 0)
+        
+        reminders.removeAll(where: { $0.listId == id })
+        
+        customLists.removeAll(where: { $0.id == id })
+    }
+    
+    
     func filteredAndSortedLists(searchText: String, sortOrder: ListSortOrder) -> [ReminderList] {
         var result = customLists
         
@@ -341,10 +378,9 @@ class ReminderViewModel: ObservableObject{
         
         switch sortOrder {
         case .alphabetical:
-           
             result.sort { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
         case .creation:
-            break
+            result.reverse()
         }
         
         return result

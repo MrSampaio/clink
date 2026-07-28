@@ -14,6 +14,8 @@ struct IconAndTitleList: View {
     var selectedIcon: String
     var selectedGradient: LinearGradient
     
+    let characterLimit = 20
+    
     var body: some View {
         
         HStack(spacing: 16) {
@@ -25,6 +27,11 @@ struct IconAndTitleList: View {
                 .clipShape(Circle())
             
             TextField("Insira o nome da lista", text: $listName)
+                .onChange(of: listName) { oldValue, newValue in
+                    if newValue.count > characterLimit {
+                        listName = String(newValue.prefix(characterLimit))
+                    }
+                }
                 .padding(16)
                 .frame(maxWidth: .infinity, minHeight: 50)
                 .background(Color(UIColor.secondarySystemGroupedBackground))
@@ -44,8 +51,6 @@ struct PresetsList: View {
             
             Picker("Predefinições", selection: $presets) {
                 Text("Nenhum").tag(0)
-                Text("...").tag(1)
-                Text("...").tag(2)
             }
         }
     }

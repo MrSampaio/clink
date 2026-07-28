@@ -108,7 +108,7 @@ struct SelectedListToolBar: ToolbarContent {
     }
 }
 struct SheetReminderToolBar: ToolbarContent {
-    
+    let title: String
     let actionCancel: () -> Void
     let actionConfirm: () -> Void
     let actionDiscard: () -> Void
@@ -145,7 +145,7 @@ struct SheetReminderToolBar: ToolbarContent {
         }
         
         ToolbarItem(placement: .principal) {
-            Text("Editar")
+            Text(title)
                 .font(.system(size: 20, weight: .semibold))
         }
         if isEditing {
@@ -177,6 +177,79 @@ struct SheetReminderToolBar: ToolbarContent {
         }
     }
 }
+
+struct SheetListToolBar: ToolbarContent {
+    
+    let title: String
+    let actionCancel: () -> Void
+    let actionConfirm: () -> Void
+    let actionDiscard: () -> Void
+    let actionDelete: () -> Void
+    let disableAdd: Bool
+    var isEditing: Bool
+    
+    var color: Color?
+    
+    @Binding var showingDiscardAlert: Bool
+    
+    var body: some ToolbarContent {
+        
+        ToolbarItem(placement: .cancellationAction) {
+            Button(action: {
+                actionCancel()
+            }) {
+                Image(systemName: "xmark")
+            }
+            .confirmationDialog(
+                "",
+                isPresented: $showingDiscardAlert,
+                titleVisibility: .hidden
+            ) {
+                Button("Descartar", role: .destructive) {
+                    actionDiscard()
+                }
+                
+                Button("Continuar Editando", role: .cancel) { }
+                
+            } message: {
+                Text("Deseja mesmo descartar as alterações desta lista?")
+            }
+        }
+        
+        ToolbarItem(placement: .principal) {
+            Text(title)
+                .font(.system(size: 20, weight: .semibold))
+        }
+        
+        if isEditing {
+            ToolbarItem(placement: .destructiveAction){
+                Button(action: {
+                    actionDelete()
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
+                .tint(.red)
+            }
+        }
+        
+        ToolbarItem(placement: .confirmationAction) {
+            Button(action: {
+                actionConfirm()
+            }) {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+            .tint(color ?? .blue)
+            .disabled(disableAdd)
+        }
+    }
+}
+
 struct WidgetToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
@@ -205,17 +278,4 @@ struct ManageToolBar: ToolbarContent {
         }
     }
 }
-
-struct testToolbar: ToolbarContent{
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "magnifyingglass")}.background(.red)
-        }
-    }
-}
-
-
-
-
 

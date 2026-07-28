@@ -115,7 +115,7 @@ struct HomeView: View {
             }
             .searchable(text: $searchText, prompt: "Buscar lembretes...")
             .sheet(isPresented: $showSheetReminder) {
-                SheetEditView(list: nil, reminderToEdit: nil)
+                SheetEditReminderView(list: nil, reminderToEdit: nil)
                     .presentationDragIndicator(.visible)
             }
             
