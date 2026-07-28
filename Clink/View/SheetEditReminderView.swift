@@ -56,7 +56,10 @@ struct SheetEditReminderView: View {
         let lockedChanged = lockReminder != (reminderToEdit?.isLocked ?? false)
         let importantChanged = signposted != (reminderToEdit?.isImportant ?? false)
         
-        return titleChanged || descChanged || dateChanged || notification || repeatReminder || lockedChanged || importantChanged || hasValidSubtasks
+        let originalListId = reminderToEdit?.listId ?? list?.id ?? 1
+        let listChanged = selectedListId != originalListId
+        
+        return titleChanged || descChanged || dateChanged || notification || repeatReminder || lockedChanged || importantChanged || listChanged || hasValidSubtasks
     }
     var selectedListColor: Color {
         viewModel.customLists.first(where: { $0.id == selectedListId })?.color ?? .blue
