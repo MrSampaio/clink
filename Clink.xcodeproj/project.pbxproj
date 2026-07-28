@@ -7,23 +7,91 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36830B1B3015ABFA00AE5893 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36830B1A3015ABFA00AE5893 /* WidgetKit.framework */; };
+		36830B1D3015ABFA00AE5893 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36830B1C3015ABFA00AE5893 /* SwiftUI.framework */; };
+		36830B2E3015ABFA00AE5893 /* ClinkWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		36B1E888300C1981000EEF64 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36B1E887300C197A000EEF64 /* .gitignore */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		36830B2C3015ABFA00AE5893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36B1E871300C187B000EEF64 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36830B173015ABFA00AE5893;
+			remoteInfo = ClinkWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		36830B333015ABFA00AE5893 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				36830B2E3015ABFA00AE5893 /* ClinkWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClinkWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		36830B1A3015ABFA00AE5893 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		36830B1C3015ABFA00AE5893 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		36830B3C3015B1D600AE5893 /* ClinkWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClinkWidgetExtension.entitlements; sourceTree = "<group>"; };
 		36B1E879300C187B000EEF64 /* Clink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B1E887300C197A000EEF64 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		36830B2F3015ABFA00AE5893 /* Exceptions for "ClinkWidget" folder in "ClinkWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 36830B173015ABFA00AE5893 /* ClinkWidgetExtension */;
+		};
+		36830B3B3015AFB400AE5893 /* Exceptions for "Clink" folder in "ClinkWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				View/Theme/ColorExtensions.swift,
+			);
+			target = 36830B173015ABFA00AE5893 /* ClinkWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		36830B1E3015ABFA00AE5893 /* ClinkWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				36830B2F3015ABFA00AE5893 /* Exceptions for "ClinkWidget" folder in "ClinkWidgetExtension" target */,
+			);
+			path = ClinkWidget;
+			sourceTree = "<group>";
+		};
 		36B1E87B300C187B000EEF64 /* Clink */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				36830B3B3015AFB400AE5893 /* Exceptions for "Clink" folder in "ClinkWidgetExtension" target */,
+			);
 			path = Clink;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		36830B153015ABFA00AE5893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				36830B1D3015ABFA00AE5893 /* SwiftUI.framework in Frameworks */,
+				36830B1B3015ABFA00AE5893 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36B1E876300C187B000EEF64 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -34,11 +102,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		36830B193015ABFA00AE5893 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				36830B1A3015ABFA00AE5893 /* WidgetKit.framework */,
+				36830B1C3015ABFA00AE5893 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		36B1E870300C187B000EEF64 = {
 			isa = PBXGroup;
 			children = (
+				36830B3C3015B1D600AE5893 /* ClinkWidgetExtension.entitlements */,
 				36B1E887300C197A000EEF64 /* .gitignore */,
 				36B1E87B300C187B000EEF64 /* Clink */,
+				36830B1E3015ABFA00AE5893 /* ClinkWidget */,
+				36830B193015ABFA00AE5893 /* Frameworks */,
 				36B1E87A300C187B000EEF64 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				36B1E879300C187B000EEF64 /* Clink.app */,
+				36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,6 +135,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		36830B173015ABFA00AE5893 /* ClinkWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36830B303015ABFA00AE5893 /* Build configuration list for PBXNativeTarget "ClinkWidgetExtension" */;
+			buildPhases = (
+				36830B143015ABFA00AE5893 /* Sources */,
+				36830B153015ABFA00AE5893 /* Frameworks */,
+				36830B163015ABFA00AE5893 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				36830B1E3015ABFA00AE5893 /* ClinkWidget */,
+			);
+			name = ClinkWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = ClinkWidgetExtension;
+			productReference = 36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		36B1E878300C187B000EEF64 /* Clink */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 36B1E884300C187B000EEF64 /* Build configuration list for PBXNativeTarget "Clink" */;
@@ -61,10 +164,12 @@
 				36B1E875300C187B000EEF64 /* Sources */,
 				36B1E876300C187B000EEF64 /* Frameworks */,
 				36B1E877300C187B000EEF64 /* Resources */,
+				36830B333015ABFA00AE5893 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				36830B2D3015ABFA00AE5893 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				36B1E87B300C187B000EEF64 /* Clink */,
@@ -86,6 +191,9 @@
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					36830B173015ABFA00AE5893 = {
+						CreatedOnToolsVersion = 26.6;
+					};
 					36B1E878300C187B000EEF64 = {
 						CreatedOnToolsVersion = 26.6;
 					};
@@ -106,11 +214,19 @@
 			projectRoot = "";
 			targets = (
 				36B1E878300C187B000EEF64 /* Clink */,
+				36830B173015ABFA00AE5893 /* ClinkWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		36830B163015ABFA00AE5893 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36B1E877300C187B000EEF64 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -122,6 +238,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		36830B143015ABFA00AE5893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36B1E875300C187B000EEF64 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -131,7 +254,77 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		36830B2D3015ABFA00AE5893 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36830B173015ABFA00AE5893 /* ClinkWidgetExtension */;
+			targetProxy = 36830B2C3015ABFA00AE5893 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		36830B313015ABFA00AE5893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ClinkWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YDGZTDXJVC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClinkWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClinkWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sampaio.clink.ClinkWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36830B323015ABFA00AE5893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ClinkWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YDGZTDXJVC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClinkWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClinkWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sampaio.clink.ClinkWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		36B1E882300C187B000EEF64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -326,6 +519,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		36830B303015ABFA00AE5893 /* Build configuration list for PBXNativeTarget "ClinkWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36830B313015ABFA00AE5893 /* Debug */,
+				36830B323015ABFA00AE5893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		36B1E874300C187B000EEF64 /* Build configuration list for PBXProject "Clink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

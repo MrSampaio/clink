@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct CreateWidgetsView: View {
     @State private var selectedCard: Int? = 0
@@ -62,12 +63,24 @@ struct CreateWidgetsView: View {
                 Spacer()
                 
                 Button(action: {
+                    guard selectedCard != 1 else { return }
                     
-                    guard selectedCard == 1 else { return }
+                    if let sharedDefaults = UserDefaults.sharedWidget {
+                        
+                        sharedDefaults.set("Futebol hoje", forKey: "widgetTitle")
+                        sharedDefaults.set("⚽️", forKey: "widgetIcon")
+                        
+                        let colorString = Color.green.toHex()
+                        sharedDefaults.set(colorString, forKey: "widgetColorHex")
+                        
+                        sharedDefaults.set("Jogo com a galera do trabalho na quadra do centro.", forKey: "widgetDescription")
+                        sharedDefaults.set("Hoje, 19:00", forKey: "widgetDate")
+                    }
                     
-                    print ("Adicionar Widget")
+                    WidgetCenter.shared.reloadAllTimelines()
+                    print("widget atualizado com sucesso!")
                     
-                }) {
+                }){
                     Label("Adicionar Widget", systemImage: "plus.circle.fill")
                         .font(.headline)
                         .foregroundStyle(.white)
@@ -95,6 +108,10 @@ struct CreateWidgetsView: View {
             }
         }
     }
+}
+
+extension UserDefaults {
+    static let sharedWidget = UserDefaults(suiteName: "group.sampaio.clink.dados")
 }
 
 #Preview {
