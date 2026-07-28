@@ -37,8 +37,20 @@ struct SheetCreateListView: View {
         
         _listName = State(initialValue: listToEdit?.title ?? "")
         _selectedIcon = State(initialValue: listToEdit?.icon ?? "list.bullet")
+
         
-        _selectedColor = State(initialValue: 0)
+        let colors: [Color] = [
+            .listColor1, .listColor2, .listColor3, .listColor4, .listColor5,
+            .listColor6, .listColor7, .listColor8, .listColor9, .listColor10
+        ]
+        
+        if let existingColor = listToEdit?.color, let colorIndex = colors.firstIndex(of: existingColor) {
+            
+            _selectedColor = State(initialValue: colorIndex)
+        } else {
+            
+            _selectedColor = State(initialValue: 0)
+        }
     }
     
     var hasChanges: Bool {

@@ -122,7 +122,7 @@ struct SheetReminderToolBar: ToolbarContent {
     
     var body: some ToolbarContent {
         
-        ToolbarItem(placement: .cancellationAction) {
+        ToolbarItem(placement: .topBarLeading) {
             Button(action: {
                 actionCancel()
             }) {
@@ -148,8 +148,9 @@ struct SheetReminderToolBar: ToolbarContent {
             Text(title)
                 .font(.system(size: 20, weight: .semibold))
         }
-        if isEditing {
-            ToolbarItem(placement: .destructiveAction){
+        
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            if isEditing {
                 Button(action: {
                     actionDelete()
                 }) {
@@ -161,9 +162,7 @@ struct SheetReminderToolBar: ToolbarContent {
                 .tint(.red)
                 .disabled(disableAdd)
             }
-        }
-        
-        ToolbarItem(placement: .confirmationAction) {
+            
             Button(action: {
                 actionConfirm()
             }) {
@@ -177,7 +176,6 @@ struct SheetReminderToolBar: ToolbarContent {
         }
     }
 }
-
 struct SheetListToolBar: ToolbarContent {
     
     let title: String

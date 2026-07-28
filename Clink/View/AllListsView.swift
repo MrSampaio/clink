@@ -15,6 +15,8 @@ struct AllListsView: View {
     @State private var sortOrder: ListSortOrder = .creation
     @State var showSheetList = false
     @State var listToEdit: ReminderList?
+    @State private var showDeleteAlert = false
+    @State private var listToDelete: ReminderList?
     
     var displayedLists: [ReminderList] {
         viewModel.filteredAndSortedLists(searchText: searchText, sortOrder: sortOrder)
@@ -75,7 +77,8 @@ struct AllListsView: View {
                                         }
                                         
                                         Button(role: .destructive, action: {
-                                            viewModel.deleteList(id: list.id)
+                                            listToDelete = list
+                                            showDeleteAlert = true
                                         }) {
                                             Label("Apagar Lista", systemImage: "trash")
                                         }
@@ -106,11 +109,24 @@ struct AllListsView: View {
                 SheetCreateListView(listToEdit: selectedList)
                     .presentationDragIndicator(.visible)
             }
+            .alert("Tem certeza de que deseja apagar esta lista? ", isPresented: $showDeleteAlert) {
+                Button("Cancelar", role: .cancel) {
+                    listToDelete = nil
+                }
+                Button("Apagar", role: .destructive) {
+                    if let list = listToDelete {
+                        viewModel.deleteList(id: list.id)
+                    }
+                    listToDelete = nil
+                }
+            } message: {
+                Text("A lista e todos os lembretes dentro dela serão apagados permanentemente. Essa ação não poderá ser desfeita.")
+            }
             .searchable(text: $searchText, prompt: "Buscar listas...")
             .background(Color(.background))
             .onTapGesture {
                 #if canImport(UIKit)
-                hideKeyboard()
+                    hideKeyboard()
                 #endif
             }
             .scrollDismissesKeyboard(.interactively)
