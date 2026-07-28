@@ -11,7 +11,7 @@ import Combine
 
 class ReminderViewModel: ObservableObject{
     @Published var customLists: [ReminderList] = [
-        ReminderList(id: 1, title: "Geral", color: .listColor3, icon: "tray.fill"),
+        ReminderList(id: 1, title: "Geral", color: .blue, icon: "tray.fill"),
         ReminderList(id: 3, title: "Trabalho", color: .listColor1, icon: "briefcase.fill"),
         ReminderList(id: 2, title: "Estudos", color: .listColor2, icon: "graduationcap.fill"),
         ReminderList(id: 4, title: "Finanças", color: .listColor4, icon: "creditcard.fill"),
@@ -160,6 +160,9 @@ class ReminderViewModel: ObservableObject{
         ),
     ]
     
+    @Published var selectedTab: Int = 0
+    @Published var managePickerSelection: Int = 0
+    
     // lembretes de hoje
     var todayRemindersIndices: [Int] {
         let indices = reminders.indices.filter { index in
@@ -204,6 +207,21 @@ class ReminderViewModel: ObservableObject{
             
             return date < startOfToday && !reminders[index].isCompleted
         }
+    }
+    
+    var futureRemindersIndices: [Int] {
+        let now = Date()
+        let indices = reminders.indices.filter { index in
+            guard let date = reminders[index].dueDate else { return false }
+            
+            let isFuture = date > now
+            
+            let isNotThisMonth = !Calendar.current.isDate(date, equalTo: now, toGranularity: .month)
+            let isNotThisWeek = !Calendar.current.isDate(date, equalTo: now, toGranularity: .weekOfYear)
+            
+            return isFuture && isNotThisMonth && isNotThisWeek
+        }
+        return indices.reversed()
     }
     
     var concludedRemindersIndices: [Int] {
@@ -276,7 +294,7 @@ class ReminderViewModel: ObservableObject{
             description: (description?.isEmpty == true) ? nil : description,
             isCompleted: false,
             subtasks: subtasks?.isEmpty == true ? nil : subtasks,
-            dueDate: dueDate,
+            dueDate: (dueDate != nil) ? dueDate : Date(),
             isImportant: isImportant,
             color: getListColor,
             category: getListTitle
@@ -313,7 +331,33 @@ class ReminderViewModel: ObservableObject{
             reminders.removeAll(where: { $0.id == id })
         }
     }
+    
+    func filteredAndSortedLists(searchText: String, sortOrder: ListSortOrder) -> [ReminderList] {
+        var result = customLists
+        
+        if !searchText.isEmpty {
+            result = result.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+        }
+        
+        switch sortOrder {
+        case .alphabetical:
+           
+            result.sort { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .creation:
+            break
+        }
+        
+        return result
+    }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
 
 // ----------------------- futuras funções para criar lembretes e listas---------------
 

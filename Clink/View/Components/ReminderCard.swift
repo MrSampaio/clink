@@ -15,6 +15,7 @@ struct ReminderCard: View {
     @StateObject private var securityVM = SecurityViewModel()
     
     @State private var showEditSheet = false
+    @State private var showDeleteAlert = false
     var enableEdit: Bool = true
     
     var forceUnlock: Bool = false
@@ -45,7 +46,7 @@ struct ReminderCard: View {
                     
                     if enableEdit {
                         Button(action: { showEditSheet = true }) {
-                            Image(systemName: "pencil")
+                            Image(systemName: "info.circle")
                                 .foregroundColor(reminder.color)
                                 .font(.system(size: 22, weight: .bold))
                         }
@@ -124,11 +125,21 @@ struct ReminderCard: View {
         .contextMenu {
             if enableEdit {
                 Button(role: .destructive) {
-                    viewModel.deleteReminder(id: reminder.id)
+                    showDeleteAlert = true
                 } label: {
                     Label("Apagar Lembrete", systemImage: "trash")
                 }
             }
+        }
+        
+        .alert("Tem certeza que deseja apagar o lembrete?", isPresented: $showDeleteAlert) {
+            Button("Cancelar", role: .cancel) { }
+            
+            Button("Apagar", role: .destructive) {
+                viewModel.deleteReminder(id: reminder.id)
+            }
+        } message: {
+            Text("O lembrete será movido para a lixeira e essa ação não poderá ser desfeita.")
         }
     }
 }
@@ -137,7 +148,7 @@ struct ReminderCard: View {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
             listId: 1,
-            isLocked: true,
+            isLocked: false,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: true,

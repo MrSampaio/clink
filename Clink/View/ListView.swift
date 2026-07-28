@@ -62,7 +62,7 @@ struct ListView: View {
 
 #Preview {
     
-    var list = ReminderList(id: 2, title: "Trabalho", color: .listColor2, icon: "briefcase.fill")
+    let list = ReminderList(id: 2, title: "Trabalho", color: .listColor2, icon: "briefcase.fill")
     
     ListView(list: list)
         .environmentObject(ReminderViewModel())

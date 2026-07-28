@@ -38,7 +38,7 @@ struct Reminder: Identifiable{
     var description: String?
     var isCompleted: Bool = false
     var subtasks: [SubTask]?
-    var dueDate: Date?
+    var dueDate: Date? = Date()
     var isImportant: Bool
     var color: Color // -> quando a página de inserir lembrete estiver pronta, pode tirar essa linha
     var category: String // -> quando a página de inserir lembrete estiver pronta, pode tirar essa linha
