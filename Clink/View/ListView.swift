@@ -40,7 +40,6 @@ struct ListView: View {
                         } else{
                             Spacer()
                             Text("Nenhum lembrete adicionado.")
-                            // põe uma imagem do clink aqui pra não ficar vazio
                         }
                         
                     }
@@ -52,7 +51,7 @@ struct ListView: View {
                 }
                 
                 .sheet(isPresented: $showSheetReminder) {
-                    SheetEditView(list: list)
+                    SheetEditReminderView(list: list)
                         .presentationDragIndicator(.visible)
                 }
             }

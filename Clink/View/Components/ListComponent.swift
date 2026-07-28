@@ -27,6 +27,7 @@ public struct ListComponent: View {
                         Text(list.title)
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(Color(.font))
+                            .multilineTextAlignment(TextAlignment.leading)
                         
                         Text("\(viewModel.countReminders(for: list.id)) tarefas")
                             .font(.system(size: 15, weight: .regular))

@@ -108,7 +108,77 @@ struct SelectedListToolBar: ToolbarContent {
     }
 }
 struct SheetReminderToolBar: ToolbarContent {
+    let title: String
+    let actionCancel: () -> Void
+    let actionConfirm: () -> Void
+    let actionDiscard: () -> Void
+    let actionDelete: () -> Void
+    let disableAdd: Bool
+    var isEditing: Bool
     
+    var color: Color?
+    
+    @Binding var showingDiscardAlert: Bool
+    
+    var body: some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            Button(action: {
+                actionCancel()
+            }) {
+                Image(systemName: "xmark")
+            }
+            .confirmationDialog(
+                "",
+                isPresented: $showingDiscardAlert,
+                titleVisibility: .hidden
+            ) {
+                Button("Descartar", role: .destructive) {
+                    actionDiscard()
+                }
+                
+                Button("Continuar Editando", role: .cancel) { }
+                
+            } message: {
+                Text("Deseja mesmo descartar a edição deste lembrete?")
+            }
+        }
+        
+        ToolbarItem(placement: .principal) {
+            Text(title)
+                .font(.system(size: 20, weight: .semibold))
+        }
+        
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            if isEditing {
+                Button(action: {
+                    actionDelete()
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
+                .tint(.red)
+                .disabled(disableAdd)
+            }
+            
+            Button(action: {
+                actionConfirm()
+            }) {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+            .tint(color)
+            .disabled(disableAdd)
+        }
+    }
+}
+struct SheetListToolBar: ToolbarContent {
+    
+    let title: String
     let actionCancel: () -> Void
     let actionConfirm: () -> Void
     let actionDiscard: () -> Void
@@ -140,14 +210,15 @@ struct SheetReminderToolBar: ToolbarContent {
                 Button("Continuar Editando", role: .cancel) { }
                 
             } message: {
-                Text("Deseja mesmo descartar a edição deste lembrete?")
+                Text("Deseja mesmo descartar as alterações desta lista?")
             }
         }
         
         ToolbarItem(placement: .principal) {
-            Text("Editar")
+            Text(title)
                 .font(.system(size: 20, weight: .semibold))
         }
+        
         if isEditing {
             ToolbarItem(placement: .destructiveAction){
                 Button(action: {
@@ -159,7 +230,6 @@ struct SheetReminderToolBar: ToolbarContent {
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
                 .tint(.red)
-                .disabled(disableAdd)
             }
         }
         
@@ -172,11 +242,12 @@ struct SheetReminderToolBar: ToolbarContent {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.circle)
-            .tint(color)
+            .tint(color ?? .blue)
             .disabled(disableAdd)
         }
     }
 }
+
 struct WidgetToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
@@ -205,17 +276,4 @@ struct ManageToolBar: ToolbarContent {
         }
     }
 }
-
-struct testToolbar: ToolbarContent{
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "magnifyingglass")}.background(.red)
-        }
-    }
-}
-
-
-
-
 

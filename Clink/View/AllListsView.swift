@@ -13,6 +13,10 @@ struct AllListsView: View {
     
     @State var searchText: String = ""
     @State private var sortOrder: ListSortOrder = .creation
+    @State var showSheetList = false
+    @State var listToEdit: ReminderList?
+    @State private var showDeleteAlert = false
+    @State private var listToDelete: ReminderList?
     
     var displayedLists: [ReminderList] {
         viewModel.filteredAndSortedLists(searchText: searchText, sortOrder: sortOrder)
@@ -25,7 +29,9 @@ struct AllListsView: View {
                     Title(title: "Listas", subtitle: "\(viewModel.totalLists) listas criadas")
                     
                     VStack(spacing: 5) {
-                        NavigationLink(destination: CreateListView()) {
+                        Button(action: {
+                            showSheetList.toggle()
+                        }) {
                             HStack {
                                 Text("Crie uma nova lista")
                                     .font(.system(size: 16, weight: .bold))
@@ -37,14 +43,14 @@ struct AllListsView: View {
                                     .font(.system(size: 22, weight: .bold))
                                     .foregroundColor(.primary)
                             }
-                            .padding(15)
-                            .background(Color(.buttonBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 28))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 28)
-                                    .stroke(Color.border, lineWidth: 1)
-                            )
                         }
+                        .padding(15)
+                        .background(Color(.buttonBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 28))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 28)
+                                .stroke(Color.border, lineWidth: 1)
+                        )
                         
                         Text("Ao criar uma nova lista, é necessário definir seu nome, cor e ícone antes de concluir.")
                             .font(.system(size: 13, weight: .regular))
@@ -61,8 +67,23 @@ struct AllListsView: View {
                             
                         } else {
                             ForEach(displayedLists) { list in
+                                
                                 ListComponent(list: list)
-                    
+                                    .contextMenu {
+                                        Button(action: {
+                                            listToEdit = list
+                                        }) {
+                                            Label("Editar Lista", systemImage: "pencil")
+                                        }
+                                        
+                                        Button(role: .destructive, action: {
+                                            listToDelete = list
+                                            showDeleteAlert = true
+                                        }) {
+                                            Label("Apagar Lista", systemImage: "trash")
+                                        }
+                                    }
+                                
                                 if searchText.isEmpty {
                                     Divider()
                                         .padding(.horizontal, 30)
@@ -80,11 +101,32 @@ struct AllListsView: View {
             .toolbar {
                 AllListsToolBar(sortOrder: $sortOrder)
             }
+            .sheet(isPresented: $showSheetList) {
+                SheetCreateListView(listToEdit: nil)
+                    .presentationDragIndicator(.visible)
+            }
+            .sheet(item: $listToEdit) { selectedList in
+                SheetCreateListView(listToEdit: selectedList)
+                    .presentationDragIndicator(.visible)
+            }
+            .alert("Tem certeza de que deseja apagar esta lista? ", isPresented: $showDeleteAlert) {
+                Button("Cancelar", role: .cancel) {
+                    listToDelete = nil
+                }
+                Button("Apagar", role: .destructive) {
+                    if let list = listToDelete {
+                        viewModel.deleteList(id: list.id)
+                    }
+                    listToDelete = nil
+                }
+            } message: {
+                Text("A lista e todos os lembretes dentro dela serão apagados permanentemente. Essa ação não poderá ser desfeita.")
+            }
             .searchable(text: $searchText, prompt: "Buscar listas...")
             .background(Color(.background))
             .onTapGesture {
                 #if canImport(UIKit)
-                hideKeyboard()
+                    hideKeyboard()
                 #endif
             }
             .scrollDismissesKeyboard(.interactively)

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SheetEditView: View {
+struct SheetEditReminderView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: ReminderViewModel
     
@@ -94,6 +94,7 @@ struct SheetEditView: View {
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
                 SheetReminderToolBar(
+                    title: reminderToEdit == nil ? "Novo Lembrete" : "Editar Lembrete",
                     actionCancel: {
                         if hasChanges {
                             showingDiscardAlert = true
@@ -196,6 +197,6 @@ struct SheetEditView: View {
 }
 
 #Preview {
-    SheetEditView(list: nil)
+    SheetEditReminderView(list: nil)
         .environmentObject(ReminderViewModel())
 }
