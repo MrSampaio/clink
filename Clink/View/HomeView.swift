@@ -71,13 +71,13 @@ struct HomeView: View {
                         case .oldest:
                             DisclosureGroupComponent(title: "Atrasados", indices: applyFilters(to: viewModel.overdueRemindersIndices), reminders: $viewModel.reminders)
                             
-                            DisclosureGroupComponent(title: "Futuros", indices: applyFilters(to: viewModel.futureRemindersIndices), reminders: $viewModel.reminders)
-                            
                             DisclosureGroupComponent(title: "Este Mês", indices: applyFilters(to: viewModel.thisMonthRemindersIndices), reminders: $viewModel.reminders)
                             
                             DisclosureGroupComponent(title: "Esta Semana", indices: applyFilters(to: viewModel.thisWeekRemindersIndices), reminders: $viewModel.reminders)
                             
                             DisclosureGroupComponent(title: "Hoje", indices: applyFilters(to: viewModel.todayRemindersIndices), reminders: $viewModel.reminders)
+                            
+                            DisclosureGroupComponent(title: "Futuros", indices: applyFilters(to: viewModel.futureRemindersIndices), reminders: $viewModel.reminders)
                         }
                         
                     } else {
