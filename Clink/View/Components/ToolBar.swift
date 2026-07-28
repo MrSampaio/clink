@@ -18,8 +18,9 @@ struct HomeToolBar: ToolbarContent {
     @Binding var showConcluded: Bool
     @Binding var showLocked: Bool
     
-    // closure (ação) para avisar a HomeView que a lixeira foi clicada
+    // closures (ações) para avisar a HomeView que a lixeira e o add foram clicados
     var onTrashTapped: () -> Void
+    var onAddTapped: () -> Void
     
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -30,6 +31,12 @@ struct HomeToolBar: ToolbarContent {
                 }
             } label: {
                 Image(systemName: "arrow.up.arrow.down")
+            }
+            
+            Button(action: {
+                onAddTapped()
+            }) {
+                Image(systemName: "plus")
             }
             
             Menu {
@@ -135,7 +142,7 @@ struct SheetReminderToolBar: ToolbarContent {
     let disableAdd: Bool
     var isEditing: Bool
     
-    var color: Color? = .blue
+    var color: Color?
     
     @Binding var showingDiscardAlert: Bool
     
