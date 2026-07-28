@@ -46,7 +46,7 @@ struct ReminderCard: View {
                     
                     if enableEdit {
                         Button(action: { showEditSheet = true }) {
-                            Image(systemName: "pencil")
+                            Image(systemName: "info.circle")
                                 .foregroundColor(reminder.color)
                                 .font(.system(size: 22, weight: .bold))
                         }
@@ -148,7 +148,7 @@ struct ReminderCard: View {
     struct ReminderCardPreviewWrapper: View {
         @State var mockReminder = Reminder(
             listId: 1,
-            isLocked: true,
+            isLocked: false,
             title: "Campanha",
             description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
             isCompleted: true,

@@ -15,6 +15,7 @@ struct ManageView: View {
     //@State private var selectedPicker = 0
     
     @State private var searchText = ""
+    @State private var showClearAlert = false
     
     var currentCount: String {
         switch viewModel.managePickerSelection {
@@ -69,11 +70,19 @@ struct ManageView: View {
             .toolbar {
                 if securityVM.isAuthenticated {
                     ManageToolBar(onClearTapped: {
-                        viewModel.deletedReminders.removeAll()
+                        showClearAlert = true
                     })
                 }
             }
-            //.searchable(text: $searchText, prompt: "Buscar lembretes...")
+            .alert("Tem certeza que deseja esvaziar a lixeira?", isPresented: $showClearAlert) {
+                Button("Cancelar", role: .cancel) { }
+                
+                Button("Esvaziar", role: .destructive) {
+                    viewModel.deletedReminders.removeAll()
+                }
+            } message: {
+                Text("Isso irá apagar todos os lembretes da lixeira permanentemente e essa ação não poderá ser desfeita.")
+            }
         }
         .onAppear {
             if !securityVM.isAuthenticated {

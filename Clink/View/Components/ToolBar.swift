@@ -197,7 +197,7 @@ struct ManageToolBar: ToolbarContent {
                 Button(role: .destructive, action: {
                     onClearTapped()
                 }) {
-                    Label("Limpar lixeira", systemImage: "trash")
+                    Label("Esvaziar lixeira", systemImage: "trash")
                 }
             } label: {
                 Image(systemName: "ellipsis")
