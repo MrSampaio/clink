@@ -36,6 +36,7 @@ struct SubtaskSectionView: View {
                     TextField("Nova subtarefa", text: $subtask.title)
                         .foregroundColor(.primary)
                     
+                    
                     Button(action: {
                         withAnimation{
                             if (!subtasks.isEmpty) {
@@ -55,8 +56,11 @@ struct SubtaskSectionView: View {
             }
             
             Button(action: {
-                withAnimation {
-                    subtasks.append(SubTask(title: ""))
+
+                DispatchQueue.main.async {
+                    withAnimation{
+                        subtasks.append(SubTask(title: ""))
+                    }
                 }
             }) {
                 HStack(spacing: 16) {
@@ -65,6 +69,7 @@ struct SubtaskSectionView: View {
                 }
                 .foregroundColor(color)
             }
+            .buttonStyle(.plain)
             
             
         }

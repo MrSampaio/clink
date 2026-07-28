@@ -48,7 +48,15 @@ struct SheetEditReminderView: View {
     }
     
     var hasChanges: Bool {
-        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
+        let hasValidSubtasks = subtasks.contains { !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        
+        let titleChanged = newTitle != (reminderToEdit?.title ?? "")
+        let descChanged = description != (reminderToEdit?.description ?? "")
+        let dateChanged = isDateEnabled != (reminderToEdit?.dueDate != nil)
+        let lockedChanged = lockReminder != (reminderToEdit?.isLocked ?? false)
+        let importantChanged = signposted != (reminderToEdit?.isImportant ?? false)
+        
+        return titleChanged || descChanged || dateChanged || notification || repeatReminder || lockedChanged || importantChanged || hasValidSubtasks
     }
     var selectedListColor: Color {
         viewModel.customLists.first(where: { $0.id == selectedListId })?.color ?? .blue
