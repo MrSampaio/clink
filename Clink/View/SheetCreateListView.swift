@@ -123,6 +123,12 @@ struct SheetCreateListView: View {
                     showingDiscardAlert: $showingDiscardAlert
                 )
             }
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
             
             // MARK: - Alertas
             .alert("Houve um erro ao executar a ação.", isPresented: $showErrorAlert) {
