@@ -192,6 +192,12 @@ struct SheetEditReminderView: View {
                 )
                 
             }
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 }

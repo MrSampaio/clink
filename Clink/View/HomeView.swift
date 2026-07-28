@@ -118,6 +118,12 @@ struct HomeView: View {
                 SheetEditReminderView(list: nil, reminderToEdit: nil)
                     .presentationDragIndicator(.visible)
             }
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
             
         }
     }
