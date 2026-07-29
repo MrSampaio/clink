@@ -19,11 +19,11 @@ struct SplashScreenView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 20) {
-                    SplashVideoView(videoName: colorScheme == .dark ? "animated_logo_dark" : "animated_logo_light")
+                    SplashVideoView(videoName: colorScheme == .dark ? "logo_dark" : "logo_light")
                         .frame(width: 300, height: 300)
                 }
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         withAnimation {
                             isActive = true
                         }

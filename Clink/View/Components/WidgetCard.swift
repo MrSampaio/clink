@@ -15,47 +15,30 @@ struct WidgetCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text(image)
-                    .font(.system(size: 35))
-                    .shadow(color: .black, radius: 2, x: 0, y: 2)
+//                Image(systemName: image)
+                Text("📌")
+                    .font(.system(size: 20))
+                    .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 2)
 
                 Spacer()
-                Image(systemName: "ellipsis")
+                Image(systemName: image)
                     .foregroundColor(.white.opacity(0.8))
                 
             }
+            
+            Spacer()
             
             Text(mensagem)
                 .font(.headline)
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
             
-            Spacer()
         }
         .padding()
         .frame(width: 165, height: 165)
         .background(colorBackground)
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: .black.opacity(0.15), radius: 1, x: 0, y: 0)
-    }
-}
-
-struct AddWidgetCard: View {
-    var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "plus")
-                .font(.system(size: 35))
-            
-            Text("Clique para criar seu Widget")
-                .font(.default)
-                .multilineTextAlignment(.center)
-        }
-        .foregroundColor(.primary)
-        .padding()
-        .frame(width: 165, height: 165)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: .black.opacity(0.15), radius: 1, x: 0, y: 0)
-
     }
 }

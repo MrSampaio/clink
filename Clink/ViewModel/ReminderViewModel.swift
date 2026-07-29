@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import WidgetKit
 
 class ReminderViewModel: ObservableObject{
     @Published var customLists: [ReminderList] {
@@ -195,6 +196,12 @@ class ReminderViewModel: ObservableObject{
         
         if let encodedReminders = try? encoder.encode(reminders) {
             UserDefaults.standard.set(encodedReminders, forKey: remindersKey)
+            
+            if let sharedDefaults = UserDefaults(suiteName: "group.sampaio.clink.dados") {
+                sharedDefaults.set(encodedReminders, forKey: "widget_shared_reminders")
+                print("Lembretes salvos no App Group: \(reminders.count)")
+            }
+            //UserDefaults.sharedWidget?.set(encodedReminders, forKey: "widget_shared_reminders")
         }
         
         if let encodedLists = try? encoder.encode(customLists) {
@@ -204,6 +211,8 @@ class ReminderViewModel: ObservableObject{
         if let encodedDeleted = try? encoder.encode(deletedReminders) {
             UserDefaults.standard.set(encodedDeleted, forKey: deletedKey)
         }
+        
+        WidgetCenter.shared.reloadAllTimelines()
     }
         
     private func loadData() {
@@ -458,40 +467,3 @@ extension View {
     }
 }
 #endif
-
-// ----------------------- futuras funções para criar lembretes e listas---------------
-
-//    @Published var customLists: [ReminderList] = []
-//    @Published var reminders: [Reminder] = []
-
-//
-
-//
-//    }
-
-// -------------------------------------------------------------------------
-
-
-//
-//struct RemindersListView: View {
-//    var body: some View {
-//        ScrollView {
-//            VStack(spacing: 16) {
-//
-//                ForEach($reminders) { $reminder in
-//
-//                    if Calendar.current.isDateInToday(reminder.dueDate) {
-//                        ReminderCard(reminder: $reminder)
-//                    }
-//
-//                }
-//            }
-//            .padding()
-//        }
-//        .background(Color.white.edgesIgnoringSafeArea(.all))
-//    }
-//}
-//
-//#Preview {
-//    RemindersListView()
-//}
