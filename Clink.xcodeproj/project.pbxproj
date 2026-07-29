@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3634D3EE3019A2EA008136DA /* logo_light.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3634D3ED3019A2EA008136DA /* logo_light.mp4 */; };
+		3634D3F13019A350008136DA /* logo_dark.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3634D3F03019A350008136DA /* logo_dark.mp4 */; };
 		36830B1B3015ABFA00AE5893 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36830B1A3015ABFA00AE5893 /* WidgetKit.framework */; };
 		36830B1D3015ABFA00AE5893 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36830B1C3015ABFA00AE5893 /* SwiftUI.framework */; };
 		36830B2E3015ABFA00AE5893 /* ClinkWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -38,6 +40,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3634D3ED3019A2EA008136DA /* logo_light.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo_light.mp4; sourceTree = "<group>"; };
+		3634D3F03019A350008136DA /* logo_dark.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo_dark.mp4; sourceTree = "<group>"; };
 		36830B183015ABFA00AE5893 /* ClinkWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClinkWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		36830B1A3015ABFA00AE5893 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		36830B1C3015ABFA00AE5893 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -121,6 +125,8 @@
 				36830B1E3015ABFA00AE5893 /* ClinkWidget */,
 				36830B193015ABFA00AE5893 /* Frameworks */,
 				36B1E87A300C187B000EEF64 /* Products */,
+				3634D3ED3019A2EA008136DA /* logo_light.mp4 */,
+				3634D3F03019A350008136DA /* logo_dark.mp4 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -232,7 +238,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3634D3EE3019A2EA008136DA /* logo_light.mp4 in Resources */,
 				36B1E888300C1981000EEF64 /* .gitignore in Resources */,
+				3634D3F13019A350008136DA /* logo_dark.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
