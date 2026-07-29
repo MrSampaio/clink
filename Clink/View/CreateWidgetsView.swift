@@ -8,8 +8,23 @@ import WidgetKit
 
 struct CreateWidgetsView: View {
     @EnvironmentObject var viewModel: ReminderViewModel
+    @State private var showWidgetInstructions = false
     
-    @State private var selectedCardId: UUID?
+    @State private var selectedIndex: Int?
+    @State private var searchText = ""
+    
+    let loopMultiplier = 100
+    
+    var filteredReminders: [Reminder] {
+        if searchText.isEmpty {
+            return viewModel.reminders
+        } else {
+            return viewModel.reminders.filter { reminder in
+                reminder.title.localizedCaseInsensitiveContains(searchText) ||
+                (reminder.description?.localizedCaseInsensitiveContains(searchText) == true)
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -19,45 +34,68 @@ struct CreateWidgetsView: View {
                 
                 Spacer()
                 
-                GeometryReader { geometry in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        
-                        HStack(alignment: .center, spacing: 40) {
-                            
-                            ForEach(viewModel.reminders) { reminder in
-                                WidgetCard(
-                                    image: "🐥",
-                                    mensagem: reminder.title,
-                                    colorBackground: LinearGradient(
-                                        colors: [reminder.color, reminder.color.opacity(0.7)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .id(reminder.id)
-                                .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                                    content
-                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
-                                        .opacity(phase.isIdentity ? 1.0 : 0.5)
-                                }
-                            }
-                        }
-                        .scrollTargetLayout()
+                if filteredReminders.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+                        Text("Nenhum lembrete encontrado.")
+                            .font(.headline)
+                            .foregroundColor(.gray)
                     }
-                    .scrollTargetBehavior(.viewAligned)
-                    .scrollPosition(id: $selectedCardId)
-                    .safeAreaPadding(.horizontal, (geometry.size.width - 165) / 2)
+                    .frame(height: 200)
+                    .padding(.top, 20)
+                } else {
+                    GeometryReader { geometry in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            
+                            HStack(alignment: .center, spacing: 40) {
+                                
+                                let totalItems = filteredReminders.count * loopMultiplier
+                                
+                                ForEach(0..<totalItems, id: \.self) { index in
+                                    
+                                    let reminder = filteredReminders[index % filteredReminders.count]
+                                    let listIcon = viewModel.customLists.first(where: { $0.id == reminder.listId })?.icon ?? "list.bullet"
+                                    
+                                    WidgetCard(
+                                        image: listIcon,
+                                        mensagem: reminder.title,
+                                        colorBackground: LinearGradient(
+                                            colors: [reminder.color, reminder.color.opacity(0.7)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .id(index)
+                                    .scrollTransition(.interactive, axis: .horizontal) { content, phase in
+                                        content
+                                            .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
+                                            .opacity(phase.isIdentity ? 1.0 : 0.5)
+                                    }
+                                }
+                                
+                            }
+                            .scrollTargetLayout()
+                        }
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollPosition(id: $selectedIndex)
+                        .safeAreaPadding(.horizontal, (geometry.size.width - 165) / 2)
+                    }
+                    .frame(height: 200)
+                    .padding(.top, 20)
                 }
-                .frame(height: 200)
-                .padding(.top, 20)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(viewModel.reminders) { reminder in
+                        let safeCount = filteredReminders.isEmpty ? 1 : filteredReminders.count
+                        let currentRealIndex = (selectedIndex ?? 0) % safeCount
+                        
+                        ForEach(0..<filteredReminders.count, id: \.self) { i in
                             Circle()
-                                .fill(selectedCardId == reminder.id ? Color.primary : Color.secondary.opacity(0.3))
+                                .fill(currentRealIndex == i ? Color.primary : Color.secondary.opacity(0.3))
                                 .frame(width: 8, height: 8)
-                                .animation(.easeInOut, value: selectedCardId)
+                                .animation(.easeInOut, value: selectedIndex)
                         }
                     }
                 }
@@ -68,32 +106,9 @@ struct CreateWidgetsView: View {
                 Spacer()
                 
                 Button(action: {
-                    guard let selectedId = selectedCardId,
-                          let selectedReminder = viewModel.reminders.first(where: { $0.id == selectedId }) else { return }
-                    
-                    if let sharedDefaults = UserDefaults.sharedWidget {
-                        sharedDefaults.set(selectedReminder.title, forKey: "widgetTitle")
-                        sharedDefaults.set("📌", forKey: "widgetIcon")
-                        
-                        let colorString = selectedReminder.color.toHex()
-                        sharedDefaults.set(colorString, forKey: "widgetColorHex")
-                        
-                        sharedDefaults.set(selectedReminder.description ?? "", forKey: "widgetDescription")
-                        
-                        if let date = selectedReminder.dueDate {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "dd/MM, HH:mm"
-                            sharedDefaults.set(formatter.string(from: date), forKey: "widgetDate")
-                        } else {
-                            sharedDefaults.set("", forKey: "widgetDate")
-                        }
-                    }
-                    
-                    WidgetCenter.shared.reloadAllTimelines()
-                    print("Widget atualizado para: \(selectedReminder.title)")
-                    
+                    showWidgetInstructions = true
                 }) {
-                    Label("Adicionar Widget", systemImage: "plus.circle.fill")
+                    Label("Como adicionar à Tela Inicial?", systemImage: "questionmark.circle.fill")
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -105,24 +120,106 @@ struct CreateWidgetsView: View {
                 .padding(.bottom, 20)
                 .opacity(viewModel.reminders.isEmpty ? 0.0 : 1.0)
                 .disabled(viewModel.reminders.isEmpty)
-                .animation(.easeInOut, value: selectedCardId)
+                .animation(.easeInOut, value: selectedIndex)
             }
-            .background(Color(UIColor.systemGroupedBackground))
+            .background(Color(.background))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { WidgetToolBar() }
+//            .toolbar { WidgetToolBar() }
+            //.searchable(text: $searchText, prompt: "Buscar lembretes")
+            .onChange(of: searchText) { _ in
+                 centerCarousel()
+            }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        selectedCardId = viewModel.reminders.first?.id
-                    }
+                    centerCarousel()
                 }
             }
+            .sheet(isPresented: $showWidgetInstructions) {
+                WidgetInstructionsSheet()
+            }
+        }
+    }
+    
+    private func centerCarousel() {
+        guard !filteredReminders.isEmpty else { return }
+        
+        let middleIndex = (loopMultiplier / 2) * filteredReminders.count
+        
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+            selectedIndex = middleIndex
         }
     }
 }
 
-extension UserDefaults {
-    static let sharedWidget = UserDefaults(suiteName: "group.sampaio.clink.dados")
+// MARK: - Tela de Instruções
+struct WidgetInstructionsSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 24) {
+                    Text("Como usar os Widgets?")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 10)
+                    
+                    InstructionStepView(icon: "1.circle.fill", text: "Vá para a Tela Inicial do seu iPhone.")
+                    InstructionStepView(icon: "2.circle.fill", text: "Pressione e segure em qualquer espaço vazio até os apps tremerem.")
+                    InstructionStepView(icon: "3.circle.fill", text: "Toque no botão '+' no canto superior da tela e busque por 'Clink'.")
+                    InstructionStepView(icon: "4.circle.fill", text: "Adicione o widget. Depois, segure nele para escolher qual lembrete exibir!")
+                    
+                    Spacer(minLength: 30)
+                    
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Text("Entendi!")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    }
+                    .background(Color.blue)
+                    .cornerRadius(14)
+                }
+                .padding(30)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+    }
+}
+
+struct InstructionStepView: View {
+    var icon: String
+    var text: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 16) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.blue)
+                .frame(width: 28)
+            
+            Text(text)
+                .font(.body)
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+            
+            Spacer()
+        }
+    }
 }
 
 #Preview {

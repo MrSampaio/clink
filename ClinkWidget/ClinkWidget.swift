@@ -1,8 +1,68 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
-// MARK: - 1. A Entry (O "Pacote" de Dados)
-// Agora ela carrega todas as informações que o Widget precisa!
+struct ReminderEntity: AppEntity {
+    var id: String
+    var title: String
+    var colorHex: String
+    var description: String
+    var dateString: String
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Lembrete"
+    static var defaultQuery = ReminderQuery()
+    
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: LocalizedStringResource(stringLiteral: title))
+    }
+}
+
+struct ReminderQuery: EntityQuery {
+    func entities(for identifiers: [String]) async throws -> [ReminderEntity] {
+        return allReminders().filter { identifiers.contains($0.id) }
+    }
+    
+    func suggestedEntities() async throws -> [ReminderEntity] {
+        return allReminders()
+    }
+    
+    func defaultResult() async -> ReminderEntity? {
+        return allReminders().first
+    }
+    
+    func allReminders() -> [ReminderEntity] {
+        guard let sharedDefaults = UserDefaults(suiteName: "group.sampaio.clink.dados"),
+              let data = sharedDefaults.data(forKey: "widget_shared_reminders"),
+              let reminders = try? JSONDecoder().decode([Reminder].self, from: data) else {
+            return []
+        }
+        
+        return reminders.map { reminder in
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM, HH:mm"
+            let dateStr = reminder.dueDate != nil ? formatter.string(from: reminder.dueDate!) : ""
+            
+            return ReminderEntity(
+                id: reminder.id.uuidString,
+                title: reminder.title,
+                colorHex: reminder.color.toHex(),
+                description: reminder.description ?? "",
+                dateString: dateStr
+            )
+        }
+    }
+}
+
+struct SelectReminderIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "Escolher Lembrete"
+    static var description = IntentDescription("Escolha qual lembrete mostrar neste widget.")
+
+    @Parameter(title: "Lembrete")
+    var selectedReminder: ReminderEntity?
+    
+    init() {}
+}
+
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let title: String
@@ -12,84 +72,72 @@ struct SimpleEntry: TimelineEntry {
     let dateString: String
 }
 
-// MARK: - 2. O Provider (O Motor)
-struct Provider: TimelineProvider {
-    
-    // Função auxiliar para ler os dados do App Group e montar o pacote (Entry)
-    private func fetchEntry(for date: Date) -> SimpleEntry {
-        // Lemos os dados uma única vez aqui no motor!
-        let defaults = UserDefaults.sharedWidget
-        
-        let title = defaults?.string(forKey: "widgetTitle") ?? "Nenhum lembrete"
-        let icon = defaults?.string(forKey: "widgetIcon") ?? "📌"
-        let colorHex = defaults?.string(forKey: "widgetColorHex") ?? "2196F3"
-        let description = defaults?.string(forKey: "widgetDescription") ?? ""
-        let dateString = defaults?.string(forKey: "widgetDate") ?? ""
-        
-        return SimpleEntry(
-            date: date,
-            title: title,
-            icon: icon,
-            colorHex: colorHex,
-            description: description,
-            dateString: dateString
-        )
-    }
-
+struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        fetchEntry(for: Date())
+        SimpleEntry(date: Date(), title: "Seu Lembrete", icon: "📌", colorHex: "2196F3", description: "Descrição do lembrete", dateString: "Hoje")
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = fetchEntry(for: Date())
-        completion(entry)
+    func snapshot(for configuration: SelectReminderIntent, in context: Context) async -> SimpleEntry {
+        createEntry(for: configuration.selectedReminder)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        // Quando você aperta o botão no app e chama o "reloadAllTimelines",
-        // o iOS cai exatamente aqui. Ele vai ler os dados frescos e gerar a tela!
-        let entry = fetchEntry(for: Date())
-        let timeline = Timeline(entries: [entry], policy: .never)
-        completion(timeline)
+    func timeline(for configuration: SelectReminderIntent, in context: Context) async -> Timeline<SimpleEntry> {
+        let entry = createEntry(for: configuration.selectedReminder)
+        return Timeline(entries: [entry], policy: .never) // Só atualiza quando o app manda
+    }
+    
+    private func createEntry(for entity: ReminderEntity?) -> SimpleEntry {
+        if let entity = entity {
+            return SimpleEntry(
+                date: Date(),
+                title: entity.title,
+                icon: "📌",
+                colorHex: entity.colorHex,
+                description: entity.description,
+                dateString: entity.dateString
+            )
+        } else {
+            return SimpleEntry(
+                date: Date(),
+                title: "Nenhum Selecionado",
+                icon: "⚠️",
+                colorHex: "808080",
+                description: "Segure para editar o widget",
+                dateString: ""
+            )
+        }
     }
 }
 
-// MARK: - 3. A View (A Interface)
 struct ClinkWidgetEntryView : View {
     var entry: Provider.Entry
     
-    // NOTA: Removemos todos os @AppStorage daqui! A view agora é limpa e
-    // apenas desenha o que recebe da variável 'entry'.
-
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            
             HStack {
-                Text(entry.icon) // <-- Usando entry.icon
+                Text(entry.icon)
                     .font(.system(size: 28))
                     .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 2)
-                
                 Spacer()
-                
                 Image(systemName: "ellipsis")
                     .foregroundColor(.white.opacity(0.8))
             }
             
             Spacer(minLength: 0)
             
-            Text(entry.title) // <-- Usando entry.title
+            Text(entry.title)
                 .font(.headline)
                 .foregroundColor(.white)
                 .lineLimit(1)
             
-            if !entry.description.isEmpty { // <-- Usando entry.description
+            if !entry.description.isEmpty {
                 Text(entry.description)
                     .font(.caption)
                     .foregroundColor(.white.opacity(0.85))
                     .lineLimit(2)
             }
             
-            if !entry.dateString.isEmpty { // <-- Usando entry.dateString
+            if !entry.dateString.isEmpty {
                 Text(entry.dateString)
                     .font(.caption2)
                     .fontWeight(.bold)
@@ -102,27 +150,85 @@ struct ClinkWidgetEntryView : View {
             }
         }
         .padding()
-        // <-- Usando entry.colorHex
-        .containerBackground(Color(hex: entry.colorHex), for: .widget)
+        .containerBackground(Color(hex: entry.colorHex) ?? Color.blue, for: .widget)
     }
 }
 
-// MARK: - 4. Configuração Principal
+private func allReminders() -> [ReminderEntity] {
+    guard let sharedDefaults = UserDefaults(suiteName: "group.sampaio.clink.dados"),
+          let data = sharedDefaults.data(forKey: "widget_shared_reminders") else {
+        print("Widget: Não encontrou dados no App Group")
+        return []
+    }
+    
+    do {
+        let reminders = try JSONDecoder().decode([Reminder].self, from: data)
+        print("Widget: Carregou \(reminders.count) lembretes com sucesso!")
+        
+        return reminders.map { reminder in
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM, HH:mm"
+            let dateStr = reminder.dueDate != nil ? formatter.string(from: reminder.dueDate!) : ""
+            
+            return ReminderEntity(
+                id: reminder.id.uuidString,
+                title: reminder.title,
+                colorHex: reminder.color.toHex(),
+                description: reminder.description ?? "",
+                dateString: dateStr
+            )
+        }
+    } catch {
+        print("Widget: Erro ao decodificar os lembretes: \(error)")
+        return []
+    }
+}
+
+
+    private func createEntry(for entity: ReminderEntity?) -> SimpleEntry {
+        if let entity = entity {
+            return SimpleEntry(
+                date: Date(),
+                title: entity.title,
+                icon: "📌",
+                colorHex: entity.colorHex,
+                description: entity.description,
+                dateString: entity.dateString
+            )
+        } else {
+            let allRemindersCount = ReminderQuery().allReminders().count
+            
+            if allRemindersCount == 0 {
+                return SimpleEntry(
+                    date: Date(),
+                    title: "Erro de Conexão",
+                    icon: "⚠️",
+                    colorHex: "FF3B30",
+                    description: "O Widget não conseguiu ler os dados. Verifique o App Group.",
+                    dateString: ""
+                )
+            } else {
+                return SimpleEntry(
+                    date: Date(),
+                    title: "Lembrete Perdido",
+                    icon: "❓",
+                    colorHex: "FF9500",
+                    description: "Selecione novamente. (Lembretes lidos: \(allRemindersCount))",
+                    dateString: ""
+                )
+            }
+        }
+    }
+
 @main
 struct ClinkWidget: Widget {
     let kind: String = "ClinkWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        AppIntentConfiguration(kind: kind, intent: SelectReminderIntent.self, provider: Provider()) { entry in
             ClinkWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Lembrete Clink")
-        .description("Tenha seu lembrete favorito sempre na tela inicial.")
+        .description("Tenha seus lembretes favoritos na tela inicial.")
     }
-}
-
-// A sua extensão continua igual, certifique-se apenas de que o nome
-// do App Group aqui é o mesmo que você colocou na aba de Capabilities (ex: group.sampaio.clink.dados)
-extension UserDefaults {
-    static let sharedWidget = UserDefaults(suiteName: "group.sampaio.clink.dados")
 }
