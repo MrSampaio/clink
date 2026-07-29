@@ -47,7 +47,7 @@ class ReminderViewModel: ObservableObject{
         } else {
             self.reminders = [
                 Reminder(
-                    listId: 1,
+                    listId: 3,
                     isLocked: false,
                     title: "Campanha",
                     description: "Aprovar textos e layouts para os posts sobre economia circular e lixo eletrônico.",
@@ -59,7 +59,7 @@ class ReminderViewModel: ObservableObject{
                     category: "Trabalho"
                 ),
                 Reminder(
-                    listId: 1,
+                    listId: 3,
                     isLocked: true,
                     title: "Otimizar banco Oracle SQL",
                     description: "Verificar gargalos nas consultas e aplicar índices.",
@@ -107,7 +107,7 @@ class ReminderViewModel: ObservableObject{
                     category: "Estudos"
                 ),
                 Reminder(
-                    listId: 3,
+                    listId: 1,
                     isLocked: false,
                     title: "Ligar para o filho",
                     description: "Saber como estão as coisas e bater um papo.",
@@ -115,11 +115,11 @@ class ReminderViewModel: ObservableObject{
                     subtasks: [],
                     dueDate: Date(),
                     isImportant: true,
-                    color: .listColor3,
+                    color: .blue,
                     category: "Geral"
                 ),
                 Reminder(
-                    listId: 3,
+                    listId: 1,
                     isLocked: false,
                     title: "Ajustar PC",
                     description: "Testar compatibilidade da GPU e ver otimizações do AMD FSR 3.1.",
@@ -127,11 +127,11 @@ class ReminderViewModel: ObservableObject{
                     subtasks: [],
                     dueDate: Date(timeIntervalSinceNow: 86400 * 5),
                     isImportant: false,
-                    color: .listColor3,
+                    color: .blue,
                     category: "Geral"
                 ),
                 Reminder(
-                    listId: 3,
+                    listId: 1,
                     isLocked: false,
                     title: "Séries",
                     description: "Verificar quando saem os novos episódios de Invincible e The Boys.",
@@ -139,7 +139,7 @@ class ReminderViewModel: ObservableObject{
                     subtasks: [],
                     dueDate: Date(timeIntervalSinceNow: 86400 * 15),
                     isImportant: false,
-                    color: .listColor3,
+                    color: .blue,
                     category: "Geral"
                 ),
                 Reminder(
@@ -168,27 +168,27 @@ class ReminderViewModel: ObservableObject{
                 )
             ]
         }
-        
-        if let savedDeletedData = UserDefaults.standard.data(forKey: deletedKey),
-           let decodedDeleted = try? JSONDecoder().decode([Reminder].self, from: savedDeletedData) {
-            self.deletedReminders = decodedDeleted
-        } else {
-            self.deletedReminders = [
-                Reminder(
-                    listId: 1,
-                    isLocked: false,
-                    title: "Exemplo de lembrete apagado",
-                    description: "Esse aqui é só pra ver o lembrete apagado",
-                    isCompleted: true,
-                    subtasks: [],
-                    dueDate: Date(),
-                    isImportant: true,
-                    color: .listColor3,
-                    category: "Geral"
-                )
-            ]
+            
+            if let savedDeletedData = UserDefaults.standard.data(forKey: deletedKey),
+               let decodedDeleted = try? JSONDecoder().decode([Reminder].self, from: savedDeletedData) {
+                self.deletedReminders = decodedDeleted
+            } else {
+                self.deletedReminders = [
+                    Reminder(
+                        listId: 1,
+                        isLocked: false,
+                        title: "Exemplo de lembrete apagado",
+                        description: "Esse é um exemplo de apagado!",
+                        isCompleted: true,
+                        subtasks: [],
+                        dueDate: Date(),
+                        isImportant: true,
+                        color: .blue,
+                        category: "Geral"
+                    )
+                ]
+            }
         }
-    }
         
     private func saveData() {
         let encoder = JSONEncoder()

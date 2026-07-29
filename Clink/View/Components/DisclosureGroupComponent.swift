@@ -28,7 +28,7 @@ struct DisclosureGroupComponent: View {
                            .padding(.top, 15)
                 }
             } else{
-                Text("Nenhum lembrete.")
+                Text("Nenhum lembrete")
             }
             
             

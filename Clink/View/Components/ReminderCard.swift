@@ -48,7 +48,7 @@ struct ReminderCard: View {
                         Button(action: { showEditSheet = true }) {
                             Image(systemName: "info.circle")
                                 .foregroundColor(reminder.color)
-                                .font(.system(size: 22, weight: .bold))
+                                .font(.system(size: 22, weight: .regular))
                         }
                         .buttonStyle(PlainButtonStyle())
                     }

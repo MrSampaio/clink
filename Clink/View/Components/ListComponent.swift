@@ -18,9 +18,9 @@ public struct ListComponent: View {
             HStack{
                 HStack(spacing: 15){
                     Image(systemName: list.icon)
-                        .foregroundColor(Color(.tag))
+                        .foregroundColor(.white)
                         .frame(width: 50, height: 50)
-                        .background(Color(list.color))
+                        .background(list.color.gradient)
                         .cornerRadius(50)
                         
                     VStack(alignment: .leading, spacing: 0){
@@ -45,7 +45,7 @@ public struct ListComponent: View {
                             .foregroundColor(.font)
                             .opacity(0.7)
                     } else{
-                        Text("Nenhum lembrete.")
+                        Text("Nenhum lembrete")
                             .foregroundColor(.font)
                             .opacity(0.7)
                     }
@@ -61,13 +61,12 @@ public struct ListComponent: View {
         }
     }
 }
+
 #Preview {
-    
     let reminder = ReminderList(id: 1, title: "Trabalho", color: .listColor1, icon: "briefcase.fill")
     
     NavigationStack{
         ListComponent(list: reminder)
             .environmentObject(ReminderViewModel())
     }
-   
 }

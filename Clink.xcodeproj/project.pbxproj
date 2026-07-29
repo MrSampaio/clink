@@ -120,6 +120,8 @@
 				36830B1E3015ABFA00AE5893 /* ClinkWidget */,
 				36830B193015ABFA00AE5893 /* Frameworks */,
 				36B1E87A300C187B000EEF64 /* Products */,
+				3634E00930194459008F82D0 /* animated_logo_light.mp4 */,
+				3634E00B30195178008F82D0 /* animated_logo_dark.mp4 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -231,6 +233,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3634E00C30195178008F82D0 /* animated_logo_dark.mp4 in Resources */,
+				3634E00A30194459008F82D0 /* animated_logo_light.mp4 in Resources */,
+				3634E00830194357008F82D0 /* Clink.gif in Resources */,
 				36B1E888300C1981000EEF64 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

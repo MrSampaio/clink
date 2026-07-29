@@ -100,7 +100,7 @@ struct ManageView: View {
             
             if searchText.isEmpty {
                 
-                Title(title: "Gerenciar", subtitle: "Visualize seus lembretes concluídos, apagados ou trancados")
+                Title(title: "Gerenciar", subtitle: "Visualize seus lembretes concluídos, apagados ou trancados!")
                     .padding(16)
                 
                 VStack {
@@ -121,7 +121,7 @@ struct ManageView: View {
                     switch viewModel.managePickerSelection {
                         case 0:
                             if viewModel.concludedRemindersIndices.isEmpty {
-                               Text("Nenhum lembrete concluído foi encontrado.")
+                               Text("Nenhum lembrete concluído foi encontrado")
                                     .padding(.top, 40)
                             } else{
                                 ForEach(viewModel.concludedRemindersIndices, id: \.self) { index in
@@ -130,7 +130,7 @@ struct ManageView: View {
                             }
                         case 1:
                             if viewModel.deletedReminders.isEmpty {
-                                Text("Nenhum lembrete na lixeira foi encontrado.")
+                                Text("Nenhum lembrete na lixeira foi encontrado")
                                      .padding(.top, 40)
                             } else{
                                 ForEach($viewModel.deletedReminders) { $deletedReminder in
@@ -139,7 +139,7 @@ struct ManageView: View {
                             }
                         case 2:
                             if viewModel.lockedRemindersIndices.isEmpty {
-                                Text("Nenhum lembrete trancado foi encontrado.")
+                                Text("Nenhum lembrete trancado foi encontrado")
                                      .padding(.top, 40)
                             } else{
                                 ForEach(viewModel.lockedRemindersIndices, id: \.self) { index in
@@ -157,7 +157,7 @@ struct ManageView: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     if filteredConcludedIndices.isEmpty && filteredDeleted.isEmpty && filteredLockedIndices.isEmpty {
-                        Text("Nenhum lembrete encontrado.")
+                        Text("Nenhum lembrete encontrado")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: .center)

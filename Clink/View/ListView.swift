@@ -29,7 +29,7 @@ struct ListView: View {
                 
                 ScrollView{
                     LazyVStack(spacing: 16){
-                        Title(title: list.title, subtitle: "\(viewModel.countReminders(for: list.id)) lembretes")
+                        Title(title: list.title, subtitle: "\(viewModel.countReminders(for: list.id)) lembretes!")
                         
                         if viewModel.countReminders(for: list.id) > 0{
                             ForEach(viewModel.remindersIndicesByList(for: list.id), id: \.self) { index in
@@ -39,7 +39,7 @@ struct ListView: View {
                             
                         } else{
                             Spacer()
-                            Text("Nenhum lembrete adicionado.")
+                            Text("Nenhum lembrete adicionado")
                         }
                         
                     }

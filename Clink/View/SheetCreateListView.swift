@@ -25,30 +25,44 @@ struct SheetCreateListView: View {
     var listToEdit: ReminderList?
     
     let palette: [LinearGradient] = [
-        .grayGradient, .redGradient, .orangeGradient, .yellowGradient, .greenGradient, .blueGradient, .indigoGradient, .purpleGradient, .pinkGradient, .brownGradient]
+        .pinkGradient, .redGradient, .orangeGradient, .brownGradient, .brownDarkGradient, .greenGradient, .mintGradient, .blueGradient, .indigoGradient, .purpleGradient
+    ]
     
     let baseColors: [Color] = [
-            .listColor1, .listColor2, .listColor3, .listColor4, .listColor5,
-            .listColor6, .listColor7, .listColor8, .listColor9, .listColor10
-        ]
+        .listColor9,  // Pink
+        .listColor2,  // Red
+        .listColor3,  // Orange
+        .listColor10, // Brown
+        .listColor1,  // Brown Dark
+        .listColor5,  // Green
+        .listColor4,  // Mint
+        .listColor6,  // Blue
+        .listColor7,  // Indigo
+        .listColor8   // Purple
+    ]
     
     init(listToEdit: ReminderList? = nil) {
         self.listToEdit = listToEdit
         
         _listName = State(initialValue: listToEdit?.title ?? "")
         _selectedIcon = State(initialValue: listToEdit?.icon ?? "list.bullet")
-
         
         let colors: [Color] = [
-            .listColor1, .listColor2, .listColor3, .listColor4, .listColor5,
-            .listColor6, .listColor7, .listColor8, .listColor9, .listColor10
+            .listColor9,  // Pink
+            .listColor2,  // Red
+            .listColor3,  // Orange
+            .listColor10, // Brown
+            .listColor1,  // Brown Dark
+            .listColor5,  // Green
+            .listColor4,  // Mint
+            .listColor6,  // Blue
+            .listColor7,  // Indigo
+            .listColor8   // Purple
         ]
         
         if let existingColor = listToEdit?.color, let colorIndex = colors.firstIndex(of: existingColor) {
-            
             _selectedColor = State(initialValue: colorIndex)
         } else {
-            
             _selectedColor = State(initialValue: 0)
         }
     }
@@ -81,7 +95,7 @@ struct SheetCreateListView: View {
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
                 SheetListToolBar(
-                    title: listToEdit == nil ? "Nova Lista" : "Editar Lista",
+                    title: listToEdit == nil ? "Criar Lista" : "Editar Lista",
                     
                     actionCancel: {
                         if hasChanges {
@@ -124,19 +138,19 @@ struct SheetCreateListView: View {
                 )
             }
             .onTapGesture {
-                #if canImport(UIKit)
-                    hideKeyboard()
-                #endif
+#if canImport(UIKit)
+                hideKeyboard()
+#endif
             }
             .scrollDismissesKeyboard(.interactively)
             
-            // MARK: - Alertas
+            //Alertas
             .alert("Houve um erro ao executar a ação.", isPresented: $showErrorAlert) {
                 Button("Tentar novamente", role: .cancel) { }
             } message: {
                 Text(errorMessage)
             }
-
+            
             .alert("Tem certeza de que deseja apagar esta lista? ", isPresented: $showingDeleteAlert) {
                 Button("Cancelar", role: .cancel) {}
                 Button("Apagar", role: .destructive) {
@@ -154,4 +168,5 @@ struct SheetCreateListView: View {
 
 #Preview {
     SheetCreateListView()
+        .environmentObject(ReminderViewModel())
 }
