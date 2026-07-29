@@ -1,0 +1,227 @@
+//
+//  SheetSections.swift
+//  Clink
+//
+//  Created by Vitor Silva Souza on 22/07/26.
+//
+
+import SwiftUI
+
+struct DetailsSectionView: View {
+    @Binding var newTitle: String
+    @Binding var description: String
+    
+    var body: some View {
+        Section {
+            TextField("Título", text: $newTitle)
+            
+            TextField("Escreva uma descrição", text: $description, axis: .vertical)
+                .lineLimit(3...5)
+        }
+    }
+}
+
+struct SubtaskSectionView: View {
+    @Binding var subtasks: [SubTask]
+    //@Binding var reminderId: Int
+    var color: Color = .blue
+    
+    var body: some View {
+        Section {
+            ForEach($subtasks) { $subtask in
+                HStack(spacing: 16) {
+                    CheckBox(isMarked: $subtask.isCompleted, color: color)
+                        .frame(width: 20, height: 20)
+
+                    TextField("Nova subtarefa", text: $subtask.title)
+                        .foregroundColor(.primary)
+                    
+                    
+                    Button(action: {
+                        withAnimation{
+                            if (!subtasks.isEmpty) {
+                                subtasks.removeAll(where: { $0.id == subtask.id })
+                            }
+                        }
+                        
+                    }) {
+                        HStack() {
+                            Image(systemName: "minus.circle.fill")
+                        }
+                        .foregroundColor(.red)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                
+            }
+            
+            Button(action: {
+
+                DispatchQueue.main.async {
+                    withAnimation{
+                        subtasks.append(SubTask(title: ""))
+                    }
+                }
+            }) {
+                HStack(spacing: 16) {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Adicionar subtarefa")
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(color)
+            }
+            .buttonStyle(.plain)
+            .contentShape(Rectangle())
+            
+            
+        }
+    }
+}
+struct AlertSectionView: View {
+    @Binding var isDateEnabled: Bool
+    @Binding var isTimeEnabled: Bool
+    @Binding var selectedDate: Date
+    
+    var color: Color? = .green
+    
+    var body: some View {
+        
+        Section(header: Text("Alerta")) {
+            Toggle(isOn: $isDateEnabled) {
+                Text("Data")
+            } .tint(color)
+            
+            if isDateEnabled {
+                HStack {
+                    Image(systemName: "calendar")
+                    
+                    DatePicker(
+                        "",
+                        selection: $selectedDate,
+                        displayedComponents: .date
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    
+                    // muda a linguagem do calendário depois
+                    //.typesettingLanguage(.explicit(Locale.Language))
+                }
+                .frame(maxWidth: .infinity, minHeight: 60)
+                .background(Color(.systemGray4))
+                .clipShape(RoundedRectangle(cornerRadius: 28))
+            }
+        }
+        
+        Section(footer: Text("Um horário precisa de uma data definida.")) {
+            Toggle(isOn: $isTimeEnabled) {
+                Text("Hora")
+            }.tint(color)
+            if isTimeEnabled {
+                HStack {
+                    Image(systemName: "clock")
+                    
+                    DatePicker(
+                        "",
+                        selection: $selectedDate,
+                        displayedComponents: .hourAndMinute
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                }
+                .frame(maxWidth: .infinity, minHeight: 60)
+                .background(Color(.systemGray4))
+                .clipShape(RoundedRectangle(cornerRadius: 28))
+            }
+        }
+        
+        
+    }
+}
+
+struct NotificationSectionView: View {
+    @Binding var notification: Bool
+    @Binding var repeatReminder: Bool
+    
+    var color: Color? = .green
+    
+    var body: some View {
+        Section {
+            HStack {
+                Image(systemName: "bell")
+                Toggle("Notificações", isOn: $notification)
+                    .tint(color)
+            }
+            HStack {
+                Image(systemName: "repeat")
+                Toggle("Repetir lembrete", isOn: $repeatReminder)
+                    .tint(color)
+            }
+        }
+    }
+}
+
+struct PrivacySectionView: View {
+    @Binding var lockReminder: Bool
+    var color: Color? = .green
+    
+    var body: some View {
+        Section(header: Text("Privacidade"), footer: Text("Ao trancar um lembrete, você só poderá acessá-lo com o FaceID.")) {
+            HStack {
+                Image(systemName: "lock")
+                Toggle("Trancar lembrete", isOn: $lockReminder)
+                    .tint(color)
+            }
+        }
+    }
+}
+
+struct OrganizationSectionView: View {
+    @Binding var signposted: Bool
+    @Binding var selectedListId: Int
+    var color: Color? = .green
+    
+    @EnvironmentObject var viewModel: ReminderViewModel
+    
+    var body: some View {
+        Section(header: Text("Classificar")) {
+            Toggle(isOn: $signposted) {
+                Label("Sinalizar", systemImage: "flag")
+            }
+            .tint(color)
+            .foregroundColor(.primary)
+            
+            Picker("Mover para lista", selection: Binding(
+                get: { selectedListId },
+                set: { newValue in
+                    DispatchQueue.main.async {
+                        selectedListId = newValue
+                    }
+                }
+            )) {
+                ForEach(viewModel.customLists) { list in
+                    Text(list.title).tag(list.id)
+                }
+            }
+            .pickerStyle(.menu)
+            .tint(color)
+        }
+    }
+}
+struct AttachmentSectionView: View {
+    var body: some View {
+        Section(header: Text("Mídia")) {
+            HStack(spacing: 12) {
+                Image(systemName: "paperclip")
+                    .foregroundColor(.primary)
+                
+                Text("Anexo")
+                    .foregroundColor(.primary)
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+}

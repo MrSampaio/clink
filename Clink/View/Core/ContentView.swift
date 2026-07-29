@@ -8,18 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var reminderViewModel = ReminderViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            
-        }
-        .padding()
+        SplashScreenView()
+            .environmentObject(ReminderViewModel())
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(ReminderViewModel())
 }
