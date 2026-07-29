@@ -2,14 +2,14 @@
 //  CreateWidgetsView.swift
 //  Clink
 //
-//  Created by Julio Sampaio on 19/07/26.
-//
 
 import SwiftUI
 import WidgetKit
 
 struct CreateWidgetsView: View {
-    @State private var selectedCard: Int? = 0
+    @EnvironmentObject var viewModel: ReminderViewModel
+    
+    @State private var selectedCardId: UUID?
     
     var body: some View {
         NavigationStack {
@@ -24,63 +24,75 @@ struct CreateWidgetsView: View {
                         
                         HStack(alignment: .center, spacing: 40) {
                             
-                            Group {
-                                WidgetCard(image: "⛈️", mensagem: "Tirar a roupa do varal", colorBackground: .indigoGradient)
-                                    .id(0)
-                                
-                                AddWidgetCard()
-                                    .id(1)
-                                
-                                WidgetCard(image: "⚽️", mensagem: "Futebol hoje", colorBackground: .greenGradient)
-                                    .id(2)
-                            }
-                            .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                                content
-                                    .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
-                                    .opacity(phase.isIdentity ? 1.0 : 0.5)
+                            ForEach(viewModel.reminders) { reminder in
+                                WidgetCard(
+                                    image: "🐥",
+                                    mensagem: reminder.title,
+                                    colorBackground: LinearGradient(
+                                        colors: [reminder.color, reminder.color.opacity(0.7)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .id(reminder.id)
+                                .scrollTransition(.interactive, axis: .horizontal) { content, phase in
+                                    content
+                                        .scaleEffect(phase.isIdentity ? 1.0 : 0.85)
+                                        .opacity(phase.isIdentity ? 1.0 : 0.5)
+                                }
                             }
                         }
                         .scrollTargetLayout()
                     }
                     .scrollTargetBehavior(.viewAligned)
-                    .scrollPosition(id: $selectedCard)
+                    .scrollPosition(id: $selectedCardId)
                     .safeAreaPadding(.horizontal, (geometry.size.width - 165) / 2)
                 }
                 .frame(height: 200)
                 .padding(.top, 20)
                 
-                HStack(spacing: 8) {
-                    ForEach(0..<3) { index in
-                        Circle()
-                            .fill(selectedCard == index ? Color.primary : Color.secondary.opacity(0.3))
-                            .frame(width: 8, height: 8)
-                            .animation(.easeInOut, value: selectedCard)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(viewModel.reminders) { reminder in
+                            Circle()
+                                .fill(selectedCardId == reminder.id ? Color.primary : Color.secondary.opacity(0.3))
+                                .frame(width: 8, height: 8)
+                                .animation(.easeInOut, value: selectedCardId)
+                        }
                     }
                 }
+                .frame(maxWidth: 150)
                 .padding(.top, 16)
                 .padding(.bottom, 30)
                 
                 Spacer()
                 
                 Button(action: {
-                    guard selectedCard != 1 else { return }
+                    guard let selectedId = selectedCardId,
+                          let selectedReminder = viewModel.reminders.first(where: { $0.id == selectedId }) else { return }
                     
                     if let sharedDefaults = UserDefaults.sharedWidget {
+                        sharedDefaults.set(selectedReminder.title, forKey: "widgetTitle")
+                        sharedDefaults.set("📌", forKey: "widgetIcon")
                         
-                        sharedDefaults.set("Futebol hoje", forKey: "widgetTitle")
-                        sharedDefaults.set("⚽️", forKey: "widgetIcon")
-                        
-                        let colorString = Color.green.toHex()
+                        let colorString = selectedReminder.color.toHex()
                         sharedDefaults.set(colorString, forKey: "widgetColorHex")
                         
-                        sharedDefaults.set("Jogo com a galera do trabalho na quadra do centro.", forKey: "widgetDescription")
-                        sharedDefaults.set("Hoje, 19:00", forKey: "widgetDate")
+                        sharedDefaults.set(selectedReminder.description ?? "", forKey: "widgetDescription")
+                        
+                        if let date = selectedReminder.dueDate {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "dd/MM, HH:mm"
+                            sharedDefaults.set(formatter.string(from: date), forKey: "widgetDate")
+                        } else {
+                            sharedDefaults.set("", forKey: "widgetDate")
+                        }
                     }
                     
                     WidgetCenter.shared.reloadAllTimelines()
-                    print("widget atualizado com sucesso!")
+                    print("Widget atualizado para: \(selectedReminder.title)")
                     
-                }){
+                }) {
                     Label("Adicionar Widget", systemImage: "plus.circle.fill")
                         .font(.headline)
                         .foregroundStyle(.white)
@@ -91,18 +103,17 @@ struct CreateWidgetsView: View {
                 .tint(.blue)
                 .padding(.horizontal, 32)
                 .padding(.bottom, 20)
-                .opacity(selectedCard == 1 ? 0.0 : 1.0)
-                .disabled(selectedCard == 1)
-                .animation(.easeInOut, value: selectedCard)
+                .opacity(viewModel.reminders.isEmpty ? 0.0 : 1.0)
+                .disabled(viewModel.reminders.isEmpty)
+                .animation(.easeInOut, value: selectedCardId)
             }
             .background(Color(UIColor.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { WidgetToolBar() }
             .onAppear {
-                // Atraso para o GeometryReader calcular a tela
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        selectedCard = 1
+                        selectedCardId = viewModel.reminders.first?.id
                     }
                 }
             }
@@ -116,4 +127,5 @@ extension UserDefaults {
 
 #Preview {
     CreateWidgetsView()
+        .environmentObject(ReminderViewModel())
 }
