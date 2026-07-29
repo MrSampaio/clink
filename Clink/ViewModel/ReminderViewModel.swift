@@ -28,6 +28,7 @@ class ReminderViewModel: ObservableObject{
     private let deletedKey = "saved_deleted_key"
     
     init() {
+        NotificationManager.shared.requestAuthorization()
         if let savedListsData = UserDefaults.standard.data(forKey: listsKey),
            let decodedLists = try? JSONDecoder().decode([ReminderList].self, from: savedListsData) {
             self.customLists = decodedLists
@@ -367,13 +368,15 @@ class ReminderViewModel: ObservableObject{
             description: (description?.isEmpty == true) ? nil : description,
             isCompleted: false,
             subtasks: subtasks?.isEmpty == true ? nil : subtasks,
-            dueDate: (dueDate != nil) ? dueDate : Date(),
+            dueDate: dueDate,
             isImportant: isImportant,
             color: getListColor,
             category: getListTitle
         )
         
         reminders.append(newReminder)
+        NotificationManager.shared.scheduleNotification(for: newReminder)
+        
         return newReminder
     }
     
@@ -394,14 +397,18 @@ class ReminderViewModel: ObservableObject{
             reminders[index].isImportant = isImportant
             reminders[index].category = newListTitle
             reminders[index].color = newListColor
+            
+            NotificationManager.shared.scheduleNotification(for: reminders[index])
         }
+        
+        
     }
     
     func deleteReminder(id: UUID) {
         if let reminderToDelete = reminders.first(where: { $0.id == id }) {
             deletedReminders.insert(reminderToDelete, at: 0)
-            
             reminders.removeAll(where: { $0.id == id })
+            NotificationManager.shared.cancelNotification(for: id.uuidString)
         }
     }
     
