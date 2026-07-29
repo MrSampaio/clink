@@ -29,7 +29,7 @@ struct ListView: View {
                 
                 ScrollView{
                     LazyVStack(spacing: 16){
-                        Title(title: list.title, subtitle: "\(viewModel.countReminders(for: list.id)) lembretes")
+                        Title(title: list.title, subtitle: "\(viewModel.countReminders(for: list.id)) lembretes!")
                         
                         if viewModel.countReminders(for: list.id) > 0{
                             ForEach(viewModel.remindersIndicesByList(for: list.id), id: \.self) { index in
@@ -39,8 +39,7 @@ struct ListView: View {
                             
                         } else{
                             Spacer()
-                            Text("Nenhum lembrete adicionado.")
-                            // põe uma imagem do clink aqui pra não ficar vazio
+                            Text("Nenhum lembrete adicionado")
                         }
                         
                     }
@@ -52,7 +51,7 @@ struct ListView: View {
                 }
                 
                 .sheet(isPresented: $showSheetReminder) {
-                    SheetEditView(list: list)
+                    SheetEditReminderView(list: list)
                         .presentationDragIndicator(.visible)
                 }
             }
@@ -62,7 +61,7 @@ struct ListView: View {
 
 #Preview {
     
-    var list = ReminderList(id: 2, title: "Trabalho", color: .listColor2, icon: "briefcase.fill")
+    let list = ReminderList(id: 2, title: "Trabalho", color: .listColor2, icon: "briefcase.fill")
     
     ListView(list: list)
         .environmentObject(ReminderViewModel())

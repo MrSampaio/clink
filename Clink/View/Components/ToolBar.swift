@@ -7,71 +7,83 @@
 
 import SwiftUI
 
+enum SortOrder {
+    case newest
+    case oldest
+}
+
 struct HomeToolBar: ToolbarContent {
+
+    @Binding var sortOrder: SortOrder
+    @Binding var showConcluded: Bool
+    @Binding var showLocked: Bool
+    
+    // closures (ações) para avisar a HomeView que a lixeira e o add foram clicados
+    var onTrashTapped: () -> Void
+    var onAddTapped: () -> Void
+    
     var body: some ToolbarContent {
-        
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                print("Pequisar Clicado") }) { Image(systemName: "magnifyingglass")}
-        }
-        
         ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(action: {
-                print("Organizar Clicado") }) { Image(systemName: "arrow.up.arrow.down")}
+            Menu {
+                Picker("Organizar", selection: $sortOrder) {
+                    Text("Mais recentes primeiro").tag(SortOrder.newest)
+                    Text("Mais antigos primeiro").tag(SortOrder.oldest)
+                }
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
+            }
             
             Button(action: {
-                print("Menu Clicado") }) { Image(systemName: "ellipsis")}
+                onAddTapped()
+            }) {
+                Image(systemName: "plus")
+            }
+            
+            Menu {
+                Toggle(isOn: $showConcluded) {
+                    Label("Mostrar concluídos", systemImage: "checkmark.circle")
+                }
+                
+                Toggle(isOn: $showLocked) {
+                    Label("Mostrar trancados", systemImage: "lock")
+                }
+                
+                Divider()
+                
+                Button(role: .destructive, action: {
+                    onTrashTapped()
+                }) {
+                    Label("Lixeira", systemImage: "trash")
+                }
+                
+            } label: {
+                Image(systemName: "ellipsis")
+            }
         }
     }
 }
 
+enum ListSortOrder {
+    case alphabetical
+    case creation
+}
+
 struct AllListsToolBar: ToolbarContent {
+    
+    @Binding var sortOrder: ListSortOrder
+    
     var body: some ToolbarContent {
-        
+
         ToolbarItem(placement: .topBarTrailing) {
-            
-            HStack(spacing: 12) {
-                Button(action: {
-                    print("Pesquisar Clicado")
-                }) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.font)
-                        .frame(width: 50, height: 50)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle().stroke(Color.border.opacity(0.3), lineWidth: 1)
-                        )
-                        .shadow(color: .border.opacity(0.15), radius: 5, x: 0, y: 4)
+            Menu {
+                Picker("Organizar", selection: $sortOrder) {
+                    Text("Ordem alfabética").tag(ListSortOrder.alphabetical)
+                    Text("Ordem de criação").tag(ListSortOrder.creation)
                 }
-                
-                HStack(spacing: 20) {
-                    Button(action: { print("Organizar Clicado") }) {
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
-                    
-                    Button(action: { print("Lixo Clicado") }) {
-                        Image(systemName: "trash")
-                    }
-                    
-                    Button(action: { print("Menu Clicado") }) {
-                        Image(systemName: "ellipsis")
-                    }
-                }
-                .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.font)
-                .padding(.horizontal, 20)
-                .frame(height: 50)
-                .background(.ultraThinMaterial)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule().stroke(Color.border.opacity(0.3), lineWidth: 1)
-                )
-                .shadow(color: .font.opacity(0.15), radius: 5, x: 0, y: 4)
-                
+            } label: {
+                Image(systemName: "arrow.up.arrow.down")
             }
-        } .sharedBackgroundVisibility(.hidden)
+        }
     }
 }
 
@@ -96,7 +108,7 @@ struct SelectedListToolBar: ToolbarContent {
     }
 }
 struct SheetReminderToolBar: ToolbarContent {
-    
+    let title: String
     let actionCancel: () -> Void
     let actionConfirm: () -> Void
     let actionDiscard: () -> Void
@@ -104,7 +116,77 @@ struct SheetReminderToolBar: ToolbarContent {
     let disableAdd: Bool
     var isEditing: Bool
     
-    var color: Color? = .blue
+    var color: Color?
+    
+    @Binding var showingDiscardAlert: Bool
+    
+    var body: some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading) {
+            Button(action: {
+                actionCancel()
+            }) {
+                Image(systemName: "xmark")
+            }
+            .confirmationDialog(
+                "",
+                isPresented: $showingDiscardAlert,
+                titleVisibility: .hidden
+            ) {
+                Button("Descartar", role: .destructive) {
+                    actionDiscard()
+                }
+                
+                Button("Continuar Editando", role: .cancel) { }
+                
+            } message: {
+                Text("Deseja mesmo descartar a edição deste lembrete?")
+            }
+        }
+        
+        ToolbarItem(placement: .principal) {
+            Text(title)
+                .font(.system(size: 20, weight: .semibold))
+        }
+        
+        ToolbarItemGroup(placement: .topBarTrailing) {
+            if isEditing {
+                Button(action: {
+                    actionDelete()
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.circle)
+                .tint(.red)
+                .disabled(disableAdd)
+            }
+            
+            Button(action: {
+                actionConfirm()
+            }) {
+                Image(systemName: "checkmark")
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.circle)
+            .tint(color)
+            .disabled(disableAdd)
+        }
+    }
+}
+struct SheetListToolBar: ToolbarContent {
+    
+    let title: String
+    let actionCancel: () -> Void
+    let actionConfirm: () -> Void
+    let actionDiscard: () -> Void
+    let actionDelete: () -> Void
+    let disableAdd: Bool
+    var isEditing: Bool
+    
+    var color: Color?
     
     @Binding var showingDiscardAlert: Bool
     
@@ -128,14 +210,15 @@ struct SheetReminderToolBar: ToolbarContent {
                 Button("Continuar Editando", role: .cancel) { }
                 
             } message: {
-                Text("Deseja mesmo descartar a edição deste lembrete?")
+                Text("Deseja mesmo descartar as alterações desta lista?")
             }
         }
         
         ToolbarItem(placement: .principal) {
-            Text("Editar")
+            Text(title)
                 .font(.system(size: 20, weight: .semibold))
         }
+        
         if isEditing {
             ToolbarItem(placement: .destructiveAction){
                 Button(action: {
@@ -147,7 +230,6 @@ struct SheetReminderToolBar: ToolbarContent {
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
                 .tint(.red)
-                .disabled(disableAdd)
             }
         }
         
@@ -160,11 +242,12 @@ struct SheetReminderToolBar: ToolbarContent {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.circle)
-            .tint(color)
+            .tint(color ?? .blue)
             .disabled(disableAdd)
         }
     }
 }
+
 struct WidgetToolBar: ToolbarContent {
     var body: some ToolbarContent {
         
@@ -176,25 +259,21 @@ struct WidgetToolBar: ToolbarContent {
 }
 
 struct ManageToolBar: ToolbarContent {
+    
+    var onClearTapped: () -> Void
+    
     var body: some ToolbarContent {
-        
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "ellipsis")}
+            Menu {
+                Button(role: .destructive, action: {
+                    onClearTapped()
+                }) {
+                    Label("Esvaziar lixeira", systemImage: "trash")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+            }
         }
     }
 }
-
-struct testToolbar: ToolbarContent{
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button(action: {
-                print ("Menu Clicada") }) { Image(systemName: "magnifyingglass")}.background(.red)
-        }
-    }
-}
-
-
-
-
 

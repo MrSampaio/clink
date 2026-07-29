@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SheetEditView: View {
+struct SheetEditReminderView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: ReminderViewModel
     
@@ -48,7 +48,18 @@ struct SheetEditView: View {
     }
     
     var hasChanges: Bool {
-        !newTitle.isEmpty || !description.isEmpty || isDateEnabled || notification || repeatReminder || lockReminder || signposted || !subtasks.isEmpty
+        let hasValidSubtasks = subtasks.contains { !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        
+        let titleChanged = newTitle != (reminderToEdit?.title ?? "")
+        let descChanged = description != (reminderToEdit?.description ?? "")
+        let dateChanged = isDateEnabled != (reminderToEdit?.dueDate != nil)
+        let lockedChanged = lockReminder != (reminderToEdit?.isLocked ?? false)
+        let importantChanged = signposted != (reminderToEdit?.isImportant ?? false)
+        
+        let originalListId = reminderToEdit?.listId ?? list?.id ?? 1
+        let listChanged = selectedListId != originalListId
+        
+        return titleChanged || descChanged || dateChanged || notification || repeatReminder || lockedChanged || importantChanged || listChanged || hasValidSubtasks
     }
     var selectedListColor: Color {
         viewModel.customLists.first(where: { $0.id == selectedListId })?.color ?? .blue
@@ -76,7 +87,7 @@ struct SheetEditView: View {
                 } message: {
                     Text(errorMessage)
                 }
-            .alert("Apagar Lembrete", isPresented: $showingDeleteAlert) {
+            .alert("Tem certeza que deseja apagar o lembrete?", isPresented: $showingDeleteAlert) {
                 Button("Cancelar", role: .cancel) {}
                 
                 Button("Apagar", role: .destructive) {
@@ -88,12 +99,13 @@ struct SheetEditView: View {
                     }
                 }
             } message: {
-                Text("Tem certeza de que deseja apagar este lembrete? Esta ação não pode ser desfeita.")
+                Text("O lembrete será movido para a lixeira e essa ação não poderá ser desfeita.")
             }
             .navigationBarTitleDisplayMode(.inline)
             .interactiveDismissDisabled(hasChanges)
             .toolbar {
                 SheetReminderToolBar(
+                    title: reminderToEdit == nil ? "Novo Lembrete" : "Editar Lembrete",
                     actionCancel: {
                         if hasChanges {
                             showingDiscardAlert = true
@@ -191,11 +203,17 @@ struct SheetEditView: View {
                 )
                 
             }
+            .onTapGesture {
+                #if canImport(UIKit)
+                    hideKeyboard()
+                #endif
+            }
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 }
 
 #Preview {
-    SheetEditView(list: nil)
+    SheetEditReminderView(list: nil)
         .environmentObject(ReminderViewModel())
 }

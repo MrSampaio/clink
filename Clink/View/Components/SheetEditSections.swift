@@ -36,6 +36,7 @@ struct SubtaskSectionView: View {
                     TextField("Nova subtarefa", text: $subtask.title)
                         .foregroundColor(.primary)
                     
+                    
                     Button(action: {
                         withAnimation{
                             if (!subtasks.isEmpty) {
@@ -55,16 +56,22 @@ struct SubtaskSectionView: View {
             }
             
             Button(action: {
-                withAnimation {
-                    subtasks.append(SubTask(title: ""))
+
+                DispatchQueue.main.async {
+                    withAnimation{
+                        subtasks.append(SubTask(title: ""))
+                    }
                 }
             }) {
                 HStack(spacing: 16) {
                     Image(systemName: "plus.circle.fill")
                     Text("Adicionar subtarefa")
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(color)
             }
+            .buttonStyle(.plain)
+            .contentShape(Rectangle())
             
             
         }
@@ -183,18 +190,23 @@ struct OrganizationSectionView: View {
             .tint(color)
             .foregroundColor(.primary)
             
-            Picker("Mover para lista", selection: $selectedListId) {
-                
+            Picker("Mover para lista", selection: Binding(
+                get: { selectedListId },
+                set: { newValue in
+                    DispatchQueue.main.async {
+                        selectedListId = newValue
+                    }
+                }
+            )) {
                 ForEach(viewModel.customLists) { list in
-                    
                     Text(list.title).tag(list.id)
-                    
                 }
             }
+            .pickerStyle(.menu)
+            .tint(color)
         }
     }
 }
-
 struct AttachmentSectionView: View {
     var body: some View {
         Section(header: Text("Mídia")) {

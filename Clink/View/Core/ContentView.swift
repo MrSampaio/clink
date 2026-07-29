@@ -11,11 +11,12 @@ struct ContentView: View {
     @StateObject var reminderViewModel = ReminderViewModel()
     
     var body: some View {
-        TabViewComponent()
-            .environmentObject(reminderViewModel)
+        SplashScreenView()
+            .environmentObject(ReminderViewModel())
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(ReminderViewModel())
 }

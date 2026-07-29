@@ -7,10 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3634E00830194357008F82D0 /* Clink.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3634E00730194357008F82D0 /* Clink.gif */; };
+		3634E00A30194459008F82D0 /* animated_logo_light.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3634E00930194459008F82D0 /* animated_logo_light.mp4 */; };
+		3634E00C30195178008F82D0 /* animated_logo_dark.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3634E00B30195178008F82D0 /* animated_logo_dark.mp4 */; };
 		36B1E888300C1981000EEF64 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36B1E887300C197A000EEF64 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3634E00730194357008F82D0 /* Clink.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Clink.gif; sourceTree = "<group>"; };
+		3634E00930194459008F82D0 /* animated_logo_light.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = animated_logo_light.mp4; sourceTree = "<group>"; };
+		3634E00B30195178008F82D0 /* animated_logo_dark.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = animated_logo_dark.mp4; sourceTree = "<group>"; };
 		36B1E879300C187B000EEF64 /* Clink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B1E887300C197A000EEF64 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -37,9 +43,12 @@
 		36B1E870300C187B000EEF64 = {
 			isa = PBXGroup;
 			children = (
+				3634E00730194357008F82D0 /* Clink.gif */,
 				36B1E887300C197A000EEF64 /* .gitignore */,
 				36B1E87B300C187B000EEF64 /* Clink */,
 				36B1E87A300C187B000EEF64 /* Products */,
+				3634E00930194459008F82D0 /* animated_logo_light.mp4 */,
+				3634E00B30195178008F82D0 /* animated_logo_dark.mp4 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +124,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3634E00C30195178008F82D0 /* animated_logo_dark.mp4 in Resources */,
+				3634E00A30194459008F82D0 /* animated_logo_light.mp4 in Resources */,
+				3634E00830194357008F82D0 /* Clink.gif in Resources */,
 				36B1E888300C1981000EEF64 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
