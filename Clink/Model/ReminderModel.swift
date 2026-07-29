@@ -15,7 +15,7 @@ import SwiftUI
 //}
 
 struct SubTask: Identifiable, Codable{
-    let id = UUID()
+    var id: UUID = UUID()
     var title: String
     var isCompleted: Bool = false
 }
@@ -31,7 +31,7 @@ struct ReminderList: Identifiable, Codable{
 
 // -> não esquece de fazer uma lógica pra adicionar as horas no lembrete!!!!
 struct Reminder: Identifiable, Codable{
-    let id = UUID()
+    var id: UUID = UUID()
     var listId: Int // -> depois muda aqui pra UUID, quando a página de inserir lembrete estiver pronta
     var isLocked: Bool
     var title: String
