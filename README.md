@@ -20,26 +20,6 @@ Clink is a feature-rich, powerful task management and reminder app that helps yo
 * **UserNotifications**: A framework for managing notifications.
 * **LocalAuthentication**: A framework for handling biometric authentication.
 
-## ⚙️ System Requirements
-Before you begin, ensure your development environment meets the following minimum requirements:
-* **IDE:** Xcode 15.0 or later.
-* **iOS Target:** iOS 17.0+ (Required for native `Charts` and modern SwiftUI shapes).
-* **macOS Target:** macOS 14.0+ (Sonoma) or later.
-
-
-## 📦 Installation
-To install Clink, follow these steps:
-1. Clone the repository using Git.
-2. Open the project in Xcode.
-3. Build and run the application on a physical device or simulator.
-
-## 💻 Usage
-1. Launch the application and create a new reminder or task.
-2. Customize your reminder or task with due dates, subtasks, and other options.
-3. Secure your reminders with biometric authentication.
-4. Access your reminders and tasks directly from your home screen using the Clink widget.
-5. Receive notifications for upcoming reminders and events.
-
 ## 📂 Project Structure
 ```markdown
 Clink
@@ -62,7 +42,60 @@ Clink
 │   ├── ClinkWidgetLiveActivity.swift
 ```
 
-<!--## 📸 Screenshots -->
+## ⚙️ System Requirements
+
+Before you begin, ensure your development environment meets the following minimum requirements:
+
+- **IDE**: Xcode 15.0 or later
+- **iOS Target**: iOS 17.0+ (Required for Interactive Widgets, AppIntents, and Live Activities)
+
+---
+
+## 📦 Installation & Build
+
+To compile and run Clink locally on your machine, follow these steps:
+
+**1. Clone the repository**
+
+Open your Terminal and run:
+
+```bash
+git clone https://github.com/MrSampaio/clink.git
+```
+
+**2. Open the project in Xcode**
+
+Navigate to the cloned folder and double-click the `.xcodeproj` (or `.xcworkspace` if applicable) file to open it in Xcode.
+
+**3. Configure the App Group** *(Optional but Recommended)*
+
+To ensure the Widgets communicate properly with the main app, verify that the App Group identifier (`group.sampaio.clink.dados`) is enabled and matches your Apple Developer account settings under the **Signing & Capabilities** tab.
+
+**4. Select the Build Target**
+
+In the Xcode top toolbar, click on the active scheme name and choose:
+
+- `Clink` → Choose an iPhone Simulator (e.g., iPhone 15 Pro) or a physical connected device.
+
+**5. Compile and Run**
+
+Press `Cmd + R` or click the Play (▶) button. Xcode will compile the code and launch the application.
+
+---
+
+## 💻 Usage Guide
+
+Once the app is running, you can test its full feature set:
+
+1. **Create a Custom List**: Navigate to the "Listas" tab, tap the `+` button, and define a name, color gradient, and SF Symbol icon for your new category.
+
+2. **Add Reminders**: Inside your list or from the Home tab, add a new reminder. Toggle the options to include subtasks, set a specific date/time for local notifications, or flag it as important.
+
+3. **Lock a Reminder**: While creating or editing a reminder, toggle "Trancar lembrete". Attempting to view its details later will prompt a Face ID/Touch ID authentication request.
+
+4. **Test the Widget**: Go to your iOS Simulator/Device Home Screen, long-press the background, tap the `+` icon, and search for "Clink". Add the widget and long-press it to configure which reminder it should display.
+
+---
 
 ## 🍎 Thank you, Apple Developer Academy
-This project was developed in collaboration with @vitorssza at Apple Developer Academy.
+This project was developed in collaboration with [@vitorssza](https://github.com/vitorssza) at Apple Developer Academy.
