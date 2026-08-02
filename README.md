@@ -20,6 +20,13 @@ Clink is a feature-rich, powerful task management and reminder app that helps yo
 * **UserNotifications**: A framework for managing notifications.
 * **LocalAuthentication**: A framework for handling biometric authentication.
 
+## ⚙️ System Requirements
+Before you begin, ensure your development environment meets the following minimum requirements:
+* **IDE:** Xcode 15.0 or later.
+* **iOS Target:** iOS 17.0+ (Required for native `Charts` and modern SwiftUI shapes).
+* **macOS Target:** macOS 14.0+ (Sonoma) or later.
+
+
 ## 📦 Installation
 To install Clink, follow these steps:
 1. Clone the repository using Git.
