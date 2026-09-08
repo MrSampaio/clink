@@ -1,7 +1,7 @@
 # 📝 Clink: A Comprehensive Reminder and Task Management Application
 Clink is a feature-rich, powerful task management and reminder app that helps you to keep your life organized and on top of your tasks. With its user-friendly interface and extensive feature set, Clink provides a seamless experience to manage reminders, tasks, and notifications. The application is built with Swift, SwiftUI and other frameworks, which ensures its reliable and efficient operation.
 
-## 🚀 Features
+## Features
 * **Reminder Management**: Create, edit, and delete reminders with ease, including custom lists, subtasks, and due dates.
 * **Biometric Authentication**: Protect your reminders with Face ID or Touch ID authentication.
 * **Notification Management**: Get notified about upcoming reminders and events.
@@ -20,7 +20,7 @@ Clink is a feature-rich, powerful task management and reminder app that helps yo
 * **UserNotifications**: A framework for managing notifications.
 * **LocalAuthentication**: A framework for handling biometric authentication.
 
-## 📂 Project Structure
+## Project Structure
 ```markdown
 Clink
 ├── Clink
@@ -42,7 +42,7 @@ Clink
 │   ├── ClinkWidgetLiveActivity.swift
 ```
 
-## ⚙️ System Requirements
+## System Requirements
 
 Before you begin, ensure your development environment meets the following minimum requirements:
 
@@ -51,7 +51,7 @@ Before you begin, ensure your development environment meets the following minimu
 
 ---
 
-## 📦 Installation & Build
+## Installation & Build
 
 To compile and run Clink locally on your machine, follow these steps:
 
@@ -83,7 +83,7 @@ Press `Cmd + R` or click the Play (▶) button. Xcode will compile the code and 
 
 ---
 
-## 💻 Usage Guide
+## Usage Guide
 
 Once the app is running, you can test its full feature set:
 
