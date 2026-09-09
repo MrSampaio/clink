@@ -12,11 +12,11 @@ Clink is a feature-rich, powerful task management and reminder app that helps yo
 ## System Showcase
 
 <div align="center">
-  <img src="./docs/mockup01.png" alt="Frush App" width="1000"/>
+  <img src="./docs/mockup01.png" alt="Clink App" width="1000"/>
 </div>
 
 <div align="center">
-  <img src="./docs/mockup02.png" alt="Frush App" width="1000"/>
+  <img src="./docs/mockup02.png" alt="Clink App" width="1000"/>
 </div>
 
 ## Tech Stack
