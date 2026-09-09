@@ -9,6 +9,16 @@ Clink is a feature-rich, powerful task management and reminder app that helps yo
 * **Live Activity**: Show a dynamic island on the lock screen or in the notification center with the state of the timer.
 * **Customizable**: Personalize your experience with settings and preferences.
 
+## System Showcase
+
+<div align="center">
+  <img src="./docs/mockup01.png" alt="Frush App" width="1000"/>
+</div>
+
+<div align="center">
+  <img src="./docs/mockup02.png" alt="Frush App" width="1000"/>
+</div>
+
 ## Tech Stack
 * **Swift**: The primary programming language used for development.
 * **SwiftUI**: A framework for building user interfaces in Swift.
